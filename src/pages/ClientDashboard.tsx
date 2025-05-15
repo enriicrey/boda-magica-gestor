@@ -8,7 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Calendar, Heart, MapPin, Clock, Check, Settings, Bell, User, FileText, Package, Home } from 'lucide-react';
+import { Calendar, Heart, MapPin, Clock, Check, Settings, Bell, User, FileText, Package, Home, Camera } from 'lucide-react';
 import ServiceCard from '@/components/ServiceCard';
 
 const ClientDashboard = () => {
