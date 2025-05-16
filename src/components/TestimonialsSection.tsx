@@ -29,12 +29,13 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section id="testimonials" className="py-20">
+    <section id="testimonials" className="py-24 bg-gray-50">
       <div className="container-custom">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="heading-lg mb-4">Historias de Amor</h2>
-          <p className="text-body text-gray-600">
-            Miles de parejas han confiado en nosotros para hacer de su día especial algo verdaderamente mágico. Esto es lo que dicen sobre su experiencia.
+        <div className="text-center max-w-lg mx-auto mb-16">
+          <h2 className="font-serif text-3xl md:text-4xl font-light mb-6">Historias de Amor</h2>
+          <div className="w-20 h-[1px] bg-wedding-blush mx-auto mb-6"></div>
+          <p className="text-gray-600 font-light leading-relaxed">
+            Miles de parejas han confiado en nosotros para hacer de su día especial algo verdaderamente mágico.
           </p>
         </div>
 
@@ -42,22 +43,22 @@ const TestimonialsSection = () => {
           {testimonials.map((testimonial, index) => (
             <div 
               key={index} 
-              className="bg-white p-8 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+              className="bg-white p-10 shadow-sm hover:shadow-md transition-shadow"
             >
-              <div className="flex items-center mb-1">
+              <div className="flex items-center mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star key={i} className="h-4 w-4 fill-wedding-gold text-wedding-gold" />
                 ))}
               </div>
-              <p className="text-body text-gray-600 mt-4 mb-6">"{testimonial.content}"</p>
-              <div className="flex items-center mt-4">
+              <p className="text-gray-700 font-light italic mb-8 leading-relaxed">"{testimonial.content}"</p>
+              <div className="flex items-center">
                 <Avatar className="h-12 w-12 mr-4">
                   <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
                   <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div>
                   <h4 className="font-serif font-medium text-wedding-navy">{testimonial.name}</h4>
-                  <p className="text-sm text-gray-500">{testimonial.role}</p>
+                  <p className="text-sm text-gray-500 font-light">{testimonial.role}</p>
                 </div>
               </div>
             </div>

@@ -20,21 +20,21 @@ const Navigation = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-sm border-b border-gray-100">
+    <header className="absolute top-0 left-0 right-0 z-50 bg-transparent py-4">
       <div className="container-custom flex h-16 items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-serif font-bold text-wedding-navy">Wedding<span className="text-wedding-blush">Plan</span></span>
+            <span className="text-2xl font-serif font-normal tracking-wide text-white">Wedding<span className="font-light italic">Plan</span></span>
           </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden md:flex items-center space-x-10">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               to={link.href}
-              className="text-gray-700 hover:text-wedding-navy font-medium transition-colors"
+              className="text-white hover:text-wedding-blush font-light tracking-wide transition-colors text-sm uppercase"
             >
               {link.name}
             </Link>
@@ -43,16 +43,16 @@ const Navigation = () => {
 
         <div className="hidden md:flex items-center space-x-4">
           <Link to="/login">
-            <Button variant="outline" className="border-wedding-navy text-wedding-navy hover:bg-wedding-navy/10">Iniciar sesión</Button>
+            <Button variant="ghost" className="text-white hover:bg-white/10 font-light tracking-wide text-sm uppercase">Iniciar sesión</Button>
           </Link>
           <Link to="/register">
-            <Button className="bg-wedding-navy hover:bg-wedding-navy/90">Registrarse</Button>
+            <Button variant="outline" className="border-white text-white hover:bg-white/10 font-light tracking-wide text-sm uppercase rounded-none">Registrarse</Button>
           </Link>
         </div>
 
         {/* Mobile Menu Button */}
         <button 
-          className="md:hidden p-2" 
+          className="md:hidden p-2 text-white" 
           onClick={toggleMobileMenu}
           aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
         >
@@ -61,24 +61,24 @@ const Navigation = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 md:hidden z-50 animate-fade-in">
-            <div className="container-custom py-4 flex flex-col space-y-4">
+          <div className="absolute top-16 left-0 right-0 bg-white md:hidden z-50 animate-fade-in">
+            <div className="container-custom py-8 flex flex-col space-y-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-gray-700 hover:text-wedding-navy font-medium transition-colors py-2"
+                  className="text-wedding-navy font-light text-base tracking-wide hover:text-wedding-blush transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.name}
                 </Link>
               ))}
-              <div className="flex flex-col space-y-2 pt-2 border-t border-gray-100">
+              <div className="flex flex-col space-y-4 pt-4 border-t border-gray-100">
                 <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full border-wedding-navy text-wedding-navy hover:bg-wedding-navy/10">Iniciar sesión</Button>
+                  <Button variant="ghost" className="w-full justify-start text-wedding-navy hover:bg-transparent hover:text-wedding-blush font-light">Iniciar sesión</Button>
                 </Link>
                 <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-wedding-navy hover:bg-wedding-navy/90">Registrarse</Button>
+                  <Button className="w-full bg-wedding-navy hover:bg-wedding-navy/90 text-white font-light">Registrarse</Button>
                 </Link>
               </div>
             </div>

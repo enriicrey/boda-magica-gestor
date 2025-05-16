@@ -5,34 +5,35 @@ import { Button } from '@/components/ui/button';
 
 const HeroSection = () => {
   return (
-    <section className="relative bg-gradient-to-r from-wedding-navy to-wedding-blush min-h-[80vh] flex items-center">
+    <section className="relative min-h-[90vh] flex items-center overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ 
-            backgroundImage: "url('https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')", 
+            backgroundImage: "url('https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')", 
             backgroundPosition: 'center',
-            filter: 'brightness(0.4)'
+            filter: 'brightness(0.6)'
           }}
         />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent" />
       </div>
       <div className="container-custom relative z-10 text-white">
-        <div className="max-w-2xl mx-auto md:mx-0">
-          <h1 className="heading-xl mb-4 text-center md:text-left">
-            Crea la boda de tus sueños
+        <div className="max-w-2xl mx-auto md:ml-0">
+          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-6 leading-tight tracking-tight">
+            El día perfecto<br />merece una<br /><span className="font-normal italic">planificación perfecta</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-center md:text-left opacity-90">
-            Conectamos parejas con los mejores proveedores de servicios para bodas, haciendo que tu día especial sea perfecto.
+          <p className="text-xl md:text-2xl mb-10 opacity-90 font-light">
+            Conectamos parejas con los mejores proveedores de servicios para bodas, creando experiencias memorables.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+          <div className="flex flex-col sm:flex-row gap-6">
             <Link to="/register?role=client">
-              <Button className="bg-white text-wedding-navy hover:bg-white/90 text-lg px-6 py-4 w-full sm:w-auto">
-                Soy una Pareja
+              <Button className="bg-white text-wedding-navy hover:bg-white/90 text-base px-8 py-6 rounded-none">
+                Comenzar como Pareja
               </Button>
             </Link>
             <Link to="/register?role=provider">
-              <Button variant="outline" className="border-2 border-white bg-transparent hover:bg-white/10 text-white text-lg px-6 py-4 w-full sm:w-auto">
-                Soy un Proveedor
+              <Button variant="outline" className="border border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-none">
+                Unirse como Proveedor
               </Button>
             </Link>
           </div>

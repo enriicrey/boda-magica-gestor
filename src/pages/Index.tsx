@@ -60,49 +60,52 @@ const Index = () => {
         
         <ServicesSection />
         
-        <section id="vendors" className="py-20">
+        <section id="vendors" className="py-24 bg-white">
           <div className="container-custom">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-              <div className="max-w-2xl">
-                <h2 className="heading-lg mb-4">Proveedores Destacados</h2>
-                <p className="text-body text-gray-600">
-                  Trabaja con los mejores profesionales del sector para hacer realidad la boda de tus sueños.
-                </p>
-              </div>
-              <Link to="/vendors" className="mt-4 md:mt-0">
-                <Button variant="outline" className="btn-outline">
+            <div className="text-center max-w-lg mx-auto mb-12">
+              <h2 className="font-serif text-3xl md:text-4xl font-light mb-6">Proveedores Destacados</h2>
+              <div className="w-20 h-[1px] bg-wedding-blush mx-auto mb-6"></div>
+              <p className="text-gray-600 font-light leading-relaxed mb-12">
+                Trabaja con los mejores profesionales del sector para hacer realidad la boda de tus sueños.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+              {featuredVendors.map((vendor) => (
+                <VendorCard key={vendor.id} {...vendor} />
+              ))}
+            </div>
+            
+            <div className="text-center">
+              <Link to="/vendors">
+                <Button variant="outline" className="border-wedding-navy text-wedding-navy hover:bg-wedding-navy hover:text-white rounded-none px-8 py-6">
                   Ver todos los proveedores
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredVendors.map((vendor) => (
-                <VendorCard key={vendor.id} {...vendor} />
-              ))}
             </div>
           </div>
         </section>
         
         <TestimonialsSection />
         
-        <section id="contact" className="py-20 bg-wedding-navy text-white">
+        <section id="contact" className="py-24 bg-wedding-navy text-white">
           <div className="container-custom">
-            <div className="text-center max-w-3xl mx-auto">
-              <h2 className="heading-lg mb-4">¿Listo para comenzar?</h2>
-              <p className="text-xl mb-8 text-gray-300">
+            <div className="text-center max-w-xl mx-auto">
+              <h2 className="font-serif text-3xl md:text-4xl font-light mb-6">¿Estás listo para comenzar?</h2>
+              <div className="w-20 h-[1px] bg-wedding-blush mx-auto mb-6"></div>
+              <p className="text-xl mb-12 text-gray-300 font-light">
                 Únete a nuestra plataforma y comienza a planificar la boda de tus sueños hoy mismo.
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <div className="flex flex-col sm:flex-row justify-center gap-6">
                 <Link to="/register?role=client">
-                  <Button className="bg-white text-wedding-navy hover:bg-gray-100 text-lg px-6 py-4 w-full sm:w-auto">
+                  <Button className="bg-white text-wedding-navy hover:bg-white/90 text-base px-8 py-6 rounded-none">
                     Comenzar como Pareja
                   </Button>
                 </Link>
                 <Link to="/register?role=provider">
-                  <Button variant="outline" className="border-2 border-white bg-transparent hover:bg-white/10 text-white text-lg px-6 py-4 w-full sm:w-auto">
-                    Registrarse como Proveedor
+                  <Button variant="outline" className="border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-none">
+                    Unirse como Proveedor
                   </Button>
                 </Link>
               </div>
