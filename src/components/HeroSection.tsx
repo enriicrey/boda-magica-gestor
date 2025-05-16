@@ -1,9 +1,10 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import ContactForm from './ContactForm';
+import ProviderForm from './ProviderForm';
+import { DialogTitle } from '@/components/ui/dialog';
 
 const HeroSection = () => {
   return (
@@ -35,20 +36,32 @@ const HeroSection = () => {
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[600px]">
-                <div className="py-6">
-                  <h2 className="font-serif text-2xl font-light mb-2 text-center">Cuéntanos sobre tu boda soñada</h2>
-                  <p className="text-muted-foreground text-center mb-6">
-                    Completa el formulario y nos pondremos en contacto contigo para ayudarte a planificar tu día especial.
-                  </p>
-                  <ContactForm />
-                </div>
+                <DialogTitle className="font-serif text-2xl font-light mb-2 text-center">
+                  Cuéntanos sobre tu boda soñada
+                </DialogTitle>
+                <p className="text-muted-foreground text-center mb-6">
+                  Completa el formulario y nos pondremos en contacto contigo para ayudarte a planificar tu día especial.
+                </p>
+                <ContactForm />
               </DialogContent>
             </Dialog>
-            <Link to="/register?role=provider">
-              <Button variant="outline" className="border border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-md">
-                Unirse como Proveedor
-              </Button>
-            </Link>
+            
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="border border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-md">
+                  Unirse como Proveedor
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[600px]">
+                <DialogTitle className="font-serif text-2xl font-light mb-2 text-center">
+                  Forma parte de nuestra red de proveedores
+                </DialogTitle>
+                <p className="text-muted-foreground text-center mb-6">
+                  Completa el formulario y te contactaremos para discutir cómo puedes ofrecer tus servicios a nuestras parejas.
+                </p>
+                <ProviderForm />
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>
