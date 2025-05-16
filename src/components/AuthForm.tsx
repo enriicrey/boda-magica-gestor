@@ -1,6 +1,6 @@
 
-import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -18,23 +18,75 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { toast } from "sonner";
 
-const AuthForm = () => {
-  const [searchParams] = useSearchParams();
-  const defaultRole = searchParams.get("role") || "client";
-  const [role, setRole] = useState<string>(defaultRole);
-  const [activeTab, setActiveTab] = useState<string>("login");
+interface AuthFormProps {
+  initialTab?: string;
+  initialRole?: string | null;
+}
+
+const AuthForm: React.FC<AuthFormProps> = ({ 
+  initialTab = "login",
+  initialRole = "client" 
+}) => {
+  const navigate = useNavigate();
+  const [role, setRole] = useState<string>(initialRole || "client");
+  const [activeTab, setActiveTab] = useState<string>(initialTab);
+
+  useEffect(() => {
+    if (initialRole) {
+      setRole(initialRole);
+    }
+  }, [initialRole]);
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login submitted");
-    // Add login logic here
+    console.log("Login submitted for role:", role);
+    
+    // Simulate successful login
+    toast.success(`Inicio de sesión exitoso como ${getRoleText(role)}`);
+    
+    // Redirect based on role
+    setTimeout(() => {
+      if (role === "client") {
+        navigate("/client-dashboard");
+      } else if (role === "provider") {
+        navigate("/provider-dashboard");
+      } else if (role === "admin") {
+        navigate("/admin-dashboard");
+      }
+    }, 1000);
   };
 
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Register submitted with role:", role);
-    // Add registration logic here
+    
+    // Simulate successful registration
+    toast.success(`Cuenta de ${getRoleText(role)} creada exitosamente`);
+    
+    // Redirect to login
+    setTimeout(() => {
+      setActiveTab("login");
+    }, 1000);
+  };
+
+  const getRoleText = (role: string): string => {
+    switch (role) {
+      case "client": return "Cliente";
+      case "provider": return "Proveedor";
+      case "admin": return "Administrador";
+      default: return "Usuario";
+    }
+  };
+
+  const getRoleColor = (role: string): string => {
+    switch (role) {
+      case "client": return "text-wedding-blush";
+      case "provider": return "text-wedding-navy";
+      case "admin": return "text-purple-600";
+      default: return "text-gray-700";
+    }
   };
 
   return (
@@ -42,6 +94,7 @@ const AuthForm = () => {
       <CardHeader>
         <CardTitle className="text-center font-serif text-2xl">
           {activeTab === "login" ? "Iniciar Sesión" : "Crear Cuenta"}
+          {role && <span className={`ml-2 ${getRoleColor(role)}`}>({getRoleText(role)})</span>}
         </CardTitle>
         <CardDescription className="text-center">
           {activeTab === "login"
@@ -52,6 +105,7 @@ const AuthForm = () => {
       <CardContent>
         <Tabs
           defaultValue={activeTab}
+          value={activeTab}
           onValueChange={setActiveTab}
           className="w-full"
         >
@@ -88,7 +142,7 @@ const AuthForm = () => {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full btn-primary">
+              <Button type="submit" className="w-full bg-wedding-navy hover:bg-wedding-navy/90">
                 Iniciar Sesión
               </Button>
             </form>
@@ -98,6 +152,7 @@ const AuthForm = () => {
             <form onSubmit={handleRegisterSubmit} className="space-y-4">
               <RadioGroup
                 defaultValue={role}
+                value={role}
                 onValueChange={setRole}
                 className="grid grid-cols-3 gap-4 mb-4"
               >
@@ -171,7 +226,7 @@ const AuthForm = () => {
                 </Label>
               </div>
               
-              <Button type="submit" className="w-full btn-primary">
+              <Button type="submit" className="w-full bg-wedding-navy hover:bg-wedding-navy/90">
                 Crear Cuenta
               </Button>
             </form>

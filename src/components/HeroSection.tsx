@@ -26,7 +26,7 @@ const HeroSection = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
             <Link to="/register?role=client">
-              <Button className="btn-secondary text-lg px-6 py-4 w-full sm:w-auto">
+              <Button className="bg-white text-wedding-navy hover:bg-white/90 text-lg px-6 py-4 w-full sm:w-auto">
                 Soy una Pareja
               </Button>
             </Link>

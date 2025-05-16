@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
-import { Dialog } from '@/components/ui/dialog';
-import { cn } from '@/lib/utils';
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -45,10 +43,10 @@ const Navigation = () => {
 
         <div className="hidden md:flex items-center space-x-4">
           <Link to="/login">
-            <Button variant="outline" className="btn-outline">Iniciar sesión</Button>
+            <Button variant="outline" className="border-wedding-navy text-wedding-navy hover:bg-wedding-navy/10">Iniciar sesión</Button>
           </Link>
           <Link to="/register">
-            <Button className="btn-primary">Registrarse</Button>
+            <Button className="bg-wedding-navy hover:bg-wedding-navy/90">Registrarse</Button>
           </Link>
         </div>
 
@@ -77,10 +75,10 @@ const Navigation = () => {
               ))}
               <div className="flex flex-col space-y-2 pt-2 border-t border-gray-100">
                 <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full btn-outline">Iniciar sesión</Button>
+                  <Button variant="outline" className="w-full border-wedding-navy text-wedding-navy hover:bg-wedding-navy/10">Iniciar sesión</Button>
                 </Link>
                 <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full btn-primary">Registrarse</Button>
+                  <Button className="w-full bg-wedding-navy hover:bg-wedding-navy/90">Registrarse</Button>
                 </Link>
               </div>
             </div>
