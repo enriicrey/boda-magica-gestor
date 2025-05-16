@@ -55,10 +55,12 @@ const Index = () => {
     <div className="flex flex-col min-h-screen">
       <Navigation />
       
-      <main className="flex-grow">
+      <main className="flex-grow" id="top">
         <HeroSection />
         
-        <ServicesSection />
+        <div id="services">
+          <ServicesSection />
+        </div>
         
         <section id="vendors" className="py-24 bg-white">
           <div className="container-custom">
@@ -87,7 +89,9 @@ const Index = () => {
           </div>
         </section>
         
-        <TestimonialsSection />
+        <div id="testimonials">
+          <TestimonialsSection />
+        </div>
         
         <section id="contact" className="py-24 bg-wedding-navy text-white">
           <div className="container-custom">
