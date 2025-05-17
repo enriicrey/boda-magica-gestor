@@ -11,7 +11,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
   
   const handleBeginAsClient = () => {
-    navigate('/login');
+    navigate('/register?role=client');
   };
 
   return (

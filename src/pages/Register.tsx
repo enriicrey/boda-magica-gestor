@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -39,24 +39,18 @@ const Register = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              {role === 'client' && (
+              {role && (
                 <div className="mb-4">
-                  <h2 className="text-2xl font-serif mb-4 text-center">Registro como Cliente</h2>
-                  <p className="text-gray-600 text-center mb-8">Crea tu cuenta y comienza a planificar tu boda de ensueño</p>
-                </div>
-              )}
-              
-              {role === 'provider' && (
-                <div className="mb-4">
-                  <h2 className="text-2xl font-serif mb-4 text-center">Registro como Proveedor</h2>
-                  <p className="text-gray-600 text-center mb-8">Crea tu cuenta profesional y conecta con parejas buscando servicios</p>
-                </div>
-              )}
-              
-              {role === 'admin' && (
-                <div className="mb-4">
-                  <h2 className="text-2xl font-serif mb-4 text-center">Registro como Administrador</h2>
-                  <p className="text-gray-600 text-center mb-8">Accede al sistema de administración de la plataforma</p>
+                  <h2 className="text-2xl font-serif mb-4 text-center">
+                    {role === 'client' && 'Registro como Cliente'}
+                    {role === 'provider' && 'Registro como Proveedor'}
+                    {role === 'admin' && 'Registro como Administrador'}
+                  </h2>
+                  <p className="text-gray-600 text-center mb-8">
+                    {role === 'client' && 'Crea tu cuenta y comienza a planificar tu boda de ensueño'}
+                    {role === 'provider' && 'Crea tu cuenta profesional y conecta con parejas buscando servicios'}
+                    {role === 'admin' && 'Accede al sistema de administración de la plataforma'}
+                  </p>
                 </div>
               )}
               

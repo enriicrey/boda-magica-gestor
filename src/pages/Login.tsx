@@ -106,27 +106,19 @@ const Login = () => {
                     Volver a selección
                   </Button>
                   
-                  {userType === 'client' && (
+                  {userType && (
                     <div className="mb-4">
-                      <h2 className="text-2xl font-serif mb-4 text-center">Registro como Cliente</h2>
-                      <p className="text-gray-600 text-center mb-8">Crea tu cuenta y comienza a planificar tu boda de ensueño</p>
-                      <AuthForm initialTab="register" initialRole="client" />
-                    </div>
-                  )}
-                  
-                  {userType === 'provider' && (
-                    <div className="mb-4">
-                      <h2 className="text-2xl font-serif mb-4 text-center">Registro como Proveedor</h2>
-                      <p className="text-gray-600 text-center mb-8">Crea tu cuenta profesional y conecta con parejas buscando servicios</p>
-                      <AuthForm initialTab="register" initialRole="provider" />
-                    </div>
-                  )}
-                  
-                  {userType === 'admin' && (
-                    <div className="mb-4">
-                      <h2 className="text-2xl font-serif mb-4 text-center">Registro como Administrador</h2>
-                      <p className="text-gray-600 text-center mb-8">Accede al sistema de administración de la plataforma</p>
-                      <AuthForm initialTab="register" initialRole="admin" />
+                      <h2 className="text-2xl font-serif mb-4 text-center">
+                        {userType === 'client' && 'Registro como Cliente'}
+                        {userType === 'provider' && 'Registro como Proveedor'}
+                        {userType === 'admin' && 'Registro como Administrador'}
+                      </h2>
+                      <p className="text-gray-600 text-center mb-8">
+                        {userType === 'client' && 'Crea tu cuenta y comienza a planificar tu boda de ensueño'}
+                        {userType === 'provider' && 'Crea tu cuenta profesional y conecta con parejas buscando servicios'}
+                        {userType === 'admin' && 'Accede al sistema de administración de la plataforma'}
+                      </p>
+                      <AuthForm initialTab="register" initialRole={userType} />
                     </div>
                   )}
                 </motion.div>
