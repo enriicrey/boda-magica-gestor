@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import AuthForm from '@/components/AuthForm';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
+import ProviderForm from '@/components/ProviderForm';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Login = () => {
   
   return (
     <div className="flex flex-col min-h-screen">
-      <Navigation hideLinks={registrationView} />
+      <Navigation hideLinks={true} />
       
       <main className="flex-grow py-16 bg-gray-50">
         <div className="container-custom">
@@ -97,10 +98,10 @@ const Login = () => {
                 >
                   <Button 
                     onClick={handleBackToRoleSelection}
-                    className="text-wedding-navy hover:text-wedding-navy/80 font-medium flex items-center mb-8"
+                    className="text-wedding-navy hover:text-wedding-navy/80 font-medium flex items-center mb-8 group w-auto px-4"
                     variant="ghost"
                   >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                     Volver a selección
@@ -119,6 +120,21 @@ const Login = () => {
                         {userType === 'admin' && 'Accede al sistema de administración de la plataforma'}
                       </p>
                       <AuthForm initialTab="login" initialRole={userType} />
+                      
+                      {/* Provider information request section */}
+                      {userType === 'provider' && (
+                        <div className="mt-16 pt-8 border-t border-gray-200">
+                          <div className="text-center mb-10">
+                            <h3 className="text-2xl font-serif mb-2">¿Quieres ofrecer tus servicios?</h3>
+                            <p className="text-gray-600 max-w-lg mx-auto">
+                              Si eres proveedor de servicios para bodas y deseas formar parte de nuestra red, completa el siguiente formulario y nos pondremos en contacto contigo.
+                            </p>
+                          </div>
+                          <div className="max-w-lg mx-auto">
+                            <ProviderForm />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </motion.div>

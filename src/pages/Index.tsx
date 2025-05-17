@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
@@ -9,8 +9,13 @@ import VendorCard from '@/components/VendorCard';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import ProviderForm from '@/components/ProviderForm';
+import ClientForm from './ClientForm';
 
 const Index = () => {
+  const [showClientForm, setShowClientForm] = useState(false);
+  
   const featuredVendors = [
     {
       id: '1',
@@ -48,8 +53,48 @@ const Index = () => {
       isVerified: true,
       description: 'Espectaculares tartas de boda personalizadas con ingredientes de primera calidad.',
       price: 'Desde €400',
+    },
+    {
+      id: '4',
+      name: 'Elegancia Floral',
+      category: 'Decoración',
+      image: 'https://images.unsplash.com/photo-1561998338-13ad7883b20f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      rating: 4.9,
+      reviewCount: 78,
+      location: 'Sevilla, España',
+      isVerified: true,
+      description: 'Arreglos florales exquisitos para crear ambientes mágicos en tu ceremonia y celebración.',
+      price: 'Desde €800',
+    },
+    {
+      id: '5',
+      name: 'Melodía Nupcial',
+      category: 'Música',
+      image: 'https://images.unsplash.com/photo-1501612780327-45045538702b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      rating: 4.6,
+      reviewCount: 45,
+      location: 'Barcelona, España',
+      isVerified: true,
+      description: 'Grupo musical versátil que adapta su repertorio desde música clásica hasta éxitos actuales.',
+      price: 'Desde €1,200',
+    },
+    {
+      id: '6',
+      name: 'Vehículos Clásicos Premier',
+      category: 'Transporte',
+      image: 'https://images.unsplash.com/photo-1574169208507-84376144848b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      rating: 4.8,
+      reviewCount: 32,
+      location: 'Madrid, España',
+      isVerified: true,
+      description: 'Colección de coches clásicos y de lujo para transportar a los novios con estilo y elegancia.',
+      price: 'Desde €500',
     }
   ];
+
+  const handleToggleClientForm = () => {
+    setShowClientForm(!showClientForm);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -95,24 +140,54 @@ const Index = () => {
         
         <section id="contact" className="py-24 bg-wedding-navy text-white">
           <div className="container-custom">
-            <div className="text-center max-w-xl mx-auto">
+            <div className="text-center max-w-xl mx-auto mb-12">
               <h2 className="font-serif text-3xl md:text-4xl font-light mb-6">¿Estás listo para comenzar?</h2>
               <div className="w-20 h-[1px] bg-wedding-blush mx-auto mb-6"></div>
               <p className="text-xl mb-12 text-gray-300 font-light">
                 Únete a nuestra plataforma y comienza a planificar la boda de tus sueños hoy mismo.
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-6">
-                <Link to="/register?role=client">
-                  <Button className="bg-white text-wedding-navy hover:bg-white/90 text-base px-8 py-6 rounded-none">
+              <div className="flex flex-col sm:flex-row justify-center gap-6 mb-16">
+                {!showClientForm ? (
+                  <Button 
+                    onClick={handleToggleClientForm}
+                    className="bg-white text-wedding-navy hover:bg-white/90 text-base px-8 py-6 rounded-md"
+                  >
                     Comenzar como Pareja
                   </Button>
-                </Link>
-                <Link to="/register?role=provider">
-                  <Button variant="outline" className="border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-none">
-                    Unirse como Proveedor
+                ) : (
+                  <Button 
+                    onClick={handleToggleClientForm}
+                    variant="outline"
+                    className="border border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-md"
+                  >
+                    Cerrar formulario
                   </Button>
-                </Link>
+                )}
+                
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="border border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-md">
+                      Unirse como Proveedor
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[600px]">
+                    <DialogTitle className="font-serif text-2xl font-light mb-2 text-center">
+                      Forma parte de nuestra red de proveedores
+                    </DialogTitle>
+                    <p className="text-muted-foreground text-center mb-6">
+                      Completa el formulario y te contactaremos para discutir cómo puedes ofrecer tus servicios a nuestras parejas.
+                    </p>
+                    <ProviderForm />
+                  </DialogContent>
+                </Dialog>
               </div>
+              
+              {showClientForm && (
+                <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/20 max-w-2xl mx-auto animate-fade-in">
+                  <h3 className="font-serif text-2xl font-light mb-6 text-center">Solicitar información como pareja</h3>
+                  <ClientForm />
+                </div>
+              )}
             </div>
           </div>
         </section>

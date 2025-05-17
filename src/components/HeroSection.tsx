@@ -1,17 +1,19 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import ContactForm from './ContactForm';
 import ProviderForm from './ProviderForm';
 import { DialogTitle } from '@/components/ui/dialog';
 import { useNavigate } from 'react-router-dom';
+import ClientForm from './ClientForm';
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const [showClientForm, setShowClientForm] = useState(false);
   
-  const handleBeginAsClient = () => {
-    navigate('/login?role=client');
+  const handleToggleClientForm = () => {
+    setShowClientForm(!showClientForm);
   };
 
   return (
@@ -36,12 +38,22 @@ const HeroSection = () => {
             Conectamos parejas con los mejores proveedores de servicios para bodas, creando experiencias memorables.
           </p>
           <div className="flex flex-col sm:flex-row gap-6">
-            <Button 
-              onClick={handleBeginAsClient}
-              className="bg-white text-wedding-navy hover:bg-white/90 text-base px-8 py-6 rounded-md"
-            >
-              Comenzar como Pareja
-            </Button>
+            {!showClientForm ? (
+              <Button 
+                onClick={handleToggleClientForm}
+                className="bg-white text-wedding-navy hover:bg-white/90 text-base px-8 py-6 rounded-md"
+              >
+                Comenzar como Pareja
+              </Button>
+            ) : (
+              <Button 
+                onClick={handleToggleClientForm}
+                variant="outline"
+                className="border border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-md"
+              >
+                Cerrar formulario
+              </Button>
+            )}
             
             <Dialog>
               <DialogTrigger asChild>
@@ -60,6 +72,13 @@ const HeroSection = () => {
               </DialogContent>
             </Dialog>
           </div>
+          
+          {showClientForm && (
+            <div className="mt-10 bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20 animate-fade-in">
+              <h3 className="font-serif text-2xl font-light mb-4">Solicitar información</h3>
+              <ClientForm />
+            </div>
+          )}
         </div>
       </div>
     </section>
