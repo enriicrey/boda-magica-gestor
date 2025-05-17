@@ -1,12 +1,20 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 
-const Navigation = () => {
+interface NavigationProps {
+  hideLinks?: boolean;
+}
+
+const Navigation = ({ hideLinks = false }: NavigationProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+
+  // Check if we're on a login or registration page
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
   // Handle scroll event to change header background
   useEffect(() => {
@@ -88,40 +96,47 @@ const Navigation = () => {
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-10">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="text-white hover:text-wedding-blush font-light tracking-wide transition-colors text-sm uppercase"
-              onClick={(e) => handleAnchorClick(e, link.href)}
-            >
-              {link.name}
-            </a>
-          ))}
-        </nav>
+        {/* Desktop Navigation - Only show if not on auth page or if hideLinks is false */}
+        {!hideLinks && !isAuthPage && (
+          <nav className="hidden md:flex items-center space-x-10">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="text-white hover:text-wedding-blush font-light tracking-wide transition-colors text-sm uppercase relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-wedding-blush after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
+                onClick={(e) => handleAnchorClick(e, link.href)}
+              >
+                {link.name}
+              </a>
+            ))}
+          </nav>
+        )}
 
-        <div className="hidden md:flex items-center space-x-4">
-          <Link to="/login">
-            <Button variant="ghost" className="text-white hover:bg-white/10 font-light tracking-wide text-sm uppercase">Iniciar sesión</Button>
-          </Link>
-          <Link to="/register">
-            <Button variant="outline" className="border-white text-white hover:bg-white/10 font-light tracking-wide text-sm uppercase rounded-none">Registrarse</Button>
-          </Link>
-        </div>
+        {/* Login/Register buttons - Only show if not on auth page or if hideLinks is false */}
+        {!hideLinks && !isAuthPage && (
+          <div className="hidden md:flex items-center space-x-4">
+            <Link to="/login">
+              <Button variant="ghost" className="text-white hover:bg-white/10 font-light tracking-wide text-sm uppercase">Iniciar sesión</Button>
+            </Link>
+            <Link to="/register">
+              <Button variant="outline" className="border-white text-white hover:bg-white/10 font-light tracking-wide text-sm uppercase rounded-none">Registrarse</Button>
+            </Link>
+          </div>
+        )}
 
-        {/* Mobile Menu Button */}
-        <button 
-          className="md:hidden p-2 text-white" 
-          onClick={toggleMobileMenu}
-          aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-        >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        {/* Mobile Menu Button - Only show if not on auth page or if hideLinks is false */}
+        {!hideLinks && !isAuthPage && (
+          <button 
+            className="md:hidden p-2 text-white" 
+            onClick={toggleMobileMenu}
+            aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        )}
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
+        {mobileMenuOpen && !hideLinks && !isAuthPage && (
           <div className="absolute top-16 left-0 right-0 bg-white md:hidden z-50 animate-fade-in">
             <div className="container-custom py-8 flex flex-col space-y-6">
               {navLinks.map((link) => (

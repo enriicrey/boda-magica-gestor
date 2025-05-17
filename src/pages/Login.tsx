@@ -23,7 +23,7 @@ const Login = () => {
   
   return (
     <div className="flex flex-col min-h-screen">
-      <Navigation />
+      <Navigation hideLinks={registrationView} />
       
       <main className="flex-grow py-16 bg-gray-50">
         <div className="container-custom">
@@ -97,7 +97,7 @@ const Login = () => {
                 >
                   <Button 
                     onClick={handleBackToRoleSelection}
-                    className="text-wedding-navy hover:text-wedding-navy/80 font-medium flex items-center mb-8 w-full justify-start"
+                    className="text-wedding-navy hover:text-wedding-navy/80 font-medium flex items-center mb-8"
                     variant="ghost"
                   >
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

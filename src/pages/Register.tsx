@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -15,14 +15,14 @@ const Register = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navigation />
+      <Navigation hideLinks={true} />
       
       <main className="flex-grow py-16 bg-gray-50">
         <div className="container-custom">
           <div className="max-w-md mx-auto">
             <Button 
               onClick={handleBackToLogin}
-              className="text-wedding-navy hover:text-wedding-navy/80 font-medium flex items-center mb-8 w-full justify-start"
+              className="text-wedding-navy hover:text-wedding-navy/80 font-medium flex items-center mb-8"
               variant="ghost"
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
