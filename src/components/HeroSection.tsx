@@ -5,8 +5,15 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import ContactForm from './ContactForm';
 import ProviderForm from './ProviderForm';
 import { DialogTitle } from '@/components/ui/dialog';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+  
+  const handleBeginAsClient = () => {
+    navigate('/login');
+  };
+
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
@@ -29,22 +36,12 @@ const HeroSection = () => {
             Conectamos parejas con los mejores proveedores de servicios para bodas, creando experiencias memorables.
           </p>
           <div className="flex flex-col sm:flex-row gap-6">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="bg-white text-wedding-navy hover:bg-white/90 text-base px-8 py-6 rounded-md">
-                  Comenzar como Pareja
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px]">
-                <DialogTitle className="font-serif text-2xl font-light mb-2 text-center">
-                  Cuéntanos sobre tu boda soñada
-                </DialogTitle>
-                <p className="text-muted-foreground text-center mb-6">
-                  Completa el formulario y nos pondremos en contacto contigo para ayudarte a planificar tu día especial.
-                </p>
-                <ContactForm />
-              </DialogContent>
-            </Dialog>
+            <Button 
+              onClick={handleBeginAsClient}
+              className="bg-white text-wedding-navy hover:bg-white/90 text-base px-8 py-6 rounded-md"
+            >
+              Comenzar como Pareja
+            </Button>
             
             <Dialog>
               <DialogTrigger asChild>
