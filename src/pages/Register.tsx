@@ -3,15 +3,12 @@ import React from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import AuthForm from '@/components/AuthForm';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 const Register = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const role = searchParams.get('role') || null;
-
+  
   const handleBackToLogin = () => {
     navigate('/login');
   };
@@ -25,7 +22,7 @@ const Register = () => {
           <div className="max-w-md mx-auto">
             <Button 
               onClick={handleBackToLogin}
-              className="text-wedding-navy hover:text-wedding-navy/80 font-medium flex items-center mb-8"
+              className="text-wedding-navy hover:text-wedding-navy/80 font-medium flex items-center mb-8 w-full justify-start"
               variant="ghost"
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -38,23 +35,19 @@ const Register = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
+              className="text-center"
             >
-              {role && (
-                <div className="mb-4">
-                  <h2 className="text-2xl font-serif mb-4 text-center">
-                    {role === 'client' && 'Registro como Cliente'}
-                    {role === 'provider' && 'Registro como Proveedor'}
-                    {role === 'admin' && 'Registro como Administrador'}
-                  </h2>
-                  <p className="text-gray-600 text-center mb-8">
-                    {role === 'client' && 'Crea tu cuenta y comienza a planificar tu boda de ensueño'}
-                    {role === 'provider' && 'Crea tu cuenta profesional y conecta con parejas buscando servicios'}
-                    {role === 'admin' && 'Accede al sistema de administración de la plataforma'}
-                  </p>
-                </div>
-              )}
+              <h2 className="text-2xl font-serif mb-4">Registro no disponible</h2>
+              <p className="text-gray-600 mb-8">
+                El registro directo no está disponible. Para solicitar acceso, utilice los formularios de contacto en la página principal.
+              </p>
               
-              <AuthForm initialTab="register" initialRole={role} />
+              <Button 
+                onClick={() => navigate('/')} 
+                className="bg-wedding-navy hover:bg-wedding-navy/90 text-white"
+              >
+                Volver a la página principal
+              </Button>
             </motion.div>
           </div>
         </div>
