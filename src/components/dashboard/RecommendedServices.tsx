@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import ServiceCard from '@/components/ServiceCard';
+import { toast } from "sonner";
 
 interface Service {
   id: string;
@@ -21,11 +22,15 @@ interface RecommendedServicesProps {
 }
 
 const RecommendedServices = ({ services }: RecommendedServicesProps) => {
+  const handleViewAll = () => {
+    toast.success("Navegando a todos los servicios");
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-serif text-2xl font-semibold">Servicios Recomendados</h2>
-        <Link to="/services">
+        <Link to="/services" onClick={handleViewAll}>
           <Button variant="link" className="text-wedding-sage">Ver Todos</Button>
         </Link>
       </div>

@@ -10,6 +10,14 @@ import Register from "./pages/Register";
 import ClientDashboard from "./pages/ClientDashboard";
 import ProviderDashboard from "./pages/ProviderDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import Calendar from "./pages/Calendar";
+import Favorites from "./pages/Favorites";
+import Services from "./pages/Services";
+import Budget from "./pages/Budget";
+import Guests from "./pages/Guests";
+import Notifications from "./pages/Notifications";
+import Settings from "./pages/Settings";
+import Tasks from "./pages/Tasks";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,15 +36,15 @@ const App = () => (
           <Route path="/provider-dashboard" element={<ProviderDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           
-          {/* New routes for client dashboard sections */}
-          <Route path="/calendar" element={<ClientDashboard />} />
-          <Route path="/favorites" element={<ClientDashboard />} />
-          <Route path="/services" element={<ClientDashboard />} />
-          <Route path="/budget" element={<ClientDashboard />} />
-          <Route path="/guests" element={<ClientDashboard />} />
-          <Route path="/notifications" element={<ClientDashboard />} />
-          <Route path="/settings" element={<ClientDashboard />} />
-          <Route path="/tasks" element={<ClientDashboard />} />
+          {/* Client dashboard sections */}
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/budget" element={<Budget />} />
+          <Route path="/guests" element={<Guests />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/tasks" element={<Tasks />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
