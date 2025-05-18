@@ -69,6 +69,9 @@ export default function ProviderForm() {
     form.reset();
   }
 
+  // Determine if the form is inside a dialog (white background) or in the hero section (dark background)
+  const isInDialog = typeof window !== 'undefined' && window.location.hash !== '#contact';
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -77,11 +80,16 @@ export default function ProviderForm() {
           name="companyName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nombre de la empresa</FormLabel>
+              <FormLabel className={!isInDialog ? "text-white" : ""}>Nombre de la empresa</FormLabel>
               <FormControl>
-                <Input placeholder="Tu empresa S.L." id="provider-company-name" {...field} />
+                <Input 
+                  placeholder="Tu empresa S.L." 
+                  id="provider-company-name" 
+                  className={!isInDialog ? "bg-white/20 border-white/30 text-white placeholder:text-white/70" : ""} 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className={!isInDialog ? "text-white/90" : ""} />
             </FormItem>
           )}
         />
@@ -91,22 +99,27 @@ export default function ProviderForm() {
           name="serviceType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tipo de servicio</FormLabel>
+              <FormLabel className={!isInDialog ? "text-white" : ""}>Tipo de servicio</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger id="provider-service-type">
+                  <SelectTrigger 
+                    id="provider-service-type"
+                    className={!isInDialog ? "bg-white/20 border-white/30 text-white" : ""}
+                  >
                     <SelectValue placeholder="Selecciona un tipo de servicio" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
+                  <SelectItem value="lugar">Lugar para celebración</SelectItem>
                   <SelectItem value="fotografia">Fotografía</SelectItem>
                   <SelectItem value="catering">Catering</SelectItem>
                   <SelectItem value="musica">Música</SelectItem>
                   <SelectItem value="decoracion">Decoración</SelectItem>
+                  <SelectItem value="planificacion_completa">Planificación completa</SelectItem>
                   <SelectItem value="otros">Otros</SelectItem>
                 </SelectContent>
               </Select>
-              <FormMessage />
+              <FormMessage className={!isInDialog ? "text-white/90" : ""} />
             </FormItem>
           )}
         />
@@ -117,11 +130,17 @@ export default function ProviderForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className={!isInDialog ? "text-white" : ""}>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="info@tuempresa.com" id="provider-email" {...field} />
+                  <Input 
+                    type="email" 
+                    placeholder="info@tuempresa.com" 
+                    id="provider-email" 
+                    className={!isInDialog ? "bg-white/20 border-white/30 text-white placeholder:text-white/70" : ""} 
+                    {...field} 
+                  />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className={!isInDialog ? "text-white/90" : ""} />
               </FormItem>
             )}
           />
@@ -130,11 +149,17 @@ export default function ProviderForm() {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Teléfono</FormLabel>
+                <FormLabel className={!isInDialog ? "text-white" : ""}>Teléfono</FormLabel>
                 <FormControl>
-                  <Input type="tel" placeholder="912 345 678" id="provider-phone" {...field} />
+                  <Input 
+                    type="tel" 
+                    placeholder="912 345 678" 
+                    id="provider-phone" 
+                    className={!isInDialog ? "bg-white/20 border-white/30 text-white placeholder:text-white/70" : ""} 
+                    {...field} 
+                  />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className={!isInDialog ? "text-white/90" : ""} />
               </FormItem>
             )}
           />
@@ -145,11 +170,16 @@ export default function ProviderForm() {
           name="city"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Ciudad</FormLabel>
+              <FormLabel className={!isInDialog ? "text-white" : ""}>Ciudad</FormLabel>
               <FormControl>
-                <Input placeholder="Madrid" id="provider-city" {...field} />
+                <Input 
+                  placeholder="Madrid" 
+                  id="provider-city" 
+                  className={!isInDialog ? "bg-white/20 border-white/30 text-white placeholder:text-white/70" : ""} 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className={!isInDialog ? "text-white/90" : ""} />
             </FormItem>
           )}
         />
@@ -159,23 +189,23 @@ export default function ProviderForm() {
           name="comments"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Comentarios o servicios ofrecidos</FormLabel>
+              <FormLabel className={!isInDialog ? "text-white" : ""}>Comentarios o servicios ofrecidos</FormLabel>
               <FormControl>
                 <Textarea 
                   placeholder="Describe los servicios que ofreces..." 
-                  className="min-h-[120px] resize-none"
+                  className={`min-h-[120px] resize-none ${!isInDialog ? "bg-white/20 border-white/30 text-white placeholder:text-white/70" : ""}`}
                   id="provider-comments"
                   {...field} 
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className={!isInDialog ? "text-white/90" : ""} />
             </FormItem>
           )}
         />
         
         <Button 
           type="submit" 
-          className="w-full bg-wedding-navy hover:bg-wedding-navy/90 text-white rounded-md"
+          className={`w-full ${!isInDialog ? "bg-white hover:bg-white/90 text-wedding-sage" : "bg-wedding-sage hover:bg-wedding-sage/90 text-white"} rounded-md`}
         >
           Enviar información
         </Button>

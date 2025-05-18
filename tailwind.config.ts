@@ -63,14 +63,14 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Wedding theme colors
+				// Wedding theme colors - updated with more elegant colors
 				wedding: {
-					blush: '#F8D7DA',
-					navy: '#1A365D',
-					gold: '#D4AF37',
-					ivory: '#FFFFF0',
-					sage: '#B2AC88',
-					slate: '#708090',
+					blush: '#F8D7DA', // Keeping this for backward compatibility
+					navy: '#1A365D', // Keeping this for backward compatibility
+					gold: '#D4AF37', // Gold accent color for elegance
+					ivory: '#FFFFF0', // Light background color
+					sage: '#7D8E69', // Main color replacing navy blue
+					slate: '#708090', // Supporting color
 				}
 			},
 			borderRadius: {

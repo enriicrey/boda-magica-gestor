@@ -67,7 +67,7 @@ const Navigation = ({ hideLinks = false }: NavigationProps) => {
       const element = document.getElementById(href.substring(1));
       if (element) {
         // Calculate position with offset for fixed header
-        const headerOffset = 80; // Adjust based on your header height
+        const headerOffset = 100; // Increased offset to avoid overlapping
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
         
@@ -85,14 +85,14 @@ const Navigation = ({ hideLinks = false }: NavigationProps) => {
   
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 py-4 transition-all duration-300 ${
-        scrolled ? 'backdrop-blur-md bg-white/5' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 py-6 transition-all duration-300 ${
+        scrolled ? 'backdrop-blur-md bg-white/10' : 'bg-transparent'
       }`}
     >
       <div className="container-custom flex h-16 items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="flex items-center space-x-2">
-            <span className={`text-2xl font-serif font-normal tracking-wide ${scrolled ? 'text-wedding-navy' : 'text-white'}`}>Wedding<span className="font-light italic">Plan</span></span>
+            <span className={`text-2xl font-serif font-normal tracking-wide ${scrolled ? 'text-wedding-sage' : 'text-white'}`}>Wedding<span className="font-light italic">Plan</span></span>
           </Link>
         </div>
 
@@ -103,7 +103,7 @@ const Navigation = ({ hideLinks = false }: NavigationProps) => {
               <a
                 key={link.name}
                 href={link.href}
-                className={`${scrolled ? 'text-wedding-navy' : 'text-white'} hover:text-wedding-blush font-light tracking-wide transition-colors text-sm uppercase relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-wedding-blush after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left`}
+                className={`${scrolled ? 'text-wedding-sage' : 'text-white'} hover:text-wedding-gold font-light tracking-wide transition-colors text-sm uppercase relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-wedding-gold after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left`}
                 onClick={(e) => handleAnchorClick(e, link.href)}
               >
                 {link.name}
@@ -116,7 +116,7 @@ const Navigation = ({ hideLinks = false }: NavigationProps) => {
         {!hideLinks && !isAuthPage && (
           <div className="hidden md:flex items-center">
             <Link to="/login">
-              <Button variant="ghost" className={`${scrolled ? 'text-wedding-navy hover:bg-wedding-navy/10' : 'text-white hover:bg-white/10'} font-light tracking-wide text-sm uppercase`}>Iniciar sesión</Button>
+              <Button variant="ghost" className={`${scrolled ? 'text-wedding-sage hover:bg-wedding-sage/10' : 'text-white hover:bg-white/10'} font-light tracking-wide text-sm uppercase`}>Iniciar sesión</Button>
             </Link>
           </div>
         )}
@@ -124,7 +124,7 @@ const Navigation = ({ hideLinks = false }: NavigationProps) => {
         {/* Mobile Menu Button - Only show if not on auth page or if hideLinks is false */}
         {!hideLinks && !isAuthPage && (
           <button 
-            className={`md:hidden p-2 ${scrolled ? 'text-wedding-navy' : 'text-white'}`}
+            className={`md:hidden p-2 ${scrolled ? 'text-wedding-sage' : 'text-white'}`}
             onClick={toggleMobileMenu}
             aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
           >
@@ -140,7 +140,7 @@ const Navigation = ({ hideLinks = false }: NavigationProps) => {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-wedding-navy font-light text-base tracking-wide hover:text-wedding-blush transition-colors"
+                  className="text-wedding-sage font-light text-base tracking-wide hover:text-wedding-gold transition-colors"
                   onClick={(e) => {
                     handleAnchorClick(e, link.href);
                     setMobileMenuOpen(false);
@@ -151,7 +151,7 @@ const Navigation = ({ hideLinks = false }: NavigationProps) => {
               ))}
               <div className="flex pt-4 border-t border-gray-100">
                 <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full justify-start text-wedding-navy hover:bg-transparent hover:text-wedding-blush font-light">Iniciar sesión</Button>
+                  <Button variant="ghost" className="w-full justify-start text-wedding-sage hover:bg-transparent hover:text-wedding-gold font-light">Iniciar sesión</Button>
                 </Link>
               </div>
             </div>

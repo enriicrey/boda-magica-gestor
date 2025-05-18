@@ -17,7 +17,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+    <section className="relative min-h-[100vh] flex items-center overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
@@ -29,9 +29,9 @@ const HeroSection = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent" />
       </div>
-      <div className="container-custom relative z-10 text-white">
+      <div className="container-custom relative z-10 text-white pt-20 md:pt-32">
         <div className="max-w-2xl mx-auto md:ml-0">
-          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-6 leading-tight tracking-tight">
+          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light mb-8 leading-tight tracking-tight">
             El día perfecto<br />merece una<br /><span className="font-normal italic">planificación perfecta</span>
           </h1>
           <p className="text-xl md:text-2xl mb-10 opacity-90 font-light">
@@ -41,7 +41,7 @@ const HeroSection = () => {
             {!showClientForm ? (
               <Button 
                 onClick={handleToggleClientForm}
-                className="bg-white text-wedding-navy hover:bg-white/90 text-base px-8 py-6 rounded-md"
+                className="bg-white text-wedding-sage hover:bg-white/90 text-base px-8 py-6 rounded-md"
               >
                 Comenzar como Pareja
               </Button>
@@ -61,7 +61,7 @@ const HeroSection = () => {
                   Unirse como Proveedor
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px]">
+              <DialogContent className="sm:max-w-[600px] p-6 bg-black/5 backdrop-blur-md border border-white/20">
                 <DialogTitle className="font-serif text-2xl font-light mb-2 text-center">
                   Forma parte de nuestra red de proveedores
                 </DialogTitle>
@@ -74,7 +74,7 @@ const HeroSection = () => {
           </div>
           
           {showClientForm && (
-            <div className="mt-10 bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20 animate-fade-in">
+            <div className="mt-10 bg-black/5 backdrop-blur-md p-6 rounded-lg border border-white/20 animate-fade-in">
               <h3 className="font-serif text-2xl font-light mb-4">Solicitar información</h3>
               <ClientForm />
             </div>

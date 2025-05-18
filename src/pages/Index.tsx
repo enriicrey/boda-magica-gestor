@@ -11,10 +11,11 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ProviderForm from '@/components/ProviderForm';
-import ClientForm from './ClientForm';
+import ClientForm from '@/components/ClientForm';
 
 const Index = () => {
-  const [showClientForm, setShowClientForm] = useState(false);
+  // Start with the client form visible by default in the footer
+  const [showClientForm, setShowClientForm] = useState(true);
   
   const featuredVendors = [
     {
@@ -111,7 +112,7 @@ const Index = () => {
           <div className="container-custom">
             <div className="text-center max-w-lg mx-auto mb-12">
               <h2 className="font-serif text-3xl md:text-4xl font-light mb-6">Proveedores Destacados</h2>
-              <div className="w-20 h-[1px] bg-wedding-blush mx-auto mb-6"></div>
+              <div className="w-20 h-[1px] bg-wedding-gold mx-auto mb-6"></div>
               <p className="text-gray-600 font-light leading-relaxed mb-12">
                 Trabaja con los mejores profesionales del sector para hacer realidad la boda de tus sueños.
               </p>
@@ -125,7 +126,7 @@ const Index = () => {
             
             <div className="text-center">
               <Link to="/vendors">
-                <Button variant="outline" className="border-wedding-navy text-wedding-navy hover:bg-wedding-navy hover:text-white rounded-none px-8 py-6">
+                <Button variant="outline" className="border-wedding-sage text-wedding-sage hover:bg-wedding-sage hover:text-white rounded-none px-8 py-6">
                   Ver todos los proveedores
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -138,19 +139,19 @@ const Index = () => {
           <TestimonialsSection />
         </div>
         
-        <section id="contact" className="py-24 bg-wedding-navy text-white">
+        <section id="contact" className="py-24 bg-wedding-sage text-white">
           <div className="container-custom">
             <div className="text-center max-w-xl mx-auto mb-12">
               <h2 className="font-serif text-3xl md:text-4xl font-light mb-6">¿Estás listo para comenzar?</h2>
-              <div className="w-20 h-[1px] bg-wedding-blush mx-auto mb-6"></div>
-              <p className="text-xl mb-12 text-gray-300 font-light">
+              <div className="w-20 h-[1px] bg-wedding-gold mx-auto mb-6"></div>
+              <p className="text-xl mb-12 text-gray-100 font-light">
                 Únete a nuestra plataforma y comienza a planificar la boda de tus sueños hoy mismo.
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-6 mb-16">
+              <div className="flex flex-col sm:flex-row justify-center gap-6 mb-8">
                 {!showClientForm ? (
                   <Button 
                     onClick={handleToggleClientForm}
-                    className="bg-white text-wedding-navy hover:bg-white/90 text-base px-8 py-6 rounded-md"
+                    className="bg-white text-wedding-sage hover:bg-white/90 text-base px-8 py-6 rounded-md"
                   >
                     Comenzar como Pareja
                   </Button>
@@ -170,7 +171,7 @@ const Index = () => {
                       Unirse como Proveedor
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[600px]">
+                  <DialogContent className="sm:max-w-[600px] p-6 bg-black/5 backdrop-blur-md border border-white/20">
                     <DialogTitle className="font-serif text-2xl font-light mb-2 text-center">
                       Forma parte de nuestra red de proveedores
                     </DialogTitle>
@@ -182,12 +183,11 @@ const Index = () => {
                 </Dialog>
               </div>
               
-              {showClientForm && (
-                <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/20 max-w-2xl mx-auto animate-fade-in">
-                  <h3 className="font-serif text-2xl font-light mb-6 text-center">Solicitar información como pareja</h3>
-                  <ClientForm />
-                </div>
-              )}
+              {/* Client form is shown by default in the footer */}
+              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/20 max-w-2xl mx-auto animate-fade-in">
+                <h3 className="font-serif text-2xl font-light mb-6 text-center">Solicitar información como pareja</h3>
+                <ClientForm />
+              </div>
             </div>
           </div>
         </section>
