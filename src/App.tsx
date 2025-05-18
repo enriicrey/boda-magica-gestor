@@ -20,6 +20,16 @@ import Settings from "./pages/Settings";
 import Tasks from "./pages/Tasks";
 import NotFound from "./pages/NotFound";
 
+// Placeholder components para páginas adicionales
+const ProviderCalendar = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Calendario del Proveedor</h1><p>Esta página mostrará el calendario de eventos del proveedor.</p></div>;
+const ProviderServices = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Servicios del Proveedor</h1><p>Esta página permitirá al proveedor gestionar sus servicios.</p></div>;
+const ProviderClients = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Clientes del Proveedor</h1><p>Esta página mostrará la lista de clientes del proveedor.</p></div>;
+const ProviderFinances = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Finanzas del Proveedor</h1><p>Esta página mostrará las finanzas del proveedor.</p></div>;
+const ProviderMessages = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Mensajes del Proveedor</h1><p>Esta página mostrará los mensajes del proveedor.</p></div>;
+const ProviderReviews = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Reseñas del Proveedor</h1><p>Esta página mostrará las reseñas del proveedor.</p></div>;
+const ProviderNotifications = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Notificaciones del Proveedor</h1><p>Esta página mostrará las notificaciones del proveedor.</p></div>;
+const ProviderSettings = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Ajustes del Proveedor</h1><p>Esta página permitirá al proveedor configurar su cuenta.</p></div>;
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -45,6 +55,16 @@ const App = () => (
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/tasks" element={<Tasks />} />
+          
+          {/* Provider dashboard sections */}
+          <Route path="/provider-calendar" element={<ProviderCalendar />} />
+          <Route path="/provider-services" element={<ProviderServices />} />
+          <Route path="/provider-clients" element={<ProviderClients />} />
+          <Route path="/provider-finances" element={<ProviderFinances />} />
+          <Route path="/provider-messages" element={<ProviderMessages />} />
+          <Route path="/provider-reviews" element={<ProviderReviews />} />
+          <Route path="/provider-notifications" element={<ProviderNotifications />} />
+          <Route path="/provider-settings" element={<ProviderSettings />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -1,8 +1,10 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from "sonner";
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -19,6 +21,9 @@ import {
 } from 'recharts';
 
 const ProviderDashboard = () => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("upcoming");
+  
   // Sample data for the chart
   const revenueData = [
     { name: 'Ene', revenue: 2400 },
@@ -78,9 +83,27 @@ const ProviderDashboard = () => {
     },
   ];
 
+  // Handler functions for navigation and button clicks
+  const handleNavigation = (path) => {
+    toast.success(`Navegando a ${path}`);
+    // For demonstration purposes, we'll use setTimeout to simulate navigation
+    setTimeout(() => {
+      navigate(path);
+    }, 500);
+  };
+
+  const handleButtonClick = (action) => {
+    toast.success(`Acción: ${action}`);
+  };
+
+  const handleTabChange = (value) => {
+    setActiveTab(value);
+    toast.info(`Mostrando ${value === 'upcoming' ? 'Eventos Próximos' : value === 'messages' ? 'Mensajes' : 'Reseñas'}`);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <Navigation />
+      <DashboardHeader />
       
       <main className="flex-grow pt-8 pb-16">
         <div className="container-custom">
@@ -122,34 +145,55 @@ const ProviderDashboard = () => {
                 </div>
                 
                 <nav className="space-y-1">
-                  <Link to="/provider-dashboard" className="flex items-center space-x-3 px-3 py-2 bg-wedding-blush/20 text-wedding-navy rounded-md">
+                  <button 
+                    onClick={() => handleNavigation('/provider-dashboard')}
+                    className="w-full flex items-center space-x-3 px-3 py-2 bg-wedding-blush/20 text-wedding-navy rounded-md"
+                  >
                     <Home size={18} />
                     <span>Panel Principal</span>
-                  </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  </button>
+                  <button 
+                    onClick={() => handleNavigation('/provider-calendar')} 
+                    className="w-full flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
+                  >
                     <Calendar size={18} />
                     <span>Calendario</span>
-                  </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  </button>
+                  <button 
+                    onClick={() => handleNavigation('/provider-services')}
+                    className="w-full flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
+                  >
                     <Package size={18} />
                     <span>Mis Servicios</span>
-                  </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  </button>
+                  <button 
+                    onClick={() => handleNavigation('/provider-clients')}
+                    className="w-full flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
+                  >
                     <User size={18} />
                     <span>Clientes</span>
-                  </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  </button>
+                  <button 
+                    onClick={() => handleNavigation('/provider-finances')}
+                    className="w-full flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
+                  >
                     <FileText size={18} />
                     <span>Finanzas</span>
-                  </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  </button>
+                  <button 
+                    onClick={() => handleNavigation('/provider-notifications')}
+                    className="w-full flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
+                  >
                     <Bell size={18} />
                     <span>Notificaciones</span>
-                  </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  </button>
+                  <button 
+                    onClick={() => handleNavigation('/provider-settings')}
+                    className="w-full flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
+                  >
                     <Settings size={18} />
                     <span>Ajustes</span>
-                  </Link>
+                  </button>
                 </nav>
               </div>
             </div>
@@ -266,7 +310,7 @@ const ProviderDashboard = () => {
               </Card>
               
               {/* Tabs Content */}
-              <Tabs defaultValue="upcoming">
+              <Tabs value={activeTab} onValueChange={handleTabChange}>
                 <TabsList className="mb-4">
                   <TabsTrigger value="upcoming">Próximos Eventos</TabsTrigger>
                   <TabsTrigger value="messages">Mensajes</TabsTrigger>
@@ -305,12 +349,24 @@ const ProviderDashboard = () => {
                                   {event.status}
                                 </span>
                               </div>
-                              <Button className="btn-primary mt-2 md:mt-0" size="sm">Ver Detalles</Button>
+                              <Button 
+                                className="btn-primary mt-2 md:mt-0" 
+                                size="sm"
+                                onClick={() => handleButtonClick(`Ver detalles del evento de ${event.client}`)}
+                              >
+                                Ver Detalles
+                              </Button>
                             </div>
                           </div>
                         ))}
                       </div>
-                      <Button variant="outline" className="w-full mt-4">Ver Todos los Eventos</Button>
+                      <Button 
+                        variant="outline" 
+                        className="w-full mt-4"
+                        onClick={() => handleNavigation('/provider-calendar')}
+                      >
+                        Ver Todos los Eventos
+                      </Button>
                     </CardContent>
                   </Card>
                 </TabsContent>
@@ -320,7 +376,11 @@ const ProviderDashboard = () => {
                     <CardContent className="p-4 lg:p-6">
                       <div className="space-y-3">
                         {messages.map((message, index) => (
-                          <div key={index} className={`flex items-center p-3 rounded-lg border ${!message.read ? 'bg-wedding-navy/5 border-wedding-navy/10' : ''}`}>
+                          <button 
+                            key={index} 
+                            className={`w-full text-left flex items-center p-3 rounded-lg border ${!message.read ? 'bg-wedding-navy/5 border-wedding-navy/10' : ''}`}
+                            onClick={() => handleButtonClick(`Leer mensaje de ${message.from}`)}
+                          >
                             <Avatar className="h-10 w-10 mr-4">
                               <AvatarImage src={message.avatar} alt={message.from} />
                               <AvatarFallback>{message.from[0]}</AvatarFallback>
@@ -337,10 +397,16 @@ const ProviderDashboard = () => {
                             {!message.read && (
                               <div className="h-2 w-2 bg-wedding-navy rounded-full ml-2"></div>
                             )}
-                          </div>
+                          </button>
                         ))}
                       </div>
-                      <Button variant="outline" className="w-full mt-4">Ver Todos los Mensajes</Button>
+                      <Button 
+                        variant="outline" 
+                        className="w-full mt-4"
+                        onClick={() => handleNavigation('/provider-messages')}
+                      >
+                        Ver Todos los Mensajes
+                      </Button>
                     </CardContent>
                   </Card>
                 </TabsContent>
@@ -369,13 +435,28 @@ const ProviderDashboard = () => {
                               </div>
                             </div>
                             <p className="text-gray-600 text-sm">{review.comment}</p>
+                            <div className="mt-3 flex justify-end">
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => handleButtonClick(`Responder a la reseña de ${review.client}`)}
+                              >
+                                Responder
+                              </Button>
+                            </div>
                           </div>
                         ))}
                         <div className="text-center p-4 border rounded-lg bg-gray-50">
                           <p className="text-gray-500">No hay más reseñas disponibles.</p>
                         </div>
                       </div>
-                      <Button variant="outline" className="w-full mt-4">Ver Todas las Reseñas</Button>
+                      <Button 
+                        variant="outline" 
+                        className="w-full mt-4"
+                        onClick={() => handleNavigation('/provider-reviews')}
+                      >
+                        Ver Todas las Reseñas
+                      </Button>
                     </CardContent>
                   </Card>
                 </TabsContent>

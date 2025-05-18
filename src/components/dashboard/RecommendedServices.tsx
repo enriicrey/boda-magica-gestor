@@ -26,6 +26,10 @@ const RecommendedServices = ({ services }: RecommendedServicesProps) => {
     toast.success("Navegando a todos los servicios");
   };
 
+  const handleServiceClick = (serviceId: string, serviceTitle: string) => {
+    toast.info(`Viendo detalles de ${serviceTitle}`);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -37,7 +41,9 @@ const RecommendedServices = ({ services }: RecommendedServicesProps) => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {services.map((service) => (
-          <ServiceCard key={service.id} {...service} />
+          <div key={service.id} onClick={() => handleServiceClick(service.id, service.title)}>
+            <ServiceCard {...service} />
+          </div>
         ))}
       </div>
     </div>
