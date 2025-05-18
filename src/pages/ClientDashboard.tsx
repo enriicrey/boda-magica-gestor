@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -27,6 +26,13 @@ const ClientDashboard = () => {
       location: 'Boutique Eleganza',
       address: 'Gran Vía 28, Madrid',
     },
+    {
+      title: 'Visita a Villa Rosa',
+      date: '5 de julio, 2025',
+      time: '16:30 PM', 
+      location: 'Villa Rosa',
+      address: 'Carretera de El Escorial km 5, Madrid',
+    }
   ];
   
   const weddingDate = new Date(2025, 8, 15); // September 15, 2025
@@ -41,6 +47,8 @@ const ClientDashboard = () => {
     { title: 'Enviar invitaciones', completed: false },
     { title: 'Elegir música para la ceremonia', completed: false },
     { title: 'Planificar luna de miel', completed: false },
+    { title: 'Elegir anillos', completed: false },
+    { title: 'Confirmar lista de invitados', completed: false },
   ];
   
   const completedTasks = tasks.filter(task => task.completed).length;
@@ -68,11 +76,29 @@ const ClientDashboard = () => {
       category: 'Música',
       availableDate: '15/09/2025',
     },
+    {
+      id: '3',
+      title: 'Fotografía Premium',
+      provider: 'Carlos Jiménez',
+      image: 'https://images.unsplash.com/photo-1553101872-64e48bfbf309?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      price: '€1,800',
+      priceUnit: 'sesión',
+      category: 'Fotografía',
+      availableDate: '15/09/2025',
+      isPopular: true,
+    },
   ];
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <Navigation />
+      {/* Mini header with only logo */}
+      <header className="bg-white shadow-sm py-3 px-6">
+        <div className="container-custom">
+          <Link to="/" className="flex items-center">
+            <div className="font-serif text-xl font-bold text-wedding-sage">Wedding<span className="text-wedding-gold">Plan</span></div>
+          </Link>
+        </div>
+      </header>
       
       <main className="flex-grow pt-8 pb-16">
         <div className="container-custom">
@@ -98,35 +124,35 @@ const ClientDashboard = () => {
                 </div>
                 
                 <nav className="space-y-1">
-                  <Link to="/client-dashboard" className="flex items-center space-x-3 px-3 py-2 bg-wedding-blush/20 text-wedding-navy rounded-md">
+                  <Link to="/client-dashboard" className="flex items-center space-x-3 px-3 py-2 bg-wedding-blush/20 text-wedding-sage rounded-md">
                     <Home size={18} />
                     <span>Panel Principal</span>
                   </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  <Link to="/calendar" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
                     <Calendar size={18} />
                     <span>Calendario</span>
                   </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  <Link to="/favorites" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
                     <Heart size={18} />
                     <span>Favoritos</span>
                   </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  <Link to="/services" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
                     <Package size={18} />
                     <span>Mis Servicios</span>
                   </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  <Link to="/budget" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
                     <FileText size={18} />
                     <span>Presupuesto</span>
                   </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  <Link to="/guests" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
                     <User size={18} />
                     <span>Invitados</span>
                   </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  <Link to="/notifications" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
                     <Bell size={18} />
                     <span>Notificaciones</span>
                   </Link>
-                  <Link to="#" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                  <Link to="/settings" className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
                     <Settings size={18} />
                     <span>Ajustes</span>
                   </Link>
@@ -136,13 +162,13 @@ const ClientDashboard = () => {
             
             {/* Main Content */}
             <div className="lg:w-3/4 space-y-6">
-              <Card className="border-wedding-navy/10">
-                <CardHeader className="bg-wedding-navy/5">
+              <Card className="border-wedding-sage/10">
+                <CardHeader className="bg-wedding-sage/5">
                   <div className="flex justify-between items-center">
-                    <CardTitle className="font-serif text-2xl text-wedding-navy">
+                    <CardTitle className="font-serif text-2xl text-wedding-sage">
                       ¡Hola, María!
                     </CardTitle>
-                    <div className="bg-wedding-navy text-white px-4 py-2 rounded-md flex items-center">
+                    <div className="bg-wedding-sage text-white px-4 py-2 rounded-md flex items-center">
                       <Calendar className="h-4 w-4 mr-2" />
                       <span className="font-medium">{daysUntilWedding} días</span>
                       <span className="ml-2 opacity-80 text-sm">para tu boda</span>
@@ -163,7 +189,7 @@ const ClientDashboard = () => {
                         {upcomingEvents.map((event, index) => (
                           <div key={index} className="flex border rounded-md p-4 hover:bg-gray-50">
                             <div className="mr-4 bg-wedding-blush/20 h-14 w-14 rounded-full flex items-center justify-center">
-                              <Calendar className="h-6 w-6 text-wedding-navy" />
+                              <Calendar className="h-6 w-6 text-wedding-sage" />
                             </div>
                             <div>
                               <h3 className="font-medium text-lg">{event.title}</h3>
@@ -188,7 +214,7 @@ const ClientDashboard = () => {
                       <div className="space-y-2">
                         {tasks.map((task, index) => (
                           <div key={index} className={`flex items-center p-3 rounded-md ${task.completed ? 'bg-gray-50' : 'bg-white'}`}>
-                            <div className={`h-5 w-5 rounded-full border flex items-center justify-center mr-3 ${task.completed ? 'bg-wedding-navy border-wedding-navy' : 'border-gray-300'}`}>
+                            <div className={`h-5 w-5 rounded-full border flex items-center justify-center mr-3 ${task.completed ? 'bg-wedding-sage border-wedding-sage' : 'border-gray-300'}`}>
                               {task.completed && <Check className="h-3 w-3 text-white" />}
                             </div>
                             <span className={task.completed ? 'line-through text-gray-500' : ''}>
@@ -209,11 +235,11 @@ const ClientDashboard = () => {
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="font-serif text-2xl font-semibold">Servicios Recomendados</h2>
                   <Link to="/services">
-                    <Button variant="link" className="text-wedding-navy">Ver Todos</Button>
+                    <Button variant="link" className="text-wedding-sage">Ver Todos</Button>
                   </Link>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {recommendedServices.map((service) => (
                     <ServiceCard key={service.id} {...service} />
                   ))}
@@ -228,8 +254,8 @@ const ClientDashboard = () => {
                   <div className="space-y-4">
                     <div className="flex justify-between items-center p-3 border rounded-md">
                       <div className="flex items-center">
-                        <div className="h-10 w-10 bg-wedding-navy/10 rounded-md flex items-center justify-center mr-4">
-                          <Home className="h-5 w-5 text-wedding-navy" />
+                        <div className="h-10 w-10 bg-wedding-sage/10 rounded-md flex items-center justify-center mr-4">
+                          <Home className="h-5 w-5 text-wedding-sage" />
                         </div>
                         <div>
                           <p className="font-medium">Villa Rosa - Segundo Pago</p>
@@ -238,14 +264,14 @@ const ClientDashboard = () => {
                       </div>
                       <div className="text-right">
                         <p className="font-medium">€3,000</p>
-                        <Button size="sm" className="btn-primary mt-1">Pagar</Button>
+                        <Button size="sm" className="bg-wedding-sage hover:bg-wedding-sage/90 text-white mt-1">Pagar</Button>
                       </div>
                     </div>
                     
                     <div className="flex justify-between items-center p-3 border rounded-md">
                       <div className="flex items-center">
-                        <div className="h-10 w-10 bg-wedding-navy/10 rounded-md flex items-center justify-center mr-4">
-                          <Camera className="h-5 w-5 text-wedding-navy" />
+                        <div className="h-10 w-10 bg-wedding-sage/10 rounded-md flex items-center justify-center mr-4">
+                          <Camera className="h-5 w-5 text-wedding-sage" />
                         </div>
                         <div>
                           <p className="font-medium">Carlos Jiménez Fotografía</p>
@@ -254,7 +280,7 @@ const ClientDashboard = () => {
                       </div>
                       <div className="text-right">
                         <p className="font-medium">€800</p>
-                        <Button size="sm" className="btn-primary mt-1">Pagar</Button>
+                        <Button size="sm" className="bg-wedding-sage hover:bg-wedding-sage/90 text-white mt-1">Pagar</Button>
                       </div>
                     </div>
                   </div>

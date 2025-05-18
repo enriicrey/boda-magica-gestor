@@ -27,6 +27,17 @@ const App = () => (
           <Route path="/client-dashboard" element={<ClientDashboard />} />
           <Route path="/provider-dashboard" element={<ProviderDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          
+          {/* New routes for client dashboard sections */}
+          <Route path="/calendar" element={<ClientDashboard />} />
+          <Route path="/favorites" element={<ClientDashboard />} />
+          <Route path="/services" element={<ClientDashboard />} />
+          <Route path="/budget" element={<ClientDashboard />} />
+          <Route path="/guests" element={<ClientDashboard />} />
+          <Route path="/notifications" element={<ClientDashboard />} />
+          <Route path="/settings" element={<ClientDashboard />} />
+          <Route path="/tasks" element={<ClientDashboard />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

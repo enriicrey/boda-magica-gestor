@@ -1,10 +1,6 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import ContactForm from './ContactForm';
-import ProviderForm from './ProviderForm';
-import { DialogTitle } from '@/components/ui/dialog';
 import { useNavigate } from 'react-router-dom';
 import ClientForm from './ClientForm';
 
@@ -14,6 +10,19 @@ const HeroSection = () => {
   
   const handleToggleClientForm = () => {
     setShowClientForm(!showClientForm);
+  };
+
+  const scrollToContactSection = (formType: 'client' | 'provider') => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+      
+      // Set the appropriate tab in the contact section
+      const event = new CustomEvent('setActiveForm', { 
+        detail: { formType } 
+      });
+      document.dispatchEvent(event);
+    }
   };
 
   return (
@@ -38,39 +47,19 @@ const HeroSection = () => {
             Conectamos parejas con los mejores proveedores de servicios para bodas, creando experiencias memorables.
           </p>
           <div className="flex flex-col sm:flex-row gap-6">
-            {!showClientForm ? (
-              <Button 
-                onClick={handleToggleClientForm}
-                className="bg-white text-wedding-sage hover:bg-white/90 text-base px-8 py-6 rounded-md"
-              >
-                Comenzar como Pareja
-              </Button>
-            ) : (
-              <Button 
-                onClick={handleToggleClientForm}
-                variant="outline"
-                className="border border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-md"
-              >
-                Cerrar formulario
-              </Button>
-            )}
-            
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="border border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-md">
-                  Unirse como Proveedor
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px] p-6 bg-black/5 backdrop-blur-md border border-white/20">
-                <DialogTitle className="font-serif text-2xl font-light mb-2 text-center">
-                  Forma parte de nuestra red de proveedores
-                </DialogTitle>
-                <p className="text-muted-foreground text-center mb-6">
-                  Completa el formulario y te contactaremos para discutir cómo puedes ofrecer tus servicios a nuestras parejas.
-                </p>
-                <ProviderForm />
-              </DialogContent>
-            </Dialog>
+            <Button 
+              onClick={() => scrollToContactSection('client')}
+              className="bg-white text-wedding-sage hover:bg-white/90 text-base px-8 py-6 rounded-md"
+            >
+              Comenzar como Pareja
+            </Button>
+            <Button 
+              onClick={() => scrollToContactSection('provider')}
+              variant="outline" 
+              className="border border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-md"
+            >
+              Unirse como Proveedor
+            </Button>
           </div>
           
           {showClientForm && (

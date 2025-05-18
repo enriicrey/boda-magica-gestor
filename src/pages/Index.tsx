@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
@@ -9,13 +9,27 @@ import VendorCard from '@/components/VendorCard';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ProviderForm from '@/components/ProviderForm';
 import ClientForm from '@/components/ClientForm';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Index = () => {
   // Start with the client form visible by default in the footer
   const [showClientForm, setShowClientForm] = useState(true);
+  const [activeForm, setActiveForm] = useState<'client' | 'provider'>('client');
+  
+  useEffect(() => {
+    // Listen for the custom event to set the active form
+    const handleSetActiveForm = (event: CustomEvent<{formType: 'client' | 'provider'}>) => {
+      setActiveForm(event.detail.formType);
+    };
+    
+    document.addEventListener('setActiveForm', handleSetActiveForm as EventListener);
+    
+    return () => {
+      document.removeEventListener('setActiveForm', handleSetActiveForm as EventListener);
+    };
+  }, []);
   
   const featuredVendors = [
     {
@@ -35,7 +49,7 @@ const Index = () => {
       id: '2',
       name: 'Carlos Jiménez Fotografía',
       category: 'Fotografía',
-      image: 'https://images.unsplash.com/photo-1551854716-8b811be39e7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      image: 'https://images.unsplash.com/photo-1553101872-64e48bfbf309?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
       rating: 4.8,
       reviewCount: 87,
       location: 'Barcelona, España',
@@ -47,7 +61,7 @@ const Index = () => {
       id: '3',
       name: 'Dulce Tentación - Pastelería',
       category: 'Catering',
-      image: 'https://images.unsplash.com/photo-1623170075680-22c6145fdf44?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      image: 'https://images.unsplash.com/photo-1535254973379-9e872211821b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
       rating: 4.7,
       reviewCount: 56,
       location: 'Valencia, España',
@@ -92,10 +106,6 @@ const Index = () => {
       price: 'Desde €500',
     }
   ];
-
-  const handleToggleClientForm = () => {
-    setShowClientForm(!showClientForm);
-  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -147,47 +157,30 @@ const Index = () => {
               <p className="text-xl mb-12 text-gray-100 font-light">
                 Únete a nuestra plataforma y comienza a planificar la boda de tus sueños hoy mismo.
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-6 mb-8">
-                {!showClientForm ? (
-                  <Button 
-                    onClick={handleToggleClientForm}
-                    className="bg-white text-wedding-sage hover:bg-white/90 text-base px-8 py-6 rounded-md"
-                  >
-                    Comenzar como Pareja
-                  </Button>
-                ) : (
-                  <Button 
-                    onClick={handleToggleClientForm}
-                    variant="outline"
-                    className="border border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-md"
-                  >
-                    Cerrar formulario
-                  </Button>
-                )}
+              
+              <Tabs defaultValue={activeForm} value={activeForm} onValueChange={(value) => setActiveForm(value as 'client' | 'provider')} className="w-full mb-8">
+                <TabsList className="grid grid-cols-2 mb-6">
+                  <TabsTrigger value="client">Comenzar como Pareja</TabsTrigger>
+                  <TabsTrigger value="provider">Unirse como Proveedor</TabsTrigger>
+                </TabsList>
+              
+                <TabsContent value="client" className="animate-fade-in">
+                  <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/20 max-w-2xl mx-auto">
+                    <h3 className="font-serif text-2xl font-light mb-6 text-center">Solicitar información como pareja</h3>
+                    <ClientForm />
+                  </div>
+                </TabsContent>
                 
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="border border-white bg-transparent hover:bg-white/10 text-white text-base px-8 py-6 rounded-md">
-                      Unirse como Proveedor
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[600px] p-6 bg-black/5 backdrop-blur-md border border-white/20">
-                    <DialogTitle className="font-serif text-2xl font-light mb-2 text-center">
-                      Forma parte de nuestra red de proveedores
-                    </DialogTitle>
-                    <p className="text-muted-foreground text-center mb-6">
+                <TabsContent value="provider" className="animate-fade-in">
+                  <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/20 max-w-2xl mx-auto">
+                    <h3 className="font-serif text-2xl font-light mb-6 text-center">Forma parte de nuestra red de proveedores</h3>
+                    <p className="text-white/80 text-center mb-6">
                       Completa el formulario y te contactaremos para discutir cómo puedes ofrecer tus servicios a nuestras parejas.
                     </p>
                     <ProviderForm />
-                  </DialogContent>
-                </Dialog>
-              </div>
-              
-              {/* Client form is shown by default in the footer */}
-              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg border border-white/20 max-w-2xl mx-auto animate-fade-in">
-                <h3 className="font-serif text-2xl font-light mb-6 text-center">Solicitar información como pareja</h3>
-                <ClientForm />
-              </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
         </section>

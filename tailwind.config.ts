@@ -63,13 +63,13 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Wedding theme colors - updated with more elegant colors
+				// Wedding theme colors - updated with elegant green palette
 				wedding: {
 					blush: '#F8D7DA', // Keeping this for backward compatibility
-					navy: '#1A365D', // Keeping this for backward compatibility
+					navy: '#1A365D', // Keeping this for backward compatibility, but will use sage instead
 					gold: '#D4AF37', // Gold accent color for elegance
 					ivory: '#FFFFF0', // Light background color
-					sage: '#7D8E69', // Main color replacing navy blue
+					sage: '#7D8E69', // Main color replacing navy blue (elegant green)
 					slate: '#708090', // Supporting color
 				}
 			},
