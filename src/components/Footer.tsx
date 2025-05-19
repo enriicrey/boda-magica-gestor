@@ -2,13 +2,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Mail, Phone, MapPin } from 'lucide-react';
-import { toast } from "sonner";
 
 const Footer = () => {
-  const handleServiceClick = (category: string) => {
-    toast.info(`Navegando a servicios de ${category}`);
-  };
-
   return (
     <footer className="bg-wedding-sage text-white pt-16 pb-8">
       <div className="container-custom">
@@ -54,51 +49,11 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-serif font-semibold">Servicios</h3>
             <ul className="space-y-2">
-              <li>
-                <Link 
-                  to="/vendors?category=venue" 
-                  className="text-gray-200 hover:text-wedding-ivory transition-colors"
-                  onClick={() => handleServiceClick('Lugares para Bodas')}
-                >
-                  Lugares para Bodas
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/vendors?category=catering" 
-                  className="text-gray-200 hover:text-wedding-ivory transition-colors"
-                  onClick={() => handleServiceClick('Catering')}
-                >
-                  Catering
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/vendors?category=photography" 
-                  className="text-gray-200 hover:text-wedding-ivory transition-colors"
-                  onClick={() => handleServiceClick('Fotografía')}
-                >
-                  Fotografía
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/vendors?category=music" 
-                  className="text-gray-200 hover:text-wedding-ivory transition-colors"
-                  onClick={() => handleServiceClick('Música y Entretenimiento')}
-                >
-                  Música y Entretenimiento
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/vendors?category=decoration" 
-                  className="text-gray-200 hover:text-wedding-ivory transition-colors"
-                  onClick={() => handleServiceClick('Decoración')}
-                >
-                  Decoración
-                </Link>
-              </li>
+              <li><a href="#" className="text-gray-200 hover:text-wedding-ivory transition-colors">Lugares para Bodas</a></li>
+              <li><a href="#" className="text-gray-200 hover:text-wedding-ivory transition-colors">Catering</a></li>
+              <li><a href="#" className="text-gray-200 hover:text-wedding-ivory transition-colors">Fotografía</a></li>
+              <li><a href="#" className="text-gray-200 hover:text-wedding-ivory transition-colors">Música y Entretenimiento</a></li>
+              <li><a href="#" className="text-gray-200 hover:text-wedding-ivory transition-colors">Decoración</a></li>
             </ul>
           </div>
           
