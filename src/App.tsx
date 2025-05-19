@@ -31,6 +31,12 @@ const ProviderReviews = () => <div className="p-8"><h1 className="text-2xl font-
 const ProviderNotifications = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Notificaciones del Proveedor</h1><p>Esta página mostrará las notificaciones del proveedor.</p></div>;
 const ProviderSettings = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Ajustes del Proveedor</h1><p>Esta página permitirá al proveedor configurar su cuenta.</p></div>;
 
+// Admin dashboard placeholder sections
+const AdminUsers = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Gestión de Usuarios</h1><p>Esta sección permite administrar todos los usuarios de la plataforma.</p></div>;
+const AdminServices = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Gestión de Servicios</h1><p>Administrar los servicios disponibles en la plataforma.</p></div>;
+const AdminReports = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Informes y Estadísticas</h1><p>Ver informes detallados del uso de la plataforma.</p></div>;
+const AdminSettings = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Configuración de la Plataforma</h1><p>Ajustar la configuración general de la aplicación.</p></div>;
+
 // Páginas para detalles de servicio
 const ServiceDetail = () => {
   return (
@@ -77,6 +83,12 @@ const App = () => (
           <Route path="/provider-reviews" element={<ProviderReviews />} />
           <Route path="/provider-notifications" element={<ProviderNotifications />} />
           <Route path="/provider-settings" element={<ProviderSettings />} />
+          
+          {/* Admin dashboard sections */}
+          <Route path="/admin-users" element={<AdminUsers />} />
+          <Route path="/admin-services" element={<AdminServices />} />
+          <Route path="/admin-reports" element={<AdminReports />} />
+          <Route path="/admin-settings" element={<AdminSettings />} />
           
           {/* Vendor pages */}
           <Route path="/vendors" element={<Vendors />} />

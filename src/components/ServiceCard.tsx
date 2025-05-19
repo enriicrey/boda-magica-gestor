@@ -1,9 +1,11 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from "sonner";
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Heart } from 'lucide-react';
 
 interface ServiceCardProps {
   id: string;
@@ -15,6 +17,7 @@ interface ServiceCardProps {
   category: string;
   isPopular?: boolean;
   availableDate?: string;
+  isFavorite?: boolean;
 }
 
 const ServiceCard = ({
@@ -27,11 +30,20 @@ const ServiceCard = ({
   category,
   isPopular,
   availableDate,
+  isFavorite = false,
 }: ServiceCardProps) => {
   const [imageError, setImageError] = useState(false);
+  const [favorite, setFavorite] = useState(isFavorite);
   
   const handleImageError = () => {
     setImageError(true);
+  };
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setFavorite(!favorite);
+    toast.success(favorite ? `${title} eliminado de favoritos` : `${title} añadido a favoritos`);
   };
 
   return (
@@ -47,10 +59,18 @@ const ServiceCard = ({
           {category}
         </Badge>
         {isPopular && (
-          <Badge className="absolute top-3 right-3 bg-wedding-navy text-white">
+          <Badge className="absolute top-3 right-12 bg-wedding-navy text-white">
             Popular
           </Badge>
         )}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className={`absolute top-3 right-3 bg-white/90 hover:bg-white ${favorite ? 'text-wedding-sage' : 'text-gray-400'} rounded-full`}
+          onClick={toggleFavorite}
+        >
+          <Heart className={`h-4 w-4 ${favorite ? 'fill-wedding-sage' : ''}`} />
+        </Button>
       </div>
       <CardContent className="p-5 flex flex-col h-[calc(100%-176px)]">
         <h3 className="font-serif text-lg font-semibold mb-1 line-clamp-1">{title}</h3>
@@ -68,7 +88,7 @@ const ServiceCard = ({
             <span className="text-gray-500 text-xs ml-1">{priceUnit}</span>
           </div>
           <Link to={`/services/${id}`}>
-            <Button className="btn-primary" size="sm">Reservar</Button>
+            <Button className="bg-wedding-sage hover:bg-wedding-sage/90 text-white" size="sm">Reservar</Button>
           </Link>
         </div>
       </CardContent>

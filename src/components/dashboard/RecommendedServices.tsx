@@ -15,6 +15,7 @@ interface Service {
   category: string;
   isPopular?: boolean;
   availableDate?: string;
+  isFavorite?: boolean;
 }
 
 interface RecommendedServicesProps {
