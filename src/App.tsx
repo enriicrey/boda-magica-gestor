@@ -19,6 +19,7 @@ import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
 import Tasks from "./pages/Tasks";
 import NotFound from "./pages/NotFound";
+import Vendors from "./pages/Vendors";
 
 // Placeholder components para páginas adicionales
 const ProviderCalendar = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Calendario del Proveedor</h1><p>Esta página mostrará el calendario de eventos del proveedor.</p></div>;
@@ -29,6 +30,16 @@ const ProviderMessages = () => <div className="p-8"><h1 className="text-2xl font
 const ProviderReviews = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Reseñas del Proveedor</h1><p>Esta página mostrará las reseñas del proveedor.</p></div>;
 const ProviderNotifications = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Notificaciones del Proveedor</h1><p>Esta página mostrará las notificaciones del proveedor.</p></div>;
 const ProviderSettings = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Ajustes del Proveedor</h1><p>Esta página permitirá al proveedor configurar su cuenta.</p></div>;
+
+// Páginas para detalles de servicio
+const ServiceDetail = () => {
+  return (
+    <div className="p-8">
+      <h1 className="text-2xl font-serif mb-4">Detalle del Servicio</h1>
+      <p>Esta página mostrará información detallada de un servicio específico.</p>
+    </div>
+  );
+};
 
 const queryClient = new QueryClient();
 
@@ -50,6 +61,7 @@ const App = () => (
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/:id" element={<ServiceDetail />} />
           <Route path="/budget" element={<Budget />} />
           <Route path="/guests" element={<Guests />} />
           <Route path="/notifications" element={<Notifications />} />
@@ -65,6 +77,10 @@ const App = () => (
           <Route path="/provider-reviews" element={<ProviderReviews />} />
           <Route path="/provider-notifications" element={<ProviderNotifications />} />
           <Route path="/provider-settings" element={<ProviderSettings />} />
+          
+          {/* Vendor pages */}
+          <Route path="/vendors" element={<Vendors />} />
+          <Route path="/vendors/:id" element={<ServiceDetail />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

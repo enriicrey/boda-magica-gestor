@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,13 +28,20 @@ const ServiceCard = ({
   isPopular,
   availableDate,
 }: ServiceCardProps) => {
+  const [imageError, setImageError] = useState(false);
+  
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   return (
     <Card className="overflow-hidden hover:shadow-md transition-all h-full">
       <div className="relative">
         <img 
-          src={image} 
+          src={imageError ? 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' : image} 
           alt={title} 
           className="w-full h-44 object-cover"
+          onError={handleImageError}
         />
         <Badge className="absolute top-3 left-3 bg-white/90 text-wedding-navy">
           {category}

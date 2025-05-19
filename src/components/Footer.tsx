@@ -49,11 +49,11 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-serif font-semibold">Servicios</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-200 hover:text-wedding-ivory transition-colors">Lugares para Bodas</a></li>
-              <li><a href="#" className="text-gray-200 hover:text-wedding-ivory transition-colors">Catering</a></li>
-              <li><a href="#" className="text-gray-200 hover:text-wedding-ivory transition-colors">Fotografía</a></li>
-              <li><a href="#" className="text-gray-200 hover:text-wedding-ivory transition-colors">Música y Entretenimiento</a></li>
-              <li><a href="#" className="text-gray-200 hover:text-wedding-ivory transition-colors">Decoración</a></li>
+              <li><Link to="/vendors?categoria=Lugar" className="text-gray-200 hover:text-wedding-ivory transition-colors">Lugares para Bodas</Link></li>
+              <li><Link to="/vendors?categoria=Catering" className="text-gray-200 hover:text-wedding-ivory transition-colors">Catering</Link></li>
+              <li><Link to="/vendors?categoria=Fotografía" className="text-gray-200 hover:text-wedding-ivory transition-colors">Fotografía</Link></li>
+              <li><Link to="/vendors?categoria=Música" className="text-gray-200 hover:text-wedding-ivory transition-colors">Música y Entretenimiento</Link></li>
+              <li><Link to="/vendors?categoria=Decoración" className="text-gray-200 hover:text-wedding-ivory transition-colors">Decoración</Link></li>
             </ul>
           </div>
           
