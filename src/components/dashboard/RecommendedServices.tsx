@@ -31,8 +31,8 @@ const RecommendedServices = ({ services }: RecommendedServicesProps) => {
   };
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
+    <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="flex justify-between items-center mb-6">
         <h2 className="font-serif text-2xl font-semibold">Servicios Recomendados</h2>
         <Link to="/services" onClick={handleViewAll}>
           <Button variant="link" className="text-wedding-sage">Ver Todos</Button>
