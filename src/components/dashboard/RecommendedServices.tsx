@@ -40,11 +40,30 @@ const RecommendedServices = ({ services }: RecommendedServicesProps) => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map((service) => (
-          <div key={service.id} onClick={() => handleServiceClick(service.id, service.title)}>
-            <ServiceCard {...service} />
-          </div>
-        ))}
+        {services.length > 0 ? (
+          services.map((service) => (
+            <div key={service.id} onClick={() => handleServiceClick(service.id, service.title)}>
+              <ServiceCard {...service} />
+            </div>
+          ))
+        ) : (
+          // Servicios de respaldo en caso de que no se proporcionen servicios
+          [1, 2, 3].map((i) => (
+            <div key={i}>
+              <ServiceCard 
+                id={`backup-${i}`}
+                title={`Servicio de Ejemplo ${i}`}
+                provider="Proveedor Premium"
+                image={`https://images.unsplash.com/photo-${1520400485-${i}6247a8b1-1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80`}
+                price={`${(i * 500).toLocaleString()}`}
+                priceUnit="€"
+                category={i === 1 ? "Fotografía" : i === 2 ? "Catering" : "Decoración"}
+                isPopular={i === 1}
+                availableDate={i === 2 ? "próximamente" : undefined}
+              />
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

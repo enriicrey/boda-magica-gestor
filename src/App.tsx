@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Calendar from "./pages/Calendar";
 import Favorites from "./pages/Favorites";
 import Services from "./pages/Services";
+import Vendors from "./pages/Vendors";
 import Budget from "./pages/Budget";
 import Guests from "./pages/Guests";
 import Notifications from "./pages/Notifications";
@@ -29,6 +30,12 @@ const ProviderMessages = () => <div className="p-8"><h1 className="text-2xl font
 const ProviderReviews = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Reseñas del Proveedor</h1><p>Esta página mostrará las reseñas del proveedor.</p></div>;
 const ProviderNotifications = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Notificaciones del Proveedor</h1><p>Esta página mostrará las notificaciones del proveedor.</p></div>;
 const ProviderSettings = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Ajustes del Proveedor</h1><p>Esta página permitirá al proveedor configurar su cuenta.</p></div>;
+
+// Placeholders para páginas de contenido estático
+const PrivacyPage = () => <div className="p-8 pt-32 min-h-screen"><h1 className="text-3xl font-serif mb-4">Política de Privacidad</h1><p className="mb-4">Esta página contiene nuestra política de privacidad.</p></div>;
+const TermsPage = () => <div className="p-8 pt-32 min-h-screen"><h1 className="text-3xl font-serif mb-4">Términos y Condiciones</h1><p className="mb-4">Esta página contiene nuestros términos y condiciones.</p></div>;
+const CookiesPage = () => <div className="p-8 pt-32 min-h-screen"><h1 className="text-3xl font-serif mb-4">Política de Cookies</h1><p className="mb-4">Esta página contiene nuestra política de cookies.</p></div>;
+const AboutPage = () => <div className="p-8 pt-32 min-h-screen"><h1 className="text-3xl font-serif mb-4">Sobre Nosotros</h1><p className="mb-4">Esta página contiene información sobre nuestra empresa.</p></div>;
 
 const queryClient = new QueryClient();
 
@@ -50,6 +57,7 @@ const App = () => (
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/vendors" element={<Vendors />} />
           <Route path="/budget" element={<Budget />} />
           <Route path="/guests" element={<Guests />} />
           <Route path="/notifications" element={<Notifications />} />
@@ -65,6 +73,12 @@ const App = () => (
           <Route path="/provider-reviews" element={<ProviderReviews />} />
           <Route path="/provider-notifications" element={<ProviderNotifications />} />
           <Route path="/provider-settings" element={<ProviderSettings />} />
+          
+          {/* Páginas de contenido estático */}
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/cookies" element={<CookiesPage />} />
+          <Route path="/about" element={<AboutPage />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

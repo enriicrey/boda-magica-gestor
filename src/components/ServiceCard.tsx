@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { toast } from "sonner";
 
 interface ServiceCardProps {
   id: string;
@@ -28,13 +29,26 @@ const ServiceCard = ({
   isPopular,
   availableDate,
 }: ServiceCardProps) => {
+  const handleServiceClick = () => {
+    toast.info(`Explorando servicio: ${title}`);
+  };
+
+  const handleBookingClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toast.success(`Reservando ${title}`);
+  };
+
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-all h-full">
+    <Card className="overflow-hidden hover:shadow-md transition-all h-full cursor-pointer" onClick={handleServiceClick}>
       <div className="relative">
         <img 
-          src={image} 
+          src={image || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"} 
           alt={title} 
           className="w-full h-44 object-cover"
+          onError={(e) => {
+            e.currentTarget.src = "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
+          }}
         />
         <Badge className="absolute top-3 left-3 bg-white/90 text-wedding-navy">
           {category}
@@ -60,8 +74,8 @@ const ServiceCard = ({
             <span className="text-wedding-navy text-lg">{price}</span>
             <span className="text-gray-500 text-xs ml-1">{priceUnit}</span>
           </div>
-          <Link to={`/services/${id}`}>
-            <Button className="btn-primary" size="sm">Reservar</Button>
+          <Link to={`/services/${id}`} onClick={handleBookingClick}>
+            <Button className="bg-wedding-sage hover:bg-wedding-sage/90 text-white" size="sm">Reservar</Button>
           </Link>
         </div>
       </CardContent>
