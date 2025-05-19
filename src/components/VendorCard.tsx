@@ -1,10 +1,9 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'sonner';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Star, MapPin, Check, Heart } from 'lucide-react';
+import { Star, MapPin, Check } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface VendorCardProps {
@@ -34,45 +33,22 @@ const VendorCard = ({
   description,
   price,
 }: VendorCardProps) => {
-  const [imageError, setImageError] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-  
-  const handleImageError = () => {
-    setImageError(true);
-  };
-  
-  const handleToggleFavorite = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsFavorite(!isFavorite);
-    toast.success(isFavorite ? `${name} eliminado de favoritos` : `${name} añadido a favoritos`);
-  };
-
   return (
     <Card className={`overflow-hidden hover:shadow-md transition-all border-0 shadow-sm ${isFeatured ? 'ring-1 ring-wedding-gold' : ''}`}>
       <div className="relative">
         <img 
-          src={imageError ? 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' : image}
+          src={image} 
           alt={name} 
           className="w-full h-64 object-cover"
-          onError={handleImageError}
         />
         {isFeatured && (
-          <Badge className="absolute top-3 right-12 bg-wedding-gold text-white border-0 font-light uppercase text-xs tracking-wider py-1">
+          <Badge className="absolute top-3 right-3 bg-wedding-gold text-white border-0 font-light uppercase text-xs tracking-wider py-1">
             Destacado
           </Badge>
         )}
         <Badge className="absolute top-3 left-3 bg-white/90 text-wedding-navy border-0 font-light uppercase text-xs tracking-wider py-1">
           {category}
         </Badge>
-        <Button
-          variant="ghost"
-          size="icon"
-          className={`absolute top-3 right-3 bg-white/90 hover:bg-white ${isFavorite ? 'text-wedding-sage' : 'text-gray-400'} rounded-full`}
-          onClick={handleToggleFavorite}
-        >
-          <Heart className={`h-4 w-4 ${isFavorite ? 'fill-wedding-sage' : ''}`} />
-        </Button>
       </div>
       <CardContent className="p-8">
         <div className="flex justify-between items-start mb-2">
@@ -103,7 +79,7 @@ const VendorCard = ({
             <span className="text-wedding-navy">{price}</span>
           </div>
           <Link to={`/vendors/${id}`}>
-            <Button className="bg-wedding-sage hover:bg-wedding-sage/90 text-white">Ver Detalles</Button>
+            <Button variant="ghost" className="underline text-wedding-navy hover:no-underline hover:bg-wedding-navy/5">Ver Detalles</Button>
           </Link>
         </div>
       </CardContent>
