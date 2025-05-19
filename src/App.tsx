@@ -78,7 +78,7 @@ const App = () => (
           <Route path="/provider-notifications" element={<ProviderNotifications />} />
           <Route path="/provider-settings" element={<ProviderSettings />} />
           
-          {/* Vendor pages */}
+          {/* Vendor Catalog pages */}
           <Route path="/vendors" element={<Vendors />} />
           <Route path="/vendors/:id" element={<ServiceDetail />} />
           

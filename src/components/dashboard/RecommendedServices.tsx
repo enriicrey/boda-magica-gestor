@@ -35,13 +35,17 @@ const RecommendedServices = ({ services }: RecommendedServicesProps) => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="font-serif text-2xl font-semibold">Servicios Recomendados</h2>
         <Link to="/services" onClick={handleViewAll}>
-          <Button variant="link" className="text-wedding-sage">Ver Todos</Button>
+          <Button variant="link" className="text-wedding-sage">Ver Catálogo</Button>
         </Link>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {services.map((service) => (
-          <div key={service.id} onClick={() => handleServiceClick(service.id, service.title)}>
+          <div 
+            key={service.id} 
+            onClick={() => handleServiceClick(service.id, service.title)}
+            className="transition-transform duration-200 hover:scale-[1.02]"
+          >
             <ServiceCard {...service} />
           </div>
         ))}

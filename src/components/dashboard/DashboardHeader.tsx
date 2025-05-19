@@ -13,7 +13,9 @@ const DashboardHeader = () => {
       <div className="container-custom">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center" onClick={handleLogoClick}>
-            <div className="font-serif text-xl font-bold text-wedding-sage">Wedding<span className="text-wedding-gold">Plan</span></div>
+            <div className="font-serif text-xl font-bold text-wedding-sage bg-white/80 px-2 py-1 rounded shadow-sm">
+              Wedding<span className="text-wedding-gold">Plan</span>
+            </div>
           </Link>
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-600">Panel de Control</span>

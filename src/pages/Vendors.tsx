@@ -195,6 +195,10 @@ const Vendors = () => {
     toast.success(`Categoría cambiada a ${category === 'all' ? 'todas' : category}`);
   };
 
+  const handleRegister = () => {
+    toast.success("Redirigiendo al registro de usuarios");
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navigation />
@@ -202,11 +206,19 @@ const Vendors = () => {
       <main className="flex-grow pt-32 pb-24">
         <div className="container-custom">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h1 className="font-serif text-3xl md:text-4xl font-light mb-6">Nuestros Proveedores</h1>
+            <h1 className="font-serif text-3xl md:text-4xl font-light mb-6">Catálogo de Proveedores</h1>
             <div className="w-20 h-[1px] bg-wedding-gold mx-auto mb-6"></div>
             <p className="text-gray-600 font-light leading-relaxed">
               Descubre nuestra selección de los mejores profesionales para hacer tu boda perfecta
             </p>
+            <div className="mt-8">
+              <Button 
+                className="bg-wedding-sage hover:bg-wedding-sage/90 text-white"
+                onClick={handleRegister}
+              >
+                Registrarme para gestionar mis proveedores
+              </Button>
+            </div>
           </div>
           
           <Tabs 

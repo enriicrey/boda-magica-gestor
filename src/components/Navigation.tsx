@@ -86,13 +86,15 @@ const Navigation = ({ hideLinks = false }: NavigationProps) => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 py-6 transition-all duration-300 ${
-        scrolled ? 'backdrop-blur-md bg-white/10' : 'bg-transparent'
+        scrolled ? 'backdrop-blur-md bg-white/90' : 'bg-transparent'
       }`}
     >
       <div className="container-custom flex h-16 items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="flex items-center space-x-2">
-            <span className={`text-2xl font-serif font-normal tracking-wide ${scrolled ? 'text-wedding-sage' : 'text-white'}`}>Wedding<span className="font-light italic">Plan</span></span>
+            <span className={`text-2xl font-serif font-normal tracking-wide ${
+              scrolled ? 'text-wedding-sage bg-white/80 px-2 py-1 rounded shadow-sm' : 'text-white bg-wedding-sage/20 px-2 py-1 rounded backdrop-blur-sm'
+            }`}>Wedding<span className="font-light italic">Plan</span></span>
           </Link>
         </div>
 
