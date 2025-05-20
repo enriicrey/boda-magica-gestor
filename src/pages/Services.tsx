@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { toast } from "sonner";
 import Footer from '@/components/Footer';
 import ClientSidebar from '@/components/dashboard/ClientSidebar';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
-import { Package, Calendar, Check, Heart, MessageSquare, Star } from 'lucide-react';
+import { Package, Calendar, Check, Heart, MessageSquare, Star, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
