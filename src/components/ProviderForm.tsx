@@ -60,12 +60,37 @@ export default function ProviderForm() {
   });
 
   function onSubmit(data: FormValues) {
+    // Mostrar mensaje de confirmación al usuario
     toast({
       title: "Formulario enviado",
       description: "Nos pondremos en contacto contigo lo antes posible.",
     });
     
     console.log(data);
+    
+    // Enviar datos a webhook de Make.com para proveedores
+    const webhookUrl = "https://hook.eu2.make.com/izsqmd12lo8jzy9le0ksdwtjn2nqravp";
+    
+    try {
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...data,
+          formType: "provider",
+          submittedAt: new Date().toISOString()
+        }),
+        mode: "no-cors", // Para evitar problemas de CORS con el webhook
+      });
+      
+      console.log("Datos enviados al webhook de Make.com:", data);
+    } catch (error) {
+      console.error("Error al enviar datos al webhook:", error);
+    }
+    
+    // Resetear el formulario independientemente del resultado
     form.reset();
   }
 
