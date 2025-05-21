@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import Footer from '@/components/Footer';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Calendar, ArrowUpRight, CheckCircle, XCircle, AlertCircle, Filter, Search, Download, Plus, MoreHorizontal, Edit, Trash, Mail } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -46,7 +45,10 @@ import {
   Trash,
   CheckCircle,
   XCircle,
-  Clock
+  Clock,
+  AlertCircle,
+  Filter,
+  Mail
 } from 'lucide-react';
 import {
   AreaChart,
