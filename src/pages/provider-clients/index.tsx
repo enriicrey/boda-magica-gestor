@@ -314,17 +314,25 @@ const ProviderClients = () => {
       setIsEditDialogOpen(false);
     } else {
       // Añadir nuevo cliente
+      const newNameElement = document.getElementById('add-name') as HTMLInputElement;
+      const newEmailElement = document.getElementById('add-email') as HTMLInputElement;
+      const newPhoneElement = document.getElementById('add-phone') as HTMLInputElement;
+      const newWeddingDateElement = document.getElementById('add-wedding-date') as HTMLInputElement;
+      const newBudgetElement = document.getElementById('add-budget') as HTMLInputElement;
+      const newLocationElement = document.getElementById('add-location') as HTMLInputElement;
+      const newNotesElement = document.getElementById('add-notes') as HTMLTextAreaElement;
+      
       const newClient: Client = {
         id: Math.max(0, ...clients.map(c => c.id)) + 1,
-        name: document.getElementById('add-name')?.value as string || 'Nuevo Cliente',
-        email: document.getElementById('add-email')?.value as string || 'nuevo@ejemplo.com',
-        phone: document.getElementById('add-phone')?.value as string || '600 000 000',
+        name: newNameElement?.value as string || 'Nuevo Cliente',
+        email: newEmailElement?.value as string || 'nuevo@ejemplo.com',
+        phone: newPhoneElement?.value as string || '600 000 000',
         avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
         status: 'pending',
-        weddingDate: document.getElementById('add-wedding-date')?.value as string || new Date().toISOString().split('T')[0],
-        budget: Number(document.getElementById('add-budget')?.value) || 10000,
-        location: document.getElementById('add-location')?.value as string || 'Madrid',
-        notes: document.getElementById('add-notes')?.value as string || '',
+        weddingDate: newWeddingDateElement?.value as string || new Date().toISOString().split('T')[0],
+        budget: Number(newBudgetElement?.value) || 10000,
+        location: newLocationElement?.value as string || 'Madrid',
+        notes: newNotesElement?.value as string || '',
         lastContact: new Date().toISOString().split('T')[0],
         services: ['Consulta Inicial'],
         favorite: false
