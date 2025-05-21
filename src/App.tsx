@@ -20,16 +20,25 @@ import Settings from "./pages/Settings";
 import Tasks from "./pages/Tasks";
 import NotFound from "./pages/NotFound";
 import Vendors from "./pages/Vendors";
+import ProviderCalendar from "./pages/provider-calendar";
+import ProviderServices from "./pages/provider-services";
+import ProviderClients from "./pages/provider-clients";
 
 // Placeholder components para páginas adicionales
-const ProviderCalendar = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Calendario del Proveedor</h1><p>Esta página mostrará el calendario de eventos del proveedor.</p></div>;
-const ProviderServices = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Servicios del Proveedor</h1><p>Esta página permitirá al proveedor gestionar sus servicios.</p></div>;
-const ProviderClients = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Clientes del Proveedor</h1><p>Esta página mostrará la lista de clientes del proveedor.</p></div>;
 const ProviderFinances = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Finanzas del Proveedor</h1><p>Esta página mostrará las finanzas del proveedor.</p></div>;
 const ProviderMessages = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Mensajes del Proveedor</h1><p>Esta página mostrará los mensajes del proveedor.</p></div>;
 const ProviderReviews = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Reseñas del Proveedor</h1><p>Esta página mostrará las reseñas del proveedor.</p></div>;
 const ProviderNotifications = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Notificaciones del Proveedor</h1><p>Esta página mostrará las notificaciones del proveedor.</p></div>;
 const ProviderSettings = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Ajustes del Proveedor</h1><p>Esta página permitirá al proveedor configurar su cuenta.</p></div>;
+const ProviderInvitations = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Invitaciones del Proveedor</h1><p>Esta página mostrará las invitaciones del proveedor.</p></div>;
+const ProviderAnalytics = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Análisis del Proveedor</h1><p>Esta página mostrará analíticas para el proveedor.</p></div>;
+
+// Páginas para clientes
+const ClientCalendar = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Calendario del Cliente</h1><p>Esta página mostrará el calendario de eventos del cliente.</p></div>;
+const ClientInvitations = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Invitaciones del Cliente</h1><p>Esta página mostrará las invitaciones del cliente.</p></div>;
+const ClientGuests = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Invitados del Cliente</h1><p>Esta página mostrará la lista de invitados del cliente.</p></div>;
+const ClientVendors = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Proveedores del Cliente</h1><p>Esta página mostrará los proveedores del cliente.</p></div>;
+const ClientSettings = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Ajustes del Cliente</h1><p>Esta página permitirá al cliente configurar su cuenta.</p></div>;
 
 // Páginas para detalles de servicio
 const ServiceDetail = () => {
@@ -59,14 +68,19 @@ const App = () => (
           
           {/* Client dashboard sections */}
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/client-calendar" element={<ClientCalendar />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/:id" element={<ServiceDetail />} />
           <Route path="/budget" element={<Budget />} />
           <Route path="/guests" element={<Guests />} />
+          <Route path="/client-guests" element={<ClientGuests />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/client-settings" element={<ClientSettings />} />
           <Route path="/tasks" element={<Tasks />} />
+          <Route path="/client-invitations" element={<ClientInvitations />} />
+          <Route path="/client-vendors" element={<ClientVendors />} />
           
           {/* Provider dashboard sections */}
           <Route path="/provider-calendar" element={<ProviderCalendar />} />
@@ -77,6 +91,8 @@ const App = () => (
           <Route path="/provider-reviews" element={<ProviderReviews />} />
           <Route path="/provider-notifications" element={<ProviderNotifications />} />
           <Route path="/provider-settings" element={<ProviderSettings />} />
+          <Route path="/provider-invitations" element={<ProviderInvitations />} />
+          <Route path="/provider-analytics" element={<ProviderAnalytics />} />
           
           {/* Vendor Catalog pages */}
           <Route path="/vendors" element={<Vendors />} />

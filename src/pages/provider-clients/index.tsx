@@ -18,7 +18,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
   DropdownMenu,
@@ -31,7 +30,6 @@ import {
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Progress } from '@/components/ui/progress';
 
 // Tipo para cliente
 interface Client {
@@ -318,15 +316,15 @@ const ProviderClients = () => {
       // Añadir nuevo cliente
       const newClient: Client = {
         id: Math.max(0, ...clients.map(c => c.id)) + 1,
-        name: 'Nuevo Cliente',
-        email: 'nuevo@ejemplo.com',
-        phone: '600 000 000',
+        name: document.getElementById('add-name')?.value as string || 'Nuevo Cliente',
+        email: document.getElementById('add-email')?.value as string || 'nuevo@ejemplo.com',
+        phone: document.getElementById('add-phone')?.value as string || '600 000 000',
         avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
         status: 'pending',
-        weddingDate: new Date().toISOString().split('T')[0],
-        budget: 10000,
-        location: 'Madrid',
-        notes: '',
+        weddingDate: document.getElementById('add-wedding-date')?.value as string || new Date().toISOString().split('T')[0],
+        budget: Number(document.getElementById('add-budget')?.value) || 10000,
+        location: document.getElementById('add-location')?.value as string || 'Madrid',
+        notes: document.getElementById('add-notes')?.value as string || '',
         lastContact: new Date().toISOString().split('T')[0],
         services: ['Consulta Inicial'],
         favorite: false
@@ -760,7 +758,7 @@ const ProviderClients = () => {
                             </div>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+                                <Button variant="ghost" size="sm">
                                   <MoreHorizontal size={16} />
                                 </Button>
                               </DropdownMenuTrigger>
