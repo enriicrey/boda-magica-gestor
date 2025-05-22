@@ -27,15 +27,13 @@ import ProviderServices from "./pages/provider-services";
 import ProviderClients from "./pages/provider-clients";
 import ProviderFinances from "./pages/provider-finances";
 import ProviderMessages from "./pages/provider-messages";
+import ProviderReviews from "./pages/provider-reviews";
+import ProviderNotifications from "./pages/provider-notifications";
+import ProviderSettings from "./pages/provider-settings";
+import ProviderInvitations from "./pages/provider-invitations";
+import ProviderAnalytics from "./pages/provider-analytics";
 
 // Componentes para las páginas adicionales
-const ProviderReviews = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Reseñas del Proveedor</h1><p>Esta página mostrará las reseñas del proveedor.</p></div>;
-const ProviderNotifications = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Notificaciones del Proveedor</h1><p>Esta página mostrará las notificaciones del proveedor.</p></div>;
-const ProviderSettings = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Ajustes del Proveedor</h1><p>Esta página permitirá al proveedor configurar su cuenta.</p></div>;
-const ProviderInvitations = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Invitaciones del Proveedor</h1><p>Esta página mostrará las invitaciones del proveedor.</p></div>;
-const ProviderAnalytics = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Análisis del Proveedor</h1><p>Esta página mostrará analíticas para el proveedor.</p></div>;
-
-// Páginas para clientes
 const ClientCalendar = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Calendario del Cliente</h1><p>Esta página mostrará el calendario de eventos del cliente.</p></div>;
 const ClientInvitations = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Invitaciones del Cliente</h1><p>Esta página mostrará las invitaciones del cliente.</p></div>;
 const ClientGuests = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Invitados del Cliente</h1><p>Esta página mostrará la lista de invitados del cliente.</p></div>;
