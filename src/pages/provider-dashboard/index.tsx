@@ -2,206 +2,177 @@
 import React from 'react';
 import ProviderLayout from '@/components/layouts/ProviderLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart2, Calendar, CreditCard, MessageSquare, Star, Users } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Calendar, Users, CreditCard, TrendingUp } from 'lucide-react';
+
+// Mock data for the dashboard
+const revenueData = [
+  { name: 'Ene', revenue: 4000 },
+  { name: 'Feb', revenue: 3000 },
+  { name: 'Mar', revenue: 5000 },
+  { name: 'Abr', revenue: 4500 },
+  { name: 'May', revenue: 6000 },
+  { name: 'Jun', revenue: 5500 },
+];
+
+const recentClients = [
+  { id: 1, name: 'María García', event: 'Boda', date: '2024-08-15', amount: 2500 },
+  { id: 2, name: 'Carlos Rodríguez', event: 'Corporativo', date: '2024-06-22', amount: 3800 },
+  { id: 3, name: 'Ana Martínez', event: 'Cumpleaños', date: '2024-07-10', amount: 1200 },
+];
+
+const upcomingEvents = [
+  { id: 1, client: 'Laura Pérez', type: 'Boda', date: '2024-06-15', location: 'Hotel Majestic' },
+  { id: 2, client: 'Pedro Sánchez', type: 'Corporativo', date: '2024-06-18', location: 'Oficinas Centrales' },
+  { id: 3, client: 'Elena Gómez', type: 'Aniversario', date: '2024-06-22', location: 'Restaurante El Cielo' },
+];
 
 const ProviderDashboard = () => {
-  // Sample data for quick stats
-  const stats = [
-    {
-      title: "Total de Ingresos",
-      value: "€12,450",
-      description: "↗️ +15% comparado con el mes pasado",
-      icon: CreditCard,
-      color: "text-green-500"
-    },
-    {
-      title: "Clientes Activos",
-      value: "24",
-      description: "↗️ +3 clientes nuevos este mes",
-      icon: Users,
-      color: "text-blue-500"
-    },
-    {
-      title: "Eventos Pendientes",
-      value: "18",
-      description: "Próximos 30 días",
-      icon: Calendar,
-      color: "text-amber-500"
-    },
-    {
-      title: "Reseñas Positivas",
-      value: "92%",
-      description: "↗️ +5% comparado con el trimestre anterior",
-      icon: Star,
-      color: "text-purple-500"
-    }
-  ];
-
-  // Sample data for upcoming events
-  const upcomingEvents = [
-    {
-      client: "María García",
-      event: "Boda",
-      date: "15 Jun 2025",
-      status: "confirmed"
-    },
-    {
-      client: "Carlos Martínez",
-      event: "Fiesta de cumpleaños",
-      date: "22 Jun 2024",
-      status: "pending"
-    },
-    {
-      client: "Laura Sánchez",
-      event: "Evento corporativo",
-      date: "7 Jul 2024",
-      status: "confirmed"
-    }
-  ];
-
-  // Sample data for recent messages
-  const recentMessages = [
-    {
-      sender: "Ana Rodríguez",
-      message: "Necesito información sobre sus servicios de fotografía para bodas.",
-      time: "Hace 2 horas",
-      unread: true
-    },
-    {
-      sender: "Pedro López",
-      message: "Gracias por la cotización. ¿Podemos agendar una llamada?",
-      time: "Ayer",
-      unread: false
-    },
-    {
-      sender: "Carmen Díaz",
-      message: "Confirmo la reserva para el 15 de agosto. Gracias.",
-      time: "Hace 2 días",
-      unread: false
-    }
-  ];
-
   return (
     <ProviderLayout>
       <div className="flex flex-col space-y-6">
         <div className="flex flex-col space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">Panel de Control</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard del Proveedor</h1>
           <p className="text-gray-500 dark:text-gray-400">
-            Bienvenido de nuevo. Aquí tienes un resumen de tu actividad reciente.
+            Bienvenido a tu panel de control. Aquí puedes ver un resumen de tu actividad.
           </p>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat, index) => (
-            <Card key={index}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between space-x-2">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                      {stat.title}
-                    </p>
-                    <p className="text-2xl font-bold">{stat.value}</p>
-                  </div>
-                  <div className={`rounded-full p-2 ${stat.color} bg-gray-100`}>
-                    <stat.icon className="h-6 w-6" />
-                  </div>
-                </div>
-                <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
-                  {stat.description}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Main Content Area */}
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Upcoming Events */}
+        {/* KPI Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">Próximos Eventos</CardTitle>
-              <CardDescription>Eventos programados para los próximos días</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {upcomingEvents.map((event, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium">{event.client}</p>
-                      <p className="text-xs text-gray-500">{event.event} • {event.date}</p>
-                    </div>
-                    <Badge
-                      className={
-                        event.status === 'confirmed'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-amber-100 text-amber-800'
-                      }
-                    >
-                      {event.status === 'confirmed' ? 'Confirmado' : 'Pendiente'}
-                    </Badge>
-                  </div>
-                ))}
-                <div className="pt-2">
-                  <a
-                    href="/provider-calendar"
-                    className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                  >
-                    Ver todos los eventos →
-                  </a>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Ingresos totales</p>
+                  <h3 className="text-2xl font-bold mt-1">€24,500</h3>
+                  <p className="text-xs text-green-500 mt-1">+12% respecto al mes anterior</p>
+                </div>
+                <div className="bg-green-100 p-3 rounded-full">
+                  <CreditCard className="h-6 w-6 text-green-600" />
                 </div>
               </div>
             </CardContent>
           </Card>
-
-          {/* Recent Messages */}
+          
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">Mensajes Recientes</CardTitle>
-              <CardDescription>Últimas comunicaciones con clientes</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentMessages.map((message, index) => (
-                  <div key={index} className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center">
-                        <p className="text-sm font-medium">{message.sender}</p>
-                        {message.unread && (
-                          <span className="ml-2 flex h-2 w-2 rounded-full bg-blue-600"></span>
-                        )}
-                      </div>
-                      <p className="text-xs text-gray-500">{message.message}</p>
-                      <p className="text-xs text-gray-400">{message.time}</p>
-                    </div>
-                  </div>
-                ))}
-                <div className="pt-2">
-                  <a
-                    href="/provider-messages"
-                    className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                  >
-                    Ver todos los mensajes →
-                  </a>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Clientes activos</p>
+                  <h3 className="text-2xl font-bold mt-1">42</h3>
+                  <p className="text-xs text-green-500 mt-1">+5% respecto al mes anterior</p>
+                </div>
+                <div className="bg-blue-100 p-3 rounded-full">
+                  <Users className="h-6 w-6 text-blue-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Eventos programados</p>
+                  <h3 className="text-2xl font-bold mt-1">18</h3>
+                  <p className="text-xs text-green-500 mt-1">+3 nuevos este mes</p>
+                </div>
+                <div className="bg-purple-100 p-3 rounded-full">
+                  <Calendar className="h-6 w-6 text-purple-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Tasa de conversión</p>
+                  <h3 className="text-2xl font-bold mt-1">65%</h3>
+                  <p className="text-xs text-green-500 mt-1">+8% respecto al mes anterior</p>
+                </div>
+                <div className="bg-amber-100 p-3 rounded-full">
+                  <TrendingUp className="h-6 w-6 text-amber-600" />
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Activity Graph */}
+        {/* Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Ingresos mensuales</CardTitle>
+              <CardDescription>Evolución de ingresos durante los últimos 6 meses</CardDescription>
+            </CardHeader>
+            <CardContent className="pl-2">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => [`€${value}`, 'Ingresos']} />
+                  <Bar dataKey="revenue" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+          
+          <Card className="lg:col-span-1">
+            <CardHeader>
+              <CardTitle>Próximos eventos</CardTitle>
+              <CardDescription>Eventos programados en los próximos días</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-4">
+                {upcomingEvents.map((event) => (
+                  <li key={event.id} className="flex items-center space-x-3">
+                    <div className="bg-blue-100 p-2 rounded">
+                      <Calendar className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium">{event.client}</h4>
+                      <p className="text-xs text-gray-500">{event.type} - {new Date(event.date).toLocaleDateString()}</p>
+                      <p className="text-xs text-gray-400">{event.location}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Activity */}
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium">Actividad Reciente</CardTitle>
-            <CardDescription>Resumen de actividad e ingresos del último mes</CardDescription>
+          <CardHeader>
+            <CardTitle>Clientes recientes</CardTitle>
+            <CardDescription>Últimos clientes que han contratado tus servicios</CardDescription>
           </CardHeader>
-          <CardContent className="h-[300px] flex items-center justify-center">
-            <div className="text-center">
-              <BarChart2 className="mx-auto h-16 w-16 text-gray-300" />
-              <p className="mt-2 text-sm text-gray-500">
-                Los gráficos de actividad estarán disponibles próximamente
-              </p>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b">
+                    <th className="px-4 py-3 text-left">Cliente</th>
+                    <th className="px-4 py-3 text-left">Evento</th>
+                    <th className="px-4 py-3 text-left">Fecha</th>
+                    <th className="px-4 py-3 text-right">Monto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentClients.map((client) => (
+                    <tr key={client.id} className="border-b">
+                      <td className="px-4 py-3">{client.name}</td>
+                      <td className="px-4 py-3">{client.event}</td>
+                      <td className="px-4 py-3">{new Date(client.date).toLocaleDateString()}</td>
+                      <td className="px-4 py-3 text-right">€{client.amount.toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </CardContent>
         </Card>
