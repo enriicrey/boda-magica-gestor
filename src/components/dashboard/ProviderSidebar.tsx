@@ -15,7 +15,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
   SidebarTrigger
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -43,61 +42,59 @@ const ProviderSidebar = () => {
   };
 
   return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="h-screen flex">
-        <Sidebar>
-          <SidebarHeader className="p-4">
-            <div className="flex items-center space-x-2">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src="/placeholder.svg" alt="Provider" />
-                <AvatarFallback>DP</AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="font-medium text-sm">Diana Proveedor</h3>
-                <p className="text-xs text-gray-500">Organizadora Profesional</p>
-              </div>
+    <>
+      <Sidebar>
+        <SidebarHeader className="p-4">
+          <div className="flex items-center space-x-2">
+            <Avatar className="h-10 w-10">
+              <AvatarImage src="/placeholder.svg" alt="Provider" />
+              <AvatarFallback>DP</AvatarFallback>
+            </Avatar>
+            <div>
+              <h3 className="font-medium text-sm">Diana Proveedor</h3>
+              <p className="text-xs text-gray-500">Organizadora Profesional</p>
             </div>
-          </SidebarHeader>
-          
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Menú principal</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {menuItems.map((item) => (
-                    <SidebarMenuItem key={item.path}>
-                      <SidebarMenuButton 
-                        asChild 
-                        isActive={isActive(item.path)}
-                        tooltip={item.label}
-                      >
-                        <Link to={item.path}>
-                          <item.icon className="h-5 w-5" />
-                          <span>{item.label}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-          
-          <SidebarFooter>
-            <div className="p-4">
-              <Button variant="outline" className="w-full">
-                <Link to="/" className="w-full">
-                  Salir
-                </Link>
-              </Button>
-            </div>
-          </SidebarFooter>
-        </Sidebar>
-        <div className="hidden md:block">
-          <SidebarTrigger />
-        </div>
+          </div>
+        </SidebarHeader>
+        
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Menú principal</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {menuItems.map((item) => (
+                  <SidebarMenuItem key={item.path}>
+                    <SidebarMenuButton 
+                      asChild 
+                      isActive={isActive(item.path)}
+                      tooltip={item.label}
+                    >
+                      <Link to={item.path}>
+                        <item.icon className="h-5 w-5" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        
+        <SidebarFooter>
+          <div className="p-4">
+            <Button variant="outline" className="w-full">
+              <Link to="/" className="w-full">
+                Salir
+              </Link>
+            </Button>
+          </div>
+        </SidebarFooter>
+      </Sidebar>
+      <div className="hidden md:block">
+        <SidebarTrigger />
       </div>
-    </SidebarProvider>
+    </>
   );
 };
 

@@ -1,8 +1,6 @@
-
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import Footer from '@/components/Footer';
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import ProviderLayout from '@/components/layouts/ProviderLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
@@ -280,121 +278,169 @@ const ProviderCalendar = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Header */}
-      <DashboardHeader />
-      
-      <main className="flex-grow py-8">
-        <div className="container px-4 mx-auto max-w-7xl">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-serif font-semibold">Calendario de Eventos</h1>
-            <Button className="bg-wedding-sage hover:bg-wedding-sage/90" onClick={handleAddEvent}>
-              <Plus className="mr-1 h-4 w-4" /> Añadir Evento
-            </Button>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="lg:col-span-2">
-              <CardHeader className="pb-2">
-                <CardTitle>Calendario</CardTitle>
-                <CardDescription>
-                  Gestiona todos tus eventos y citas
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col lg:flex-row gap-6">
-                  <div className="lg:w-1/2">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={(date) => date && setDate(date)}
-                      className="rounded-md border shadow"
-                      modifiers={{
-                        event: getEventDays(),
-                      }}
-                      modifiersStyles={{
-                        event: { 
-                          fontWeight: 'bold',
-                          backgroundColor: 'rgba(178, 190, 181, 0.2)',
-                          borderRadius: '4px',
-                        }
-                      }}
-                    />
-                  </div>
-                  <div className="lg:w-1/2 space-y-4">
-                    <h3 className="font-medium">
-                      {formatDate(date)}
-                    </h3>
-                    
-                    {eventsForSelectedDate.length > 0 ? (
-                      <div className="space-y-3">
-                        {eventsForSelectedDate.map((event) => (
-                          <div 
-                            key={event.id} 
-                            className="border rounded-md p-3 hover:shadow-sm cursor-pointer"
-                            onClick={() => handleViewEvent(event)}
-                          >
-                            <div className="flex justify-between items-start">
-                              <div className="flex items-center">
-                                <div className="mr-3 p-2 rounded-full bg-gray-100">
-                                  {getEventTypeIcon(event.type)}
-                                </div>
-                                <div>
-                                  <h4 className="font-medium">{event.title}</h4>
-                                  <div className="text-sm text-gray-500 mt-1">
-                                    {event.isAllDay ? 'Todo el día' : `${event.startTime} - ${event.endTime || '?'}`}
-                                  </div>
-                                  {event.clientName && (
-                                    <div className="text-sm text-gray-600 mt-1">
-                                      Cliente: {event.clientName}
-                                    </div>
-                                  )}
-                                </div>
+    <ProviderLayout>
+      <div className="flex flex-col space-y-6">
+        <div className="flex flex-col space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Calendario de Eventos</h1>
+          <p className="text-gray-500 dark:text-gray-400">
+            Gestiona todos tus eventos y citas
+          </p>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <Button className="bg-wedding-sage hover:bg-wedding-sage/90 w-full sm:w-auto" onClick={handleAddEvent}>
+            <Plus className="mr-1 h-4 w-4" /> Añadir Evento
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="lg:col-span-2">
+            <CardHeader className="pb-2">
+              <CardTitle>Calendario</CardTitle>
+              <CardDescription>
+                Gestiona todos tus eventos y citas
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col lg:flex-row gap-6">
+                <div className="lg:w-1/2">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={(date) => date && setDate(date)}
+                    className="rounded-md border shadow"
+                    modifiers={{
+                      event: getEventDays(),
+                    }}
+                    modifiersStyles={{
+                      event: { 
+                        fontWeight: 'bold',
+                        backgroundColor: 'rgba(178, 190, 181, 0.2)',
+                        borderRadius: '4px',
+                      }
+                    }}
+                  />
+                </div>
+                <div className="lg:w-1/2 space-y-4">
+                  <h3 className="font-medium">
+                    {formatDate(date)}
+                  </h3>
+                  
+                  {eventsForSelectedDate.length > 0 ? (
+                    <div className="space-y-3">
+                      {eventsForSelectedDate.map((event) => (
+                        <div 
+                          key={event.id} 
+                          className="border rounded-md p-3 hover:shadow-sm cursor-pointer"
+                          onClick={() => handleViewEvent(event)}
+                        >
+                          <div className="flex justify-between items-start">
+                            <div className="flex items-center">
+                              <div className="mr-3 p-2 rounded-full bg-gray-100">
+                                {getEventTypeIcon(event.type)}
                               </div>
-                              <Badge className={getEventStatusColor(event.status)}>
-                                {getEventStatusName(event.status)}
-                              </Badge>
+                              <div>
+                                <h4 className="font-medium">{event.title}</h4>
+                                <div className="text-sm text-gray-500 mt-1">
+                                  {event.isAllDay ? 'Todo el día' : `${event.startTime} - ${event.endTime || '?'}`}
+                                </div>
+                                {event.clientName && (
+                                  <div className="text-sm text-gray-600 mt-1">
+                                    Cliente: {event.clientName}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <Badge className={getEventStatusColor(event.status)}>
+                              {getEventStatusName(event.status)}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <CalendarIcon className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                      <p>No hay eventos programados para esta fecha</p>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="mt-4"
+                        onClick={handleAddEvent}
+                      >
+                        <Plus className="mr-1 h-4 w-4" /> Añadir evento
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle>Próximos eventos</CardTitle>
+              <CardDescription>
+                Tus eventos programados
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="upcoming">
+                <TabsList className="grid w-full grid-cols-2 mb-4">
+                  <TabsTrigger value="upcoming">Próximos</TabsTrigger>
+                  <TabsTrigger value="all">Todos</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="upcoming">
+                  <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                    {upcomingEvents.length > 0 ? (
+                      upcomingEvents.map((event) => (
+                        <div 
+                          key={event.id} 
+                          className="border rounded-md p-3 hover:shadow-sm cursor-pointer"
+                          onClick={() => handleViewEvent(event)}
+                        >
+                          <div className="flex items-center">
+                            <div className="mr-3 p-2 rounded-full bg-gray-100">
+                              {getEventTypeIcon(event.type)}
+                            </div>
+                            <div>
+                              <h4 className="font-medium">{event.title}</h4>
+                              <div className="text-sm text-gray-500 mt-1">
+                                {event.date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })} • {event.isAllDay ? 'Todo el día' : event.startTime}
+                              </div>
+                              {event.clientName && (
+                                <div className="flex items-center text-xs text-gray-600 mt-1">
+                                  <Users className="h-3 w-3 mr-1" />
+                                  {event.clientName}
+                                </div>
+                              )}
                             </div>
                           </div>
-                        ))}
-                      </div>
+                          <div className="mt-2 flex justify-between items-center">
+                            <Badge className={getEventTypeColor(event.type)}>
+                              {getEventTypeName(event.type)}
+                            </Badge>
+                            <Badge className={getEventStatusColor(event.status)}>
+                              {getEventStatusName(event.status)}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))
                     ) : (
                       <div className="text-center py-8 text-gray-500">
-                        <CalendarIcon className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-                        <p>No hay eventos programados para esta fecha</p>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="mt-4"
-                          onClick={handleAddEvent}
-                        >
-                          <Plus className="mr-1 h-4 w-4" /> Añadir evento
-                        </Button>
+                        <p>No hay eventos próximos programados</p>
                       </div>
                     )}
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle>Próximos eventos</CardTitle>
-                <CardDescription>
-                  Tus eventos programados
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Tabs defaultValue="upcoming">
-                  <TabsList className="grid w-full grid-cols-2 mb-4">
-                    <TabsTrigger value="upcoming">Próximos</TabsTrigger>
-                    <TabsTrigger value="all">Todos</TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="upcoming">
-                    <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
-                      {upcomingEvents.length > 0 ? (
-                        upcomingEvents.map((event) => (
+                </TabsContent>
+                
+                <TabsContent value="all">
+                  <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                    {events.length > 0 ? (
+                      events
+                        .sort((a, b) => b.date.getTime() - a.date.getTime())
+                        .map((event) => (
                           <div 
                             key={event.id} 
                             className="border rounded-md p-3 hover:shadow-sm cursor-pointer"
@@ -409,12 +455,6 @@ const ProviderCalendar = () => {
                                 <div className="text-sm text-gray-500 mt-1">
                                   {event.date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })} • {event.isAllDay ? 'Todo el día' : event.startTime}
                                 </div>
-                                {event.clientName && (
-                                  <div className="flex items-center text-xs text-gray-600 mt-1">
-                                    <Users className="h-3 w-3 mr-1" />
-                                    {event.clientName}
-                                  </div>
-                                )}
                               </div>
                             </div>
                             <div className="mt-2 flex justify-between items-center">
@@ -427,61 +467,18 @@ const ProviderCalendar = () => {
                             </div>
                           </div>
                         ))
-                      ) : (
-                        <div className="text-center py-8 text-gray-500">
-                          <p>No hay eventos próximos programados</p>
-                        </div>
-                      )}
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="all">
-                    <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
-                      {events.length > 0 ? (
-                        events
-                          .sort((a, b) => b.date.getTime() - a.date.getTime())
-                          .map((event) => (
-                            <div 
-                              key={event.id} 
-                              className="border rounded-md p-3 hover:shadow-sm cursor-pointer"
-                              onClick={() => handleViewEvent(event)}
-                            >
-                              <div className="flex items-center">
-                                <div className="mr-3 p-2 rounded-full bg-gray-100">
-                                  {getEventTypeIcon(event.type)}
-                                </div>
-                                <div>
-                                  <h4 className="font-medium">{event.title}</h4>
-                                  <div className="text-sm text-gray-500 mt-1">
-                                    {event.date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })} • {event.isAllDay ? 'Todo el día' : event.startTime}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="mt-2 flex justify-between items-center">
-                                <Badge className={getEventTypeColor(event.type)}>
-                                  {getEventTypeName(event.type)}
-                                </Badge>
-                                <Badge className={getEventStatusColor(event.status)}>
-                                  {getEventStatusName(event.status)}
-                                </Badge>
-                              </div>
-                            </div>
-                          ))
-                      ) : (
-                        <div className="text-center py-8 text-gray-500">
-                          <p>No hay eventos programados</p>
-                        </div>
-                      )}
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          </div>
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        <p>No hay eventos programados</p>
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
         </div>
-      </main>
-      
-      <Footer />
+      </div>
       
       {/* Modal para añadir/editar evento */}
       <Dialog open={isEventModalOpen} onOpenChange={setIsEventModalOpen}>
@@ -752,7 +749,7 @@ const ProviderCalendar = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </ProviderLayout>
   );
 };
 

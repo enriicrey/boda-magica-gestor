@@ -133,9 +133,9 @@ const ProviderClients = () => {
           </p>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="relative w-64">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="relative w-full sm:w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
               <Input
                 type="search"
@@ -145,14 +145,15 @@ const ProviderClients = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="w-full sm:w-auto">
               <Filter className="mr-2 h-4 w-4" /> Filtros
             </Button>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 w-full sm:w-auto">
               <Button 
                 variant={view === 'table' ? 'default' : 'outline'} 
                 size="sm" 
                 onClick={() => setView('table')}
+                className="flex-1 sm:flex-initial"
               >
                 Tabla
               </Button>
@@ -160,12 +161,13 @@ const ProviderClients = () => {
                 variant={view === 'cards' ? 'default' : 'outline'} 
                 size="sm" 
                 onClick={() => setView('cards')}
+                className="flex-1 sm:flex-initial"
               >
                 Tarjetas
               </Button>
             </div>
           </div>
-          <Button onClick={handleAddClient}>
+          <Button onClick={handleAddClient} className="w-full sm:w-auto">
             <UserPlus className="mr-2 h-4 w-4" />
             Añadir Cliente
           </Button>
@@ -173,7 +175,7 @@ const ProviderClients = () => {
 
         {view === 'table' ? (
           <Card>
-            <CardContent className="p-0">
+            <CardContent className="p-0 overflow-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
