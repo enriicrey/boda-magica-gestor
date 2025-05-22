@@ -20,13 +20,15 @@ import Settings from "./pages/Settings";
 import Tasks from "./pages/Tasks";
 import NotFound from "./pages/NotFound";
 import Vendors from "./pages/Vendors";
+
+// Importaciones de páginas del proveedor
 import ProviderCalendar from "./pages/provider-calendar";
 import ProviderServices from "./pages/provider-services";
 import ProviderClients from "./pages/provider-clients";
+import ProviderFinances from "./pages/provider-finances";
+import ProviderMessages from "./pages/provider-messages";
 
-// Placeholder components para páginas adicionales
-const ProviderFinances = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Finanzas del Proveedor</h1><p>Esta página mostrará las finanzas del proveedor.</p></div>;
-const ProviderMessages = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Mensajes del Proveedor</h1><p>Esta página mostrará los mensajes del proveedor.</p></div>;
+// Componentes para las páginas adicionales
 const ProviderReviews = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Reseñas del Proveedor</h1><p>Esta página mostrará las reseñas del proveedor.</p></div>;
 const ProviderNotifications = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Notificaciones del Proveedor</h1><p>Esta página mostrará las notificaciones del proveedor.</p></div>;
 const ProviderSettings = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Ajustes del Proveedor</h1><p>Esta página permitirá al proveedor configurar su cuenta.</p></div>;
