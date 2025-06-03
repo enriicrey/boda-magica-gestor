@@ -74,8 +74,8 @@ const AdminProveedores = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [providers, setProviders] = useState(mockProviders);
-  const [statusFilter, setStatusFilter] = useState('');
-  const [typeFilter, setTypeFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
 
   // Filter providers based on search term and filters
   const filteredProviders = providers.filter(
@@ -83,8 +83,8 @@ const AdminProveedores = () => {
       (provider.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
        provider.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
        provider.location.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (statusFilter ? provider.status === statusFilter : true) &&
-      (typeFilter ? provider.type === typeFilter : true)
+      (statusFilter === 'all' ? true : provider.status === statusFilter) &&
+      (typeFilter === 'all' ? true : provider.type === typeFilter)
   );
 
   const handleDeleteProvider = (id: string) => {
@@ -154,7 +154,7 @@ const AdminProveedores = () => {
                   <SelectValue placeholder="Estado" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
                   <SelectItem value="Verificado">Verificado</SelectItem>
                   <SelectItem value="Pendiente">Pendiente</SelectItem>
                   <SelectItem value="Suspendido">Suspendido</SelectItem>
@@ -166,7 +166,7 @@ const AdminProveedores = () => {
                   <SelectValue placeholder="Tipo de servicio" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
                   <SelectItem value="Fotografía">Fotografía</SelectItem>
                   <SelectItem value="Catering">Catering</SelectItem>
                   <SelectItem value="Música">Música</SelectItem>

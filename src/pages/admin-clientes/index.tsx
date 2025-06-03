@@ -69,16 +69,16 @@ const AdminClientes = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [clients, setClients] = useState(mockClients);
-  const [statusFilter, setStatusFilter] = useState('');
-  const [eventFilter, setEventFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [eventFilter, setEventFilter] = useState('all');
 
   // Filter clients based on search term and filters
   const filteredClients = clients.filter(
     client => 
       (client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
        client.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (statusFilter ? client.status === statusFilter : true) &&
-      (eventFilter ? client.eventType === eventFilter : true)
+      (statusFilter === 'all' ? true : client.status === statusFilter) &&
+      (eventFilter === 'all' ? true : client.eventType === eventFilter)
   );
 
   const handleDeleteClient = (id: string) => {
@@ -148,7 +148,7 @@ const AdminClientes = () => {
                   <SelectValue placeholder="Estado" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
                   <SelectItem value="Activo">Activo</SelectItem>
                   <SelectItem value="Inactivo">Inactivo</SelectItem>
                   <SelectItem value="Pendiente">Pendiente</SelectItem>
@@ -160,7 +160,7 @@ const AdminClientes = () => {
                   <SelectValue placeholder="Tipo de evento" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
                   <SelectItem value="Boda">Boda</SelectItem>
                   <SelectItem value="Corporativo">Corporativo</SelectItem>
                   <SelectItem value="Cumpleaños">Cumpleaños</SelectItem>
