@@ -7,21 +7,21 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ClientDashboard from "./pages/client-dashboard";
-import ProviderDashboard from "./pages/provider-dashboard";
-import AdminDashboard from "./pages/admin-dashboard";
-import Calendar from "./pages/Calendar";
-import Favorites from "./pages/Favorites";
-import Services from "./pages/Services";
-import Budget from "./pages/Budget";
-import Guests from "./pages/Guests";
-import Notifications from "./pages/Notifications";
-import Settings from "./pages/Settings";
-import Tasks from "./pages/Tasks";
 import NotFound from "./pages/NotFound";
 import Vendors from "./pages/Vendors";
 
+// Client area pages
+import ClientDashboard from "./pages/client-dashboard";
+import ClientCalendar from "./pages/client-calendar";
+import ClientMisServicios from "./pages/client-mis-servicios";
+import ClientMensajes from "./pages/client-mensajes";
+import ClientPresupuesto from "./pages/client-presupuesto";
+import ClientInvitados from "./pages/client-invitados";
+import ClientNotificaciones from "./pages/client-notificaciones";
+import ClientAjustes from "./pages/client-ajustes";
+
 // Provider area pages
+import ProviderDashboard from "./pages/provider-dashboard";
 import ProviderCalendar from "./pages/provider-calendar";
 import ProviderServices from "./pages/provider-services";
 import ProviderClients from "./pages/provider-clients";
@@ -33,32 +33,18 @@ import ProviderSettings from "./pages/provider-settings";
 import ProviderInvitations from "./pages/provider-invitations";
 import ProviderAnalytics from "./pages/provider-analytics";
 
-// Client area pages
-import ClientCalendar from "./pages/client-calendar";
-
 // Admin area pages
+import AdminDashboard from "./pages/admin-dashboard";
 import AdminClientes from "./pages/admin-clientes";
 import AdminProveedores from "./pages/admin-proveedores";
+import AdminServicios from "./pages/admin-servicios";
+import AdminEventos from "./pages/admin-eventos";
+import AdminNotificaciones from "./pages/admin-notificaciones";
+import AdminAjustes from "./pages/admin-ajustes";
+import AdminMensajes from "./pages/admin-mensajes";
+import AdminAnaliticas from "./pages/admin-analiticas";
 
-// Placeholder components for additional pages
-const ClientServices = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Mis Servicios</h1><p>Esta página mostrará los servicios contratados por el cliente.</p></div>;
-const ClientMessages = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Mensajes del Cliente</h1><p>Esta página mostrará los mensajes del cliente.</p></div>;
-const ClientBudget = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Presupuesto del Cliente</h1><p>Esta página mostrará el presupuesto del cliente.</p></div>;
-const ClientGuests = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Invitados del Cliente</h1><p>Esta página mostrará la lista de invitados del cliente.</p></div>;
-const ClientNotifications = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Notificaciones del Cliente</h1><p>Esta página mostrará las notificaciones del cliente.</p></div>;
-const ClientSettings = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Ajustes del Cliente</h1><p>Esta página permitirá al cliente configurar su cuenta.</p></div>;
-const ClientInvitations = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Invitaciones del Cliente</h1><p>Esta página mostrará las invitaciones del cliente.</p></div>;
-const ClientVendors = () => <div className="p-8"><h1 className="text-2xl font-serif mb-4">Proveedores del Cliente</h1><p>Esta página mostrará los proveedores del cliente.</p></div>;
-
-// Admin area additional placeholders
-const AdminServicios = () => <div className="p-8"><h1 className="text-2xl font-bold mb-4">Servicios</h1><p>Gestión de servicios de la plataforma.</p></div>;
-const AdminEventos = () => <div className="p-8"><h1 className="text-2xl font-bold mb-4">Eventos</h1><p>Gestión de eventos de la plataforma.</p></div>;
-const AdminNotificaciones = () => <div className="p-8"><h1 className="text-2xl font-bold mb-4">Notificaciones</h1><p>Gestión de notificaciones de la plataforma.</p></div>;
-const AdminAjustes = () => <div className="p-8"><h1 className="text-2xl font-bold mb-4">Ajustes</h1><p>Configuración de la plataforma.</p></div>;
-const AdminMensajes = () => <div className="p-8"><h1 className="text-2xl font-bold mb-4">Mensajes</h1><p>Gestión de mensajes de la plataforma.</p></div>;
-const AdminAnaliticas = () => <div className="p-8"><h1 className="text-2xl font-bold mb-4">Analíticas</h1><p>Estadísticas y análisis de la plataforma.</p></div>;
-
-// Pages for service details
+// Service detail page
 const ServiceDetail = () => {
   return (
     <div className="p-8">
@@ -83,24 +69,13 @@ const App = () => (
           
           {/* Client dashboard sections */}
           <Route path="/client-dashboard" element={<ClientDashboard />} />
-          <Route path="/calendar" element={<Calendar />} />
           <Route path="/client-calendar" element={<ClientCalendar />} />
-          <Route path="/favorites" element={<Favorites />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/client-services" element={<ClientServices />} />
-          <Route path="/services/:id" element={<ServiceDetail />} />
-          <Route path="/budget" element={<Budget />} />
-          <Route path="/client-budget" element={<ClientBudget />} />
-          <Route path="/guests" element={<Guests />} />
-          <Route path="/client-guests" element={<ClientGuests />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/client-notifications" element={<ClientNotifications />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/client-settings" element={<ClientSettings />} />
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/client-messages" element={<ClientMessages />} />
-          <Route path="/client-invitations" element={<ClientInvitations />} />
-          <Route path="/client-vendors" element={<ClientVendors />} />
+          <Route path="/client-mis-servicios" element={<ClientMisServicios />} />
+          <Route path="/client-mensajes" element={<ClientMensajes />} />
+          <Route path="/client-presupuesto" element={<ClientPresupuesto />} />
+          <Route path="/client-invitados" element={<ClientInvitados />} />
+          <Route path="/client-notificaciones" element={<ClientNotificaciones />} />
+          <Route path="/client-ajustes" element={<ClientAjustes />} />
           
           {/* Provider dashboard sections */}
           <Route path="/provider-dashboard" element={<ProviderDashboard />} />
@@ -129,6 +104,7 @@ const App = () => (
           {/* Vendor Catalog pages */}
           <Route path="/vendors" element={<Vendors />} />
           <Route path="/vendors/:id" element={<ServiceDetail />} />
+          <Route path="/services/:id" element={<ServiceDetail />} />
           
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />

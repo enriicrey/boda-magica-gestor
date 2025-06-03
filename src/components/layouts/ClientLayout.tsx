@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import ClientSidebar from '../dashboard/ClientSidebar';
 
 interface ClientLayoutProps {
@@ -8,17 +9,16 @@ interface ClientLayoutProps {
 
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen w-full bg-gray-50">
-      <ClientSidebar 
-        userName="Clara Cliente" 
-        weddingDate="15 de Agosto, 2025" 
-        progress={65} 
-        avatarFallback="CC"
-      />
-      <div className="flex-1 p-4 md:p-6 lg:p-8">
-        {children}
+    <SidebarProvider>
+      <div className="flex h-screen w-full">
+        <ClientSidebar />
+        <SidebarInset className="bg-background">
+          <main className="flex-1 p-6 overflow-auto">
+            {children}
+          </main>
+        </SidebarInset>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
