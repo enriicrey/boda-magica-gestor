@@ -1,24 +1,24 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/layouts/ClientLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { Calendar, Heart, CreditCard, Users, CheckCircle, Clock } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Calendar, Heart, CreditCard, Users, CheckCircle, Clock, Plus, StickyNote } from 'lucide-react';
+import { useClient } from '@/contexts/ClientContext';
 
 const ClientDashboard = () => {
-  const tasks = [
-    { id: 1, title: 'Confirmar menú con catering', completed: true, date: '2024-06-20' },
-    { id: 2, title: 'Revisar propuesta de decoración', completed: false, date: '2024-06-25' },
-    { id: 3, title: 'Seleccionar canciones', completed: false, date: '2024-07-05' },
-    { id: 4, title: 'Prueba de vestido', completed: false, date: '2024-07-10' }
-  ];
-
-  const upcomingEvents = [
-    { id: 1, title: 'Degustación menú', date: '2024-06-25', time: '12:00' },
-    { id: 2, title: 'Prueba de vestido', date: '2024-07-10', time: '10:00' },
-    { id: 3, title: 'Reunión con decorador', date: '2024-07-15', time: '16:00' }
-  ];
+  const navigate = useNavigate();
+  const { tasks, events, completeTask, addTask } = useClient();
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [newTaskDate, setNewTaskDate] = useState('');
+  const [taskNotes, setTaskNotes] = useState('');
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
   const services = [
     { id: 1, name: 'Villa Rosa', type: 'Lugar', status: 'Confirmado', amount: '€8,500' },
@@ -28,6 +28,28 @@ const ClientDashboard = () => {
 
   const completedTasks = tasks.filter(task => task.completed).length;
   const progress = Math.round((completedTasks / tasks.length) * 100);
+
+  const handleCompleteTask = (taskId: string) => {
+    completeTask(taskId, taskNotes);
+    setTaskNotes('');
+    setSelectedTaskId(null);
+  };
+
+  const handleAddTask = () => {
+    if (newTaskTitle && newTaskDate) {
+      addTask(newTaskTitle, newTaskDate, 'personal');
+      setNewTaskTitle('');
+      setNewTaskDate('');
+    }
+  };
+
+  const handleViewEvent = (eventDate: string) => {
+    navigate(`/client-calendar?date=${eventDate}`);
+  };
+
+  const handleViewServiceDetails = (serviceId: number) => {
+    navigate(`/vendors/${serviceId}`);
+  };
 
   return (
     <ClientLayout>
@@ -59,7 +81,7 @@ const ClientDashboard = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate('/client-presupuesto')}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -72,7 +94,7 @@ const ClientDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate('/client-invitados')}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -85,7 +107,7 @@ const ClientDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate('/client-mis-servicios')}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -98,7 +120,7 @@ const ClientDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate('/client-calendar')}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -116,26 +138,97 @@ const ClientDashboard = () => {
           {/* Tasks */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-600" />
-                Tareas pendientes
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  Tareas pendientes
+                </CardTitle>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                      <Plus className="h-4 w-4 mr-1" />
+                      Nueva tarea
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Crear nueva tarea</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="taskTitle">Título</Label>
+                        <Input
+                          id="taskTitle"
+                          value={newTaskTitle}
+                          onChange={(e) => setNewTaskTitle(e.target.value)}
+                          placeholder="Describe la tarea..."
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="taskDate">Fecha límite</Label>
+                        <Input
+                          id="taskDate"
+                          type="date"
+                          value={newTaskDate}
+                          onChange={(e) => setNewTaskDate(e.target.value)}
+                        />
+                      </div>
+                      <Button onClick={handleAddTask} className="w-full">
+                        Crear tarea
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 {tasks.map((task) => (
                   <div key={task.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className={`w-4 h-4 rounded-full ${task.completed ? 'bg-green-500' : 'bg-gray-300'}`} />
+                      <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
+                        task.completed ? 'bg-green-500' : 'bg-gray-300'
+                      } ${task.type === 'personal' ? 'border-2 border-blue-500' : ''}`}>
+                        {task.completed && <CheckCircle className="h-3 w-3 text-white" />}
+                      </div>
                       <div>
                         <p className={`font-medium ${task.completed ? 'line-through text-gray-500' : ''}`}>
                           {task.title}
                         </p>
                         <p className="text-xs text-gray-500">{task.date}</p>
+                        {task.notes && (
+                          <p className="text-xs text-blue-600 mt-1">📝 {task.notes}</p>
+                        )}
                       </div>
                     </div>
                     {!task.completed && (
-                      <Button size="sm" variant="outline">Completar</Button>
+                      <div className="flex gap-1">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button size="sm" variant="outline" onClick={() => setSelectedTaskId(task.id)}>
+                              <StickyNote className="h-3 w-3" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Añadir notas</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                              <Textarea
+                                value={taskNotes}
+                                onChange={(e) => setTaskNotes(e.target.value)}
+                                placeholder="Añade notas sobre esta tarea..."
+                              />
+                              <Button onClick={() => selectedTaskId && handleCompleteTask(selectedTaskId)} className="w-full">
+                                Completar con notas
+                              </Button>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                        <Button size="sm" variant="outline" onClick={() => handleCompleteTask(task.id)}>
+                          Completar
+                        </Button>
+                      </div>
                     )}
                   </div>
                 ))}
@@ -153,13 +246,15 @@ const ClientDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {upcomingEvents.map((event) => (
+                {events.slice(0, 3).map((event) => (
                   <div key={event.id} className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
                     <div>
                       <p className="font-medium">{event.title}</p>
-                      <p className="text-sm text-gray-600">{event.date} a las {event.time}</p>
+                      <p className="text-sm text-gray-600">{event.date} {event.time && `a las ${event.time}`}</p>
                     </div>
-                    <Button size="sm" variant="outline">Ver</Button>
+                    <Button size="sm" variant="outline" onClick={() => handleViewEvent(event.date)}>
+                      Ver
+                    </Button>
                   </div>
                 ))}
               </div>
@@ -200,7 +295,13 @@ const ClientDashboard = () => {
                       </td>
                       <td className="p-2 font-semibold">{service.amount}</td>
                       <td className="p-2">
-                        <Button size="sm" variant="outline">Ver detalles</Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleViewServiceDetails(service.id)}
+                        >
+                          Ver detalles
+                        </Button>
                       </td>
                     </tr>
                   ))}

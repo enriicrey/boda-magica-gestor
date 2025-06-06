@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/layouts/ClientLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import { Search, Plus, Eye, Edit, MessageSquare, Star } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const ClientMisServicios = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
   const services = [
@@ -24,7 +26,8 @@ const ClientMisServicios = () => {
       contact: 'María García',
       phone: '+34 612 345 678',
       rating: 4.8,
-      image: 'VR'
+      image: 'VR',
+      conversationId: '2'
     },
     {
       id: '2',
@@ -38,7 +41,8 @@ const ClientMisServicios = () => {
       contact: 'Carlos Jiménez',
       phone: '+34 623 456 789',
       rating: 4.9,
-      image: 'CJ'
+      image: 'CJ',
+      conversationId: '1'
     },
     {
       id: '3',
@@ -52,7 +56,8 @@ const ClientMisServicios = () => {
       contact: 'Ana López',
       phone: '+34 634 567 890',
       rating: 4.7,
-      image: 'CD'
+      image: 'CD',
+      conversationId: '3'
     },
     {
       id: '4',
@@ -66,7 +71,8 @@ const ClientMisServicios = () => {
       contact: 'Isabel Ruiz',
       phone: '+34 645 678 901',
       rating: 4.6,
-      image: 'FB'
+      image: 'FB',
+      conversationId: '4'
     }
   ];
 
@@ -87,6 +93,18 @@ const ClientMisServicios = () => {
       default:
         return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const handleViewDetails = (serviceId: string) => {
+    navigate(`/vendors/${serviceId}`);
+  };
+
+  const handleContact = (conversationId: string) => {
+    navigate(`/client-mensajes?conversation=${conversationId}`);
+  };
+
+  const handleSearchServices = () => {
+    navigate('/vendors');
   };
 
   return (
@@ -110,7 +128,7 @@ const ClientMisServicios = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <Button>
+          <Button onClick={handleSearchServices}>
             <Plus className="mr-2 h-4 w-4" />
             Buscar servicios
           </Button>
@@ -172,11 +190,21 @@ const ClientMisServicios = () => {
                 </div>
 
                 <div className="flex gap-2 pt-2">
-                  <Button variant="outline" size="sm" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => handleViewDetails(service.id)}
+                  >
                     <Eye className="h-4 w-4 mr-1" />
                     Ver detalles
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => handleContact(service.conversationId)}
+                  >
                     <MessageSquare className="h-4 w-4 mr-1" />
                     Contactar
                   </Button>
