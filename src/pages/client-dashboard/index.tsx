@@ -51,6 +51,12 @@ const ClientDashboard = () => {
     navigate(`/vendors/${serviceId}`);
   };
 
+  // Navigation handlers for summary cards
+  const handleNavigateToPresupuesto = () => navigate('/client-presupuesto');
+  const handleNavigateToInvitados = () => navigate('/client-invitados');
+  const handleNavigateToServicios = () => navigate('/client-mis-servicios');
+  const handleNavigateToCalendar = () => navigate('/client-calendar');
+
   return (
     <ClientLayout>
       <div className="flex flex-col space-y-6">
@@ -79,9 +85,9 @@ const ClientDashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Stats Cards */}
+        {/* Stats Cards - Now clickable */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate('/client-presupuesto')}>
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={handleNavigateToPresupuesto}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -94,7 +100,7 @@ const ClientDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate('/client-invitados')}>
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={handleNavigateToInvitados}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -107,7 +113,7 @@ const ClientDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate('/client-mis-servicios')}>
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={handleNavigateToServicios}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -120,7 +126,7 @@ const ClientDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate('/client-calendar')}>
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={handleNavigateToCalendar}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -135,7 +141,7 @@ const ClientDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Tasks */}
+          {/* Tasks - Now fully functional */}
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -211,7 +217,7 @@ const ClientDashboard = () => {
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Añadir notas</DialogTitle>
+                              <DialogTitle>Añadir notas y completar</DialogTitle>
                             </DialogHeader>
                             <div className="space-y-4">
                               <Textarea
@@ -236,7 +242,7 @@ const ClientDashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Upcoming Events */}
+          {/* Upcoming Events - Now functional */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -262,7 +268,7 @@ const ClientDashboard = () => {
           </Card>
         </div>
 
-        {/* Services */}
+        {/* Services - Now functional */}
         <Card>
           <CardHeader>
             <CardTitle>Mis servicios contratados</CardTitle>

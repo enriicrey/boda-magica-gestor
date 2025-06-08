@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/layouts/ClientLayout';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, Filter } from 'lucide-react';
+import { Calendar as CalendarIcon, Plus, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -16,11 +16,12 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { useClient } from '@/contexts/ClientContext';
 
 const ClientCalendar = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { events, addEvent } = useClient();
+  const { events, tasks, addEvent } = useClient();
   const [date, setDate] = useState<Date | undefined>();
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [showUpcoming, setShowUpcoming] = useState(false);
+  const [showUpcoming, setShowUpcoming] = useState(true);
   const [filterType, setFilterType] = useState<string>('all');
   
   // New event form
@@ -50,6 +51,15 @@ const ClientCalendar = () => {
     });
   };
 
+  const getDayTasks = (day: Date) => {
+    return tasks.filter(task => {
+      const taskDate = new Date(task.date);
+      return taskDate.getDate() === day.getDate() && 
+             taskDate.getMonth() === day.getMonth() && 
+             taskDate.getFullYear() === day.getFullYear();
+    });
+  };
+
   const getFilteredEvents = () => {
     if (filterType === 'all') return events;
     return events.filter(event => event.type === filterType);
@@ -59,19 +69,12 @@ const ClientCalendar = () => {
     return getDayEvents(day).length > 0;
   };
 
+  const hasTasks = (day: Date) => {
+    return getDayTasks(day).length > 0;
+  };
+
   const todayEvents = date ? getDayEvents(date) : [];
-
-  const handlePreviousMonth = () => {
-    const newMonth = new Date(currentMonth);
-    newMonth.setMonth(newMonth.getMonth() - 1);
-    setCurrentMonth(newMonth);
-  };
-
-  const handleNextMonth = () => {
-    const newMonth = new Date(currentMonth);
-    newMonth.setMonth(newMonth.getMonth() + 1);
-    setCurrentMonth(newMonth);
-  };
+  const todayTasks = date ? getDayTasks(date) : [];
 
   const handleAddEvent = () => {
     if (newEventTitle && newEventDate) {
@@ -119,17 +122,9 @@ const ClientCalendar = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <h1 className="text-3xl font-bold">Calendario</h1>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handlePreviousMonth}>
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Mes anterior
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleNextMonth}>
-              Mes siguiente
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
             <Dialog>
               <DialogTrigger asChild>
-                <Button size="sm" className="bg-wedding-sage text-white hover:bg-wedding-sage/90">
+                <Button className="bg-pink-600 text-white hover:bg-pink-700">
                   <Plus className="h-4 w-4 mr-1" />
                   Nuevo evento
                 </Button>
@@ -195,13 +190,32 @@ const ClientCalendar = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Calendar - Now takes full width when sidebar is collapsed */}
+          <Card className="lg:col-span-3">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CalendarIcon className="h-5 w-5 text-wedding-sage" />
-                Calendario de eventos
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <CalendarIcon className="h-5 w-5 text-pink-600" />
+                  {currentMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
+                </CardTitle>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="w-full">
@@ -213,63 +227,87 @@ const ClientCalendar = () => {
                   onMonthChange={setCurrentMonth}
                   className="w-full"
                   classNames={{
-                    day_selected: "bg-wedding-sage text-white hover:bg-wedding-sage",
-                    day_today: "bg-wedding-sage/10 text-wedding-sage font-bold"
+                    day_selected: "bg-pink-600 text-white hover:bg-pink-600",
+                    day_today: "bg-pink-100 text-pink-700 font-bold"
                   }}
                   modifiers={{
-                    hasEvents: (day) => hasEvents(day)
+                    hasEvents: (day) => hasEvents(day),
+                    hasTasks: (day) => hasTasks(day)
                   }}
                   modifiersClassNames={{
-                    hasEvents: "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:transform after:-translate-x-1/2 after:w-1 after:h-1 after:bg-blue-500 after:rounded-full"
+                    hasEvents: "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:transform after:-translate-x-1/2 after:w-2 after:h-2 after:bg-blue-500 after:rounded-full",
+                    hasTasks: "relative before:content-[''] before:absolute before:top-1 before:left-1/2 before:transform before:-translate-x-1/2 before:w-2 before:h-2 before:bg-green-500 before:rounded-full"
                   }}
                 />
               </div>
             </CardContent>
           </Card>
 
+          {/* Events of selected day */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <CalendarIcon className="h-5 w-5 text-wedding-sage" />
-                Eventos del día seleccionado
+                <CalendarIcon className="h-5 w-5 text-pink-600" />
+                Día seleccionado
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {todayEvents.length > 0 ? (
-                <ul className="space-y-4">
-                  {todayEvents.map(event => (
-                    <li key={event.id} className="bg-gray-50 p-3 rounded-lg">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h4 className="font-medium">{event.title}</h4>
-                          {event.time && (
-                            <p className="text-sm text-gray-500">
-                              {event.time}
-                            </p>
-                          )}
-                          {event.location && (
-                            <p className="text-xs text-gray-500 mt-1">{event.location}</p>
-                          )}
-                          {event.description && (
-                            <p className="text-xs text-gray-600 mt-1">{event.description}</p>
-                          )}
-                        </div>
-                        <Badge className={getEventTypeColor(event.type)}>
-                          {getEventTypeLabel(event.type)}
-                        </Badge>
+              {(todayEvents.length > 0 || todayTasks.length > 0) ? (
+                <div className="space-y-4">
+                  {todayEvents.length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-sm text-gray-700 mb-2">Eventos</h4>
+                      <div className="space-y-2">
+                        {todayEvents.map(event => (
+                          <div key={event.id} className="bg-blue-50 p-3 rounded-lg">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <h4 className="font-medium">{event.title}</h4>
+                                {event.time && (
+                                  <p className="text-sm text-gray-500">{event.time}</p>
+                                )}
+                                {event.location && (
+                                  <p className="text-xs text-gray-500 mt-1">{event.location}</p>
+                                )}
+                              </div>
+                              <Badge className={getEventTypeColor(event.type)}>
+                                {getEventTypeLabel(event.type)}
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    </li>
-                  ))}
-                </ul>
+                    </div>
+                  )}
+                  
+                  {todayTasks.length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-sm text-gray-700 mb-2">Tareas</h4>
+                      <div className="space-y-2">
+                        {todayTasks.map(task => (
+                          <div key={task.id} className="bg-green-50 p-3 rounded-lg">
+                            <h4 className={`font-medium ${task.completed ? 'line-through text-gray-500' : ''}`}>
+                              {task.title}
+                            </h4>
+                            <Badge variant="outline" className="text-xs mt-1">
+                              {task.type === 'personal' ? 'Personal' : 'Servicio'}
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <p className="text-center text-gray-500 py-6">
-                  {date ? 'No hay eventos para este día' : 'Selecciona un día para ver eventos'}
+                  {date ? 'No hay eventos ni tareas para este día' : 'Selecciona un día para ver eventos'}
                 </p>
               )}
             </CardContent>
           </Card>
         </div>
 
+        {/* Upcoming events table */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -310,6 +348,7 @@ const ClientCalendar = () => {
                         <th className="pb-2 font-medium">Hora</th>
                         <th className="pb-2 font-medium">Ubicación</th>
                         <th className="pb-2 font-medium">Tipo</th>
+                        <th className="pb-2 font-medium">Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -325,6 +364,18 @@ const ClientCalendar = () => {
                             <Badge className={getEventTypeColor(event.type)}>
                               {getEventTypeLabel(event.type)}
                             </Badge>
+                          </td>
+                          <td className="py-3">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                setDate(new Date(event.date));
+                                setCurrentMonth(new Date(event.date));
+                              }}
+                            >
+                              Ver
+                            </Button>
                           </td>
                         </tr>
                       ))}

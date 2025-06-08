@@ -12,8 +12,8 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
     <SidebarProvider>
       <div className="flex h-screen w-full">
         <ClientSidebar />
-        <SidebarInset className="bg-background">
-          <main className="flex-1 p-6 overflow-auto">
+        <SidebarInset className="bg-background transition-all duration-300">
+          <main className="flex-1 p-6 overflow-auto w-full">
             {children}
           </main>
         </SidebarInset>

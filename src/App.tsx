@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Index from './pages/Index';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Vendors from './pages/Vendors';
+import Vendors from './pages/vendors';
 import ClientForm from './pages/ClientForm';
 import NotFound from './pages/NotFound';
 
@@ -51,6 +51,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/vendors" element={<Vendors />} />
+        <Route path="/vendors/:id" element={<Vendors />} />
         <Route path="/client-form" element={<ClientForm />} />
 
         {/* Admin routes */}

@@ -4,51 +4,46 @@ import ClientLayout from '@/components/layouts/ClientLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { CreditCard, TrendingUp, AlertCircle, Plus, Edit, Trash } from 'lucide-react';
+import { Plus, Edit, Trash2, CreditCard, TrendingUp, AlertCircle } from 'lucide-react';
+import { useClient } from '@/contexts/ClientContext';
 
 const ClientPresupuesto = () => {
-  const [totalBudget, setTotalBudget] = useState(20000);
+  const { budget, addBudgetItem } = useClient();
+  const [newCategory, setNewCategory] = useState('');
+  const [newDescription, setNewDescription] = useState('');
+  const [newBudgeted, setNewBudgeted] = useState('');
+  const [newProvider, setNewProvider] = useState('');
 
-  const budgetItems = [
-    { id: 1, category: 'Lugar', allocated: 8500, spent: 8500, status: 'Pagado', color: '#8884d8' },
-    { id: 2, category: 'Catering', allocated: 4200, spent: 0, status: 'Pendiente', color: '#82ca9d' },
-    { id: 3, category: 'Fotografía', allocated: 1800, spent: 900, status: 'Parcial', color: '#ffc658' },
-    { id: 4, category: 'Decoración', allocated: 2400, spent: 0, status: 'Pendiente', color: '#ff7300' },
-    { id: 5, category: 'Música', allocated: 1200, spent: 0, status: 'Pendiente', color: '#8dd1e1' },
-    { id: 6, category: 'Vestido/Traje', allocated: 1500, spent: 1200, status: 'Parcial', color: '#d084d0' },
-    { id: 7, category: 'Otros', allocated: 400, spent: 150, status: 'Parcial', color: '#87d068' }
-  ];
+  const totalBudget = budget.reduce((sum, item) => sum + item.budgeted, 0);
+  const totalSpent = budget.reduce((sum, item) => sum + item.spent, 0);
+  const remainingBudget = totalBudget - totalSpent;
+  const progressPercentage = (totalSpent / totalBudget) * 100;
 
-  const totalAllocated = budgetItems.reduce((sum, item) => sum + item.allocated, 0);
-  const totalSpent = budgetItems.reduce((sum, item) => sum + item.spent, 0);
-  const remaining = totalBudget - totalSpent;
-  const percentageUsed = (totalSpent / totalBudget) * 100;
-
-  const pieData = budgetItems.map(item => ({
-    name: item.category,
-    value: item.allocated,
-    color: item.color
-  }));
-
-  const monthlySpending = [
-    { month: 'Ene', spent: 0 },
-    { month: 'Feb', spent: 1200 },
-    { month: 'Mar', spent: 8500 },
-    { month: 'Abr', spent: 900 },
-    { month: 'May', spent: 150 },
-    { month: 'Jun', spent: 0 }
-  ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Pagado': return 'bg-green-100 text-green-800';
-      case 'Parcial': return 'bg-yellow-100 text-yellow-800';
-      case 'Pendiente': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+  const handleAddBudgetItem = () => {
+    if (newCategory && newDescription && newBudgeted) {
+      addBudgetItem({
+        category: newCategory,
+        description: newDescription,
+        budgeted: parseFloat(newBudgeted),
+        spent: 0,
+        provider: newProvider || undefined
+      });
+      setNewCategory('');
+      setNewDescription('');
+      setNewBudgeted('');
+      setNewProvider('');
     }
+  };
+
+  const getStatusColor = (budgeted: number, spent: number) => {
+    const percentage = (spent / budgeted) * 100;
+    if (percentage >= 100) return 'text-red-600';
+    if (percentage >= 80) return 'text-yellow-600';
+    return 'text-green-600';
   };
 
   return (
@@ -57,14 +52,14 @@ const ClientPresupuesto = () => {
         <div className="flex flex-col space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">Presupuesto</h1>
           <p className="text-gray-500">
-            Controla todos los gastos de tu boda y mantén el presupuesto bajo control.
+            Gestiona y controla el presupuesto de tu boda.
           </p>
         </div>
 
-        {/* Budget Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500">Presupuesto Total</p>
@@ -76,12 +71,11 @@ const ClientPresupuesto = () => {
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500">Gastado</p>
                   <p className="text-2xl font-bold text-red-600">€{totalSpent.toLocaleString()}</p>
-                  <p className="text-xs text-red-600">{percentageUsed.toFixed(1)}% del total</p>
                 </div>
                 <TrendingUp className="h-8 w-8 text-red-600" />
               </div>
@@ -89,14 +83,31 @@ const ClientPresupuesto = () => {
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Disponible</p>
-                  <p className="text-2xl font-bold text-green-600">€{remaining.toLocaleString()}</p>
-                  <p className="text-xs text-green-600">{(100 - percentageUsed).toFixed(1)}% restante</p>
+                  <p className="text-sm font-medium text-gray-500">Restante</p>
+                  <p className={`text-2xl font-bold ${remainingBudget >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    €{remainingBudget.toLocaleString()}
+                  </p>
                 </div>
-                <AlertCircle className="h-8 w-8 text-green-600" />
+                <AlertCircle className={`h-8 w-8 ${remainingBudget >= 0 ? 'text-green-600' : 'text-red-600'}`} />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Progreso</p>
+                  <p className="text-2xl font-bold">{Math.round(progressPercentage)}%</p>
+                </div>
+                <div className="w-12 h-12 flex items-center justify-center">
+                  <div className="relative w-10 h-10">
+                    <Progress value={progressPercentage} className="h-2" />
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -105,135 +116,139 @@ const ClientPresupuesto = () => {
         {/* Progress Bar */}
         <Card>
           <CardContent className="p-6">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Progreso del presupuesto</span>
-                <span>{percentageUsed.toFixed(1)}%</span>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-semibold">Progreso del presupuesto</h3>
+                <span className="text-sm text-gray-500">
+                  €{totalSpent.toLocaleString()} de €{totalBudget.toLocaleString()}
+                </span>
               </div>
-              <Progress value={percentageUsed} className="h-3" />
-              <div className="flex justify-between text-xs text-gray-500">
-                <span>€0</span>
-                <span>€{totalBudget.toLocaleString()}</span>
+              <Progress value={progressPercentage} className="h-4" />
+              <div className="flex justify-between text-sm text-gray-500">
+                <span>0%</span>
+                <span>50%</span>
+                <span>100%</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Pie Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Distribución del Presupuesto</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={pieData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
-                      paddingAngle={2}
-                      dataKey="value"
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(value) => [`€${value}`, 'Asignado']} />
-                  </PieChart>
-                </ResponsiveContainer>
+        {/* Add New Category */}
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">Desglose por categorías</h2>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Añadir categoría
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Nueva categoría de presupuesto</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="category">Categoría</Label>
+                  <Select value={newCategory} onValueChange={setNewCategory}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona una categoría" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Vestido">Vestido</SelectItem>
+                      <SelectItem value="Anillos">Anillos</SelectItem>
+                      <SelectItem value="Transporte">Transporte</SelectItem>
+                      <SelectItem value="Música">Música</SelectItem>
+                      <SelectItem value="Flores">Flores</SelectItem>
+                      <SelectItem value="Invitaciones">Invitaciones</SelectItem>
+                      <SelectItem value="Otros">Otros</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="description">Descripción</Label>
+                  <Input
+                    id="description"
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
+                    placeholder="Describe el gasto..."
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="budgeted">Presupuesto (€)</Label>
+                  <Input
+                    id="budgeted"
+                    type="number"
+                    value={newBudgeted}
+                    onChange={(e) => setNewBudgeted(e.target.value)}
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="provider">Proveedor (opcional)</Label>
+                  <Input
+                    id="provider"
+                    value={newProvider}
+                    onChange={(e) => setNewProvider(e.target.value)}
+                    placeholder="Nombre del proveedor"
+                  />
+                </div>
+                <Button onClick={handleAddBudgetItem} className="w-full">
+                  Añadir categoría
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Monthly Spending */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Gastos Mensuales</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={monthlySpending}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis tickFormatter={(value) => `€${value}`} />
-                    <Tooltip formatter={(value) => [`€${value}`, 'Gastado']} />
-                    <Bar dataKey="spent" fill="#8884d8" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Budget Items */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Desglose por Categorías</CardTitle>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Añadir categoría
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-3">Categoría</th>
-                    <th className="text-left p-3">Asignado</th>
-                    <th className="text-left p-3">Gastado</th>
-                    <th className="text-left p-3">Restante</th>
-                    <th className="text-left p-3">Estado</th>
-                    <th className="text-left p-3">Progreso</th>
-                    <th className="text-left p-3">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {budgetItems.map((item) => {
-                    const remaining = item.allocated - item.spent;
-                    const progress = (item.spent / item.allocated) * 100;
-                    
-                    return (
-                      <tr key={item.id} className="border-b">
-                        <td className="p-3 font-medium">{item.category}</td>
-                        <td className="p-3">€{item.allocated.toLocaleString()}</td>
-                        <td className="p-3">€{item.spent.toLocaleString()}</td>
-                        <td className="p-3">€{remaining.toLocaleString()}</td>
-                        <td className="p-3">
-                          <Badge className={getStatusColor(item.status)}>
-                            {item.status}
-                          </Badge>
-                        </td>
-                        <td className="p-3">
-                          <div className="flex items-center space-x-2">
-                            <Progress value={progress} className="h-2 w-20" />
-                            <span className="text-xs">{progress.toFixed(0)}%</span>
-                          </div>
-                        </td>
-                        <td className="p-3">
-                          <div className="flex space-x-1">
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="sm" className="text-red-500">
-                              <Trash className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {budget.map((item) => (
+            <Card key={item.id}>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg">{item.category}</CardTitle>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm">
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-gray-600">{item.description}</p>
+                
+                {item.provider && (
+                  <p className="text-sm text-blue-600">Proveedor: {item.provider}</p>
+                )}
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Gastado</span>
+                    <span className={getStatusColor(item.budgeted, item.spent)}>
+                      €{item.spent.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Presupuestado</span>
+                    <span>€{item.budgeted.toLocaleString()}</span>
+                  </div>
+                  <Progress 
+                    value={(item.spent / item.budgeted) * 100} 
+                    className="h-2" 
+                  />
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>{Math.round((item.spent / item.budgeted) * 100)}% usado</span>
+                    <span>€{(item.budgeted - item.spent).toLocaleString()} restante</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </ClientLayout>
   );
