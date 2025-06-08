@@ -10,17 +10,12 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Calendar, Bell, Lock, CreditCard, Download } from 'lucide-react';
+import { User, Calendar, Bell, CreditCard } from 'lucide-react';
+import { useClient } from '@/contexts/ClientContext';
 
 const ClientAjustes = () => {
-  const [profile, setProfile] = useState({
-    name: 'Clara Cliente',
-    email: 'clara.cliente@email.com',
-    phone: '+34 612 345 678',
-    address: 'Calle Mayor 123, Madrid',
-    bio: 'Preparando la boda de mis sueños para agosto de 2025'
-  });
-
+  const { profile, updateProfile } = useClient();
+  
   const [weddingDetails, setWeddingDetails] = useState({
     date: '2025-08-15',
     venue: 'Villa Rosa',
@@ -36,11 +31,20 @@ const ClientAjustes = () => {
     marketing: true
   });
 
-  const [privacy, setPrivacy] = useState({
-    publicProfile: false,
-    shareProgress: true,
-    allowContact: true
-  });
+  const [localProfile, setLocalProfile] = useState(profile);
+
+  const handleProfileSave = () => {
+    updateProfile(localProfile);
+    alert('Perfil actualizado correctamente');
+  };
+
+  const handleWeddingSave = () => {
+    alert('Detalles de la boda actualizados correctamente');
+  };
+
+  const handleNotificationsSave = () => {
+    alert('Preferencias de notificación guardadas correctamente');
+  };
 
   return (
     <ClientLayout>
@@ -53,7 +57,7 @@ const ClientAjustes = () => {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <User className="h-4 w-4" />
               Perfil
@@ -65,10 +69,6 @@ const ClientAjustes = () => {
             <TabsTrigger value="notifications" className="flex items-center gap-2">
               <Bell className="h-4 w-4" />
               Notificaciones
-            </TabsTrigger>
-            <TabsTrigger value="privacy" className="flex items-center gap-2">
-              <Lock className="h-4 w-4" />
-              Privacidad
             </TabsTrigger>
             <TabsTrigger value="billing" className="flex items-center gap-2">
               <CreditCard className="h-4 w-4" />
@@ -86,11 +86,23 @@ const ClientAjustes = () => {
                 <div className="flex items-center space-x-6">
                   <Avatar className="h-24 w-24">
                     <AvatarImage src="/placeholder.svg" alt="Perfil" />
-                    <AvatarFallback className="text-lg">CC</AvatarFallback>
+                    <AvatarFallback className="text-lg bg-pink-100 text-pink-700">
+                      {localProfile.avatar}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
-                    <Button variant="outline">Cambiar foto</Button>
-                    <p className="text-sm text-gray-500 mt-2">JPG, GIF o PNG. Máximo 1MB.</p>
+                    <Button 
+                      variant="outline"
+                      onClick={() => {
+                        const newAvatar = prompt('Introduce las iniciales para el avatar:', localProfile.avatar);
+                        if (newAvatar) {
+                          setLocalProfile({...localProfile, avatar: newAvatar});
+                        }
+                      }}
+                    >
+                      Cambiar foto
+                    </Button>
+                    <p className="text-sm text-gray-500 mt-2">Iniciales para el avatar.</p>
                   </div>
                 </div>
 
@@ -99,8 +111,8 @@ const ClientAjustes = () => {
                     <Label htmlFor="name">Nombre completo</Label>
                     <Input 
                       id="name" 
-                      value={profile.name}
-                      onChange={(e) => setProfile({...profile, name: e.target.value})}
+                      value={localProfile.name}
+                      onChange={(e) => setLocalProfile({...localProfile, name: e.target.value})}
                     />
                   </div>
                   <div className="space-y-2">
@@ -108,24 +120,24 @@ const ClientAjustes = () => {
                     <Input 
                       id="email" 
                       type="email"
-                      value={profile.email}
-                      onChange={(e) => setProfile({...profile, email: e.target.value})}
+                      value={localProfile.email}
+                      onChange={(e) => setLocalProfile({...localProfile, email: e.target.value})}
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Teléfono</Label>
                     <Input 
                       id="phone" 
-                      value={profile.phone}
-                      onChange={(e) => setProfile({...profile, phone: e.target.value})}
+                      value={localProfile.phone}
+                      onChange={(e) => setLocalProfile({...localProfile, phone: e.target.value})}
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="address">Dirección</Label>
                     <Input 
                       id="address" 
-                      value={profile.address}
-                      onChange={(e) => setProfile({...profile, address: e.target.value})}
+                      value={localProfile.address}
+                      onChange={(e) => setLocalProfile({...localProfile, address: e.target.value})}
                     />
                   </div>
                 </div>
@@ -135,12 +147,14 @@ const ClientAjustes = () => {
                   <Textarea 
                     id="bio" 
                     placeholder="Cuéntanos sobre ti y tu boda..."
-                    value={profile.bio}
-                    onChange={(e) => setProfile({...profile, bio: e.target.value})}
+                    value={localProfile.bio}
+                    onChange={(e) => setLocalProfile({...localProfile, bio: e.target.value})}
                   />
                 </div>
 
-                <Button>Guardar cambios</Button>
+                <Button onClick={handleProfileSave} className="bg-pink-600 hover:bg-pink-700">
+                  Guardar cambios
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -205,7 +219,9 @@ const ClientAjustes = () => {
                   </div>
                 </div>
 
-                <Button>Actualizar detalles</Button>
+                <Button onClick={handleWeddingSave} className="bg-pink-600 hover:bg-pink-700">
+                  Actualizar detalles
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -263,68 +279,9 @@ const ClientAjustes = () => {
                   </div>
                 </div>
 
-                <Button>Guardar preferencias</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Privacy Tab */}
-          <TabsContent value="privacy">
-            <Card>
-              <CardHeader>
-                <CardTitle>Configuración de Privacidad</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Perfil público</h4>
-                      <p className="text-sm text-gray-500">Permite que otros usuarios vean tu perfil</p>
-                    </div>
-                    <Switch 
-                      checked={privacy.publicProfile}
-                      onCheckedChange={(checked) => setPrivacy({...privacy, publicProfile: checked})}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Compartir progreso</h4>
-                      <p className="text-sm text-gray-500">Permite que tus proveedores vean tu progreso</p>
-                    </div>
-                    <Switch 
-                      checked={privacy.shareProgress}
-                      onCheckedChange={(checked) => setPrivacy({...privacy, shareProgress: checked})}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Permitir contacto directo</h4>
-                      <p className="text-sm text-gray-500">Los proveedores pueden contactarte directamente</p>
-                    </div>
-                    <Switch 
-                      checked={privacy.allowContact}
-                      onCheckedChange={(checked) => setPrivacy({...privacy, allowContact: checked})}
-                    />
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t">
-                  <h4 className="font-medium mb-4">Gestión de datos</h4>
-                  <div className="space-y-2">
-                    <Button variant="outline" className="w-full justify-start">
-                      <Download className="h-4 w-4 mr-2" />
-                      Descargar mis datos
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700">
-                      <Download className="h-4 w-4 mr-2" />
-                      Eliminar mi cuenta
-                    </Button>
-                  </div>
-                </div>
-
-                <Button>Guardar configuración</Button>
+                <Button onClick={handleNotificationsSave} className="bg-pink-600 hover:bg-pink-700">
+                  Guardar preferencias
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>

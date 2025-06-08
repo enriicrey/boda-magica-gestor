@@ -6,86 +6,67 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { Search, Plus, Users, UserCheck, UserX, Mail, Phone } from 'lucide-react';
+import { useClient } from '@/contexts/ClientContext';
 
 const ClientInvitados = () => {
+  const { guests, addGuest } = useClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-
-  const guests = [
-    {
-      id: '1',
-      name: 'María García López',
-      email: 'maria.garcia@email.com',
-      phone: '+34 612 345 678',
-      status: 'Confirmado',
-      group: 'Familia novia',
-      plusOne: true,
-      plusOneName: 'Juan Carlos García',
-      dietary: 'Vegetariana',
-      table: 'Mesa 1'
-    },
-    {
-      id: '2',
-      name: 'Carlos Rodríguez Pérez',
-      email: 'carlos.rodriguez@email.com',
-      phone: '+34 623 456 789',
-      status: 'Pendiente',
-      group: 'Amigos novio',
-      plusOne: false,
-      plusOneName: '',
-      dietary: '',
-      table: 'Mesa 5'
-    },
-    {
-      id: '3',
-      name: 'Ana Martínez Ruiz',
-      email: 'ana.martinez@email.com',
-      phone: '+34 634 567 890',
-      status: 'Confirmado',
-      group: 'Familia novia',
-      plusOne: true,
-      plusOneName: 'Luis Martínez',
-      dietary: 'Sin gluten',
-      table: 'Mesa 2'
-    },
-    {
-      id: '4',
-      name: 'Luis Sánchez Torres',
-      email: 'luis.sanchez@email.com',
-      phone: '+34 645 678 901',
-      status: 'Declinado',
-      group: 'Trabajo',
-      plusOne: false,
-      plusOneName: '',
-      dietary: '',
-      table: ''
-    },
-    {
-      id: '5',
-      name: 'Elena López Fernández',
-      email: 'elena.lopez@email.com',
-      phone: '+34 656 789 012',
-      status: 'Confirmado',
-      group: 'Amigos novia',
-      plusOne: true,
-      plusOneName: 'Pedro López',
-      dietary: '',
-      table: 'Mesa 3'
-    }
-  ];
+  const [groupFilter, setGroupFilter] = useState('all');
+  
+  // New guest form
+  const [newGuestName, setNewGuestName] = useState('');
+  const [newGuestEmail, setNewGuestEmail] = useState('');
+  const [newGuestPhone, setNewGuestPhone] = useState('');
+  const [newGuestGroup, setNewGuestGroup] = useState('');
+  const [newGuestPlusOne, setNewGuestPlusOne] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const filteredGuests = guests.filter(guest => {
     const matchesSearch = guest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          guest.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || guest.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesGroup = groupFilter === 'all' || guest.group === groupFilter;
+    return matchesSearch && matchesStatus && matchesGroup;
   });
 
   const confirmedGuests = guests.filter(g => g.status === 'Confirmado').length;
   const pendingGuests = guests.filter(g => g.status === 'Pendiente').length;
   const declinedGuests = guests.filter(g => g.status === 'Declinado').length;
   const totalAttending = guests.filter(g => g.status === 'Confirmado').reduce((sum, g) => sum + (g.plusOne ? 2 : 1), 0);
+
+  const handleAddGuest = () => {
+    if (newGuestName && newGuestEmail) {
+      addGuest({
+        name: newGuestName,
+        email: newGuestEmail,
+        phone: newGuestPhone,
+        status: 'Pendiente',
+        group: newGuestGroup || 'General',
+        plusOne: newGuestPlusOne,
+        plusOneName: '',
+        dietary: '',
+        table: ''
+      });
+      
+      // Reset form
+      setNewGuestName('');
+      setNewGuestEmail('');
+      setNewGuestPhone('');
+      setNewGuestGroup('');
+      setNewGuestPlusOne(false);
+      setIsDialogOpen(false);
+    }
+  };
+
+  const handleStatsCardClick = (filter: string) => {
+    setStatusFilter(filter);
+    setGroupFilter('all');
+    setSearchTerm('');
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -105,6 +86,8 @@ const ClientInvitados = () => {
     }
   };
 
+  const groups = [...new Set(guests.map(g => g.group))];
+
   return (
     <ClientLayout>
       <div className="flex flex-col space-y-6">
@@ -115,9 +98,12 @@ const ClientInvitados = () => {
           </p>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats Cards - Now clickable */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+          <Card 
+            className="cursor-pointer hover:shadow-md transition-all duration-200 hover:bg-blue-50" 
+            onClick={() => handleStatsCardClick('all')}
+          >
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -129,7 +115,10 @@ const ClientInvitados = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card 
+            className="cursor-pointer hover:shadow-md transition-all duration-200 hover:bg-green-50" 
+            onClick={() => handleStatsCardClick('Confirmado')}
+          >
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -141,7 +130,10 @@ const ClientInvitados = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card 
+            className="cursor-pointer hover:shadow-md transition-all duration-200 hover:bg-yellow-50" 
+            onClick={() => handleStatsCardClick('Pendiente')}
+          >
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -153,7 +145,10 @@ const ClientInvitados = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card 
+            className="cursor-pointer hover:shadow-md transition-all duration-200 hover:bg-purple-50" 
+            onClick={() => handleStatsCardClick('all')}
+          >
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -190,11 +185,90 @@ const ClientInvitados = () => {
                 <SelectItem value="Declinado">Declinado</SelectItem>
               </SelectContent>
             </Select>
+            <Select value={groupFilter} onValueChange={setGroupFilter}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue placeholder="Grupo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos los grupos</SelectItem>
+                {groups.map(group => (
+                  <SelectItem key={group} value={group}>{group}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Añadir Invitado
-          </Button>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-pink-600 hover:bg-pink-700">
+                <Plus className="mr-2 h-4 w-4" />
+                Añadir Invitado
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Añadir nuevo invitado</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="guestName">Nombre completo</Label>
+                  <Input
+                    id="guestName"
+                    value={newGuestName}
+                    onChange={(e) => setNewGuestName(e.target.value)}
+                    placeholder="Ej: María García López"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="guestEmail">Email</Label>
+                  <Input
+                    id="guestEmail"
+                    type="email"
+                    value={newGuestEmail}
+                    onChange={(e) => setNewGuestEmail(e.target.value)}
+                    placeholder="maria@ejemplo.com"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="guestPhone">Teléfono</Label>
+                  <Input
+                    id="guestPhone"
+                    value={newGuestPhone}
+                    onChange={(e) => setNewGuestPhone(e.target.value)}
+                    placeholder="+34 612 345 678"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="guestGroup">Grupo</Label>
+                  <Select value={newGuestGroup} onValueChange={setNewGuestGroup}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona un grupo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Familia novia">Familia novia</SelectItem>
+                      <SelectItem value="Familia novio">Familia novio</SelectItem>
+                      <SelectItem value="Amigos novia">Amigos novia</SelectItem>
+                      <SelectItem value="Amigos novio">Amigos novio</SelectItem>
+                      <SelectItem value="Trabajo">Trabajo</SelectItem>
+                      <SelectItem value="General">General</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="plusOne"
+                    checked={newGuestPlusOne}
+                    onChange={(e) => setNewGuestPlusOne(e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="plusOne">Puede traer acompañante</Label>
+                </div>
+                <Button onClick={handleAddGuest} className="w-full">
+                  Añadir invitado
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Guests Table */}

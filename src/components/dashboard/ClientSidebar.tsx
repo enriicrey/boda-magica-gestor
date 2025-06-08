@@ -20,9 +20,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { useClient } from '@/contexts/ClientContext';
 
 const ClientSidebar = () => {
   const location = useLocation();
+  const { profile, tasks } = useClient();
   
   const menuItems = [
     { icon: Home, label: 'Dashboard', path: '/client-dashboard' },
@@ -39,30 +41,35 @@ const ClientSidebar = () => {
     return location.pathname === path;
   };
 
+  const completedTasks = tasks.filter(task => task.completed).length;
+  const progress = Math.round((completedTasks / tasks.length) * 100);
+
   return (
     <>
-      <Sidebar>
-        <SidebarHeader className="p-4">
+      <Sidebar className="border-r border-pink-100">
+        <SidebarHeader className="p-4 bg-gradient-to-r from-pink-50 to-rose-50">
           <div className="flex items-center space-x-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src="/placeholder.svg" alt="Cliente" />
-              <AvatarFallback>CC</AvatarFallback>
+            <Avatar className="h-12 w-12 border-2 border-pink-200">
+              <AvatarImage src="/placeholder.svg" alt={profile.name} />
+              <AvatarFallback className="bg-pink-100 text-pink-700 font-semibold">
+                {profile.avatar}
+              </AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="font-medium text-sm">Clara Cliente</h3>
-              <p className="text-xs text-gray-500">Mi Boda</p>
+              <h3 className="font-semibold text-sm text-gray-900">{profile.name}</h3>
+              <p className="text-xs text-pink-600 font-medium">Mi Boda</p>
             </div>
           </div>
           <div className="mt-4">
-            <div className="text-xs text-gray-500 mb-1">Progreso de planificación</div>
-            <Progress value={65} className="h-2" />
-            <div className="text-xs text-gray-500 mt-1">65% completado</div>
+            <div className="text-xs text-gray-600 mb-2 font-medium">Progreso de planificación</div>
+            <Progress value={progress} className="h-3 bg-pink-100" />
+            <div className="text-xs text-gray-600 mt-2 font-medium">{progress}% completado</div>
           </div>
         </SidebarHeader>
         
-        <SidebarContent>
+        <SidebarContent className="bg-white">
           <SidebarGroup>
-            <SidebarGroupLabel>Mi Boda</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-pink-700 font-semibold">Mi Boda</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {menuItems.map((item) => (
@@ -71,10 +78,11 @@ const ClientSidebar = () => {
                       asChild 
                       isActive={isActive(item.path)}
                       tooltip={item.label}
+                      className="hover:bg-pink-50 hover:text-pink-700 data-[active=true]:bg-pink-100 data-[active=true]:text-pink-700 transition-colors"
                     >
                       <Link to={item.path}>
                         <item.icon className="h-5 w-5" />
-                        <span>{item.label}</span>
+                        <span className="font-medium">{item.label}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -84,18 +92,16 @@ const ClientSidebar = () => {
           </SidebarGroup>
         </SidebarContent>
         
-        <SidebarFooter>
-          <div className="p-4">
-            <Button variant="outline" className="w-full">
-              <Link to="/" className="w-full">
-                Cerrar Sesión
-              </Link>
-            </Button>
-          </div>
+        <SidebarFooter className="p-4 bg-gray-50">
+          <Button variant="outline" className="w-full border-pink-200 text-pink-700 hover:bg-pink-50">
+            <Link to="/" className="w-full">
+              Cerrar Sesión
+            </Link>
+          </Button>
         </SidebarFooter>
       </Sidebar>
       <div className="hidden md:block">
-        <SidebarTrigger />
+        <SidebarTrigger className="text-pink-600 hover:text-pink-700" />
       </div>
     </>
   );

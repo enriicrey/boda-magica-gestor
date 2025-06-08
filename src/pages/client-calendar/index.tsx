@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/layouts/ClientLayout';
-import { Calendar as CalendarIcon, Plus, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar as CalendarIcon, Plus, Filter } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ChevronRight } from 'lucide-react';
 import { useClient } from '@/contexts/ClientContext';
 
 const ClientCalendar = () => {
@@ -118,9 +119,9 @@ const ClientCalendar = () => {
 
   return (
     <ClientLayout>
-      <div className="flex flex-col space-y-6">
+      <div className="flex flex-col space-y-6 h-full">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <h1 className="text-3xl font-bold">Calendario</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Calendario</h1>
           <div className="flex items-center gap-2">
             <Dialog>
               <DialogTrigger asChild>
@@ -190,45 +191,38 @@ const ClientCalendar = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Calendar - Now takes full width when sidebar is collapsed */}
-          <Card className="lg:col-span-3">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 flex-1">
+          {/* Calendar - Expands to full width */}
+          <Card className="xl:col-span-3 h-fit">
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <CalendarIcon className="h-5 w-5 text-pink-600" />
-                  {currentMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
-                </CardTitle>
-                <div className="flex items-center gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))}
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+              <CardTitle className="flex items-center gap-2">
+                <CalendarIcon className="h-5 w-5 text-pink-600" />
+                {currentMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="w-full">
+            <CardContent className="p-6">
+              <div className="w-full flex justify-center">
                 <Calendar
                   mode="single"
                   selected={date}
                   onSelect={setDate}
                   month={currentMonth}
                   onMonthChange={setCurrentMonth}
-                  className="w-full"
+                  className="w-full max-w-none"
                   classNames={{
-                    day_selected: "bg-pink-600 text-white hover:bg-pink-600",
-                    day_today: "bg-pink-100 text-pink-700 font-bold"
+                    months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 w-full",
+                    month: "space-y-4 w-full",
+                    table: "w-full border-collapse space-y-1",
+                    head_row: "flex w-full",
+                    head_cell: "text-muted-foreground rounded-md w-full font-normal text-[0.8rem] flex-1 text-center",
+                    row: "flex w-full mt-2",
+                    cell: "h-12 w-full text-center text-sm p-0 relative flex-1 [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                    day: "h-12 w-full p-0 font-normal aria-selected:opacity-100 flex items-center justify-center hover:bg-pink-50 data-[selected=true]:bg-pink-600 data-[selected=true]:text-white",
+                    day_today: "bg-pink-100 text-pink-700 font-bold",
+                    day_outside: "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
+                    day_disabled: "text-muted-foreground opacity-50",
+                    day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                    day_hidden: "invisible",
                   }}
                   modifiers={{
                     hasEvents: (day) => hasEvents(day),
@@ -244,7 +238,7 @@ const ClientCalendar = () => {
           </Card>
 
           {/* Events of selected day */}
-          <Card>
+          <Card className="h-fit">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CalendarIcon className="h-5 w-5 text-pink-600" />
@@ -259,7 +253,7 @@ const ClientCalendar = () => {
                       <h4 className="font-medium text-sm text-gray-700 mb-2">Eventos</h4>
                       <div className="space-y-2">
                         {todayEvents.map(event => (
-                          <div key={event.id} className="bg-blue-50 p-3 rounded-lg">
+                          <div key={event.id} className="bg-blue-50 p-3 rounded-lg border border-blue-200">
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
                                 <h4 className="font-medium">{event.title}</h4>
@@ -285,13 +279,23 @@ const ClientCalendar = () => {
                       <h4 className="font-medium text-sm text-gray-700 mb-2">Tareas</h4>
                       <div className="space-y-2">
                         {todayTasks.map(task => (
-                          <div key={task.id} className="bg-green-50 p-3 rounded-lg">
+                          <div key={task.id} className="bg-green-50 p-3 rounded-lg border border-green-200">
                             <h4 className={`font-medium ${task.completed ? 'line-through text-gray-500' : ''}`}>
                               {task.title}
                             </h4>
-                            <Badge variant="outline" className="text-xs mt-1">
-                              {task.type === 'personal' ? 'Personal' : 'Servicio'}
-                            </Badge>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge variant="outline" className="text-xs">
+                                {task.type === 'personal' ? 'Personal' : 'Servicio'}
+                              </Badge>
+                              {task.completed && (
+                                <Badge className="bg-green-100 text-green-800 text-xs">
+                                  Completada
+                                </Badge>
+                              )}
+                            </div>
+                            {task.notes && (
+                              <p className="text-xs text-gray-600 mt-1">📝 {task.notes}</p>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -313,9 +317,9 @@ const ClientCalendar = () => {
             <div className="flex items-center justify-between">
               <Collapsible open={showUpcoming} onOpenChange={setShowUpcoming}>
                 <CollapsibleTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2">
+                  <Button variant="ghost" className="flex items-center gap-2 p-0 hover:bg-transparent">
                     <ChevronRight className={`h-4 w-4 transition-transform ${showUpcoming ? 'rotate-90' : ''}`} />
-                    Próximos eventos
+                    <span className="font-semibold">Próximos eventos</span>
                   </Button>
                 </CollapsibleTrigger>
               </Collapsible>
