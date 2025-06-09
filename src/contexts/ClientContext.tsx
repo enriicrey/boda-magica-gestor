@@ -42,17 +42,49 @@ interface Guest {
   table: string;
 }
 
+interface Message {
+  id: string;
+  content: string;
+  timestamp: string;
+  isProvider: boolean;
+  attachments?: string[];
+}
+
+interface Conversation {
+  id: string;
+  provider: string;
+  avatar: string;
+  lastMessage: string;
+  timestamp: string;
+  unread: number;
+  online: boolean;
+  messages: Message[];
+}
+
+interface BudgetItem {
+  id: string;
+  category: string;
+  description: string;
+  budgeted: number;
+  spent: number;
+  provider?: string;
+}
+
 interface ClientContextType {
   tasks: Task[];
   events: Event[];
   profile: UserProfile;
   guests: Guest[];
+  conversations: Conversation[];
+  budget: BudgetItem[];
   completeTask: (taskId: string, notes?: string) => void;
   addTask: (title: string, date: string, type: 'personal' | 'service') => void;
   addEvent: (event: Omit<Event, 'id'>) => void;
   updateProfile: (updates: Partial<UserProfile>) => void;
   addGuest: (guest: Omit<Guest, 'id'>) => void;
   updateGuest: (guestId: string, updates: Partial<Guest>) => void;
+  addMessage: (conversationId: string, content: string, attachments?: string[]) => void;
+  addBudgetItem: (item: Omit<BudgetItem, 'id'>) => void;
 }
 
 const ClientContext = createContext<ClientContextType | undefined>(undefined);
@@ -101,6 +133,43 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     { id: '7', name: 'Carmen Ruiz', email: 'carmen.ruiz@email.com', phone: '+34 678 901 234', status: 'Pendiente', group: 'Trabajo', plusOne: true, plusOneName: '', dietary: '', table: '' }
   ]);
 
+  const [conversations, setConversations] = useState<Conversation[]>([
+    {
+      id: '1',
+      provider: 'Catering Deluxe',
+      avatar: 'CD',
+      lastMessage: 'Perfecto, te esperamos el viernes a las 18:00',
+      timestamp: '10:30',
+      unread: 1,
+      online: true,
+      messages: [
+        { id: '1', content: 'Hola, querría confirmar la degustación para este viernes', timestamp: '10:00', isProvider: false },
+        { id: '2', content: 'Perfecto, te esperamos el viernes a las 18:00', timestamp: '10:30', isProvider: true }
+      ]
+    },
+    {
+      id: '2',
+      provider: 'Villa Rosa Events',
+      avatar: 'VR',
+      lastMessage: 'El salón estará disponible para la visita',
+      timestamp: 'Ayer',
+      unread: 0,
+      online: false,
+      messages: [
+        { id: '1', content: 'Buenos días, ¿podríamos visitar el salón?', timestamp: 'Ayer 09:00', isProvider: false },
+        { id: '2', content: 'El salón estará disponible para la visita', timestamp: 'Ayer 09:30', isProvider: true }
+      ]
+    }
+  ]);
+
+  const [budget, setBudget] = useState<BudgetItem[]>([
+    { id: '1', category: 'Catering', description: 'Menú para 120 invitados', budgeted: 8000, spent: 0, provider: 'Catering Deluxe' },
+    { id: '2', category: 'Fotografía', description: 'Sesión boda + reportaje', budgeted: 1500, spent: 300, provider: 'Carlos Jiménez Fotografía' },
+    { id: '3', category: 'Vestido', description: 'Vestido de novia', budgeted: 2000, spent: 2000 },
+    { id: '4', category: 'Música', description: 'DJ para la celebración', budgeted: 800, spent: 0 },
+    { id: '5', category: 'Flores', description: 'Decoración floral', budgeted: 1200, spent: 0 }
+  ]);
+
   const completeTask = (taskId: string, notes?: string) => {
     setTasks(prev => prev.map(task => 
       task.id === taskId 
@@ -146,18 +215,49 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     ));
   };
 
+  const addMessage = (conversationId: string, content: string, attachments?: string[]) => {
+    setConversations(prev => prev.map(conv => 
+      conv.id === conversationId 
+        ? {
+            ...conv,
+            messages: [...conv.messages, {
+              id: Date.now().toString(),
+              content,
+              timestamp: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+              isProvider: false,
+              attachments
+            }],
+            lastMessage: content,
+            timestamp: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+          }
+        : conv
+    ));
+  };
+
+  const addBudgetItem = (item: Omit<BudgetItem, 'id'>) => {
+    const newItem: BudgetItem = {
+      ...item,
+      id: Date.now().toString()
+    };
+    setBudget(prev => [...prev, newItem]);
+  };
+
   return (
     <ClientContext.Provider value={{
       tasks,
       events,
       profile,
       guests,
+      conversations,
+      budget,
       completeTask,
       addTask,
       addEvent,
       updateProfile,
       addGuest,
-      updateGuest
+      updateGuest,
+      addMessage,
+      addBudgetItem
     }}>
       {children}
     </ClientContext.Provider>
