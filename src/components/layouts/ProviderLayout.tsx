@@ -9,16 +9,20 @@ interface ProviderLayoutProps {
 
 const ProviderLayout: React.FC<ProviderLayoutProps> = ({ children }) => {
   return (
-    <SidebarProvider>
-      <div className="flex h-screen w-full">
-        <ProviderSidebar />
-        <SidebarInset className="bg-background">
-          <main className="flex-1 p-6 overflow-auto">
-            {children}
-          </main>
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
+      <SidebarProvider>
+        <div className="flex h-screen w-full">
+          <ProviderSidebar />
+          <SidebarInset className="bg-transparent transition-all duration-300 ease-in-out">
+            <main className="flex-1 overflow-auto w-full">
+              <div className="p-6 h-full">
+                {children}
+              </div>
+            </main>
+          </SidebarInset>
+        </div>
+      </SidebarProvider>
+    </div>
   );
 };
 

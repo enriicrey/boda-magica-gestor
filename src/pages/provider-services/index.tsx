@@ -1,188 +1,224 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ProviderLayout from '@/components/layouts/ProviderLayout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Search, Plus, Filter, Edit, Trash } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Plus, Search, Edit, Trash, Eye, Camera, Heart, Users, Sparkles } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-// Mock data for services
+// Mock data para servicios
 const mockServices = [
   {
     id: '1',
-    name: 'Fotografía de Boda Completa',
+    name: 'Sesión de fotos pre-boda',
     category: 'Fotografía',
-    price: 1500,
-    description: 'Servicio completo de fotografía para bodas, incluye sesión pre-boda, ceremonia y recepción.',
-    status: 'Activo',
-    duration: '12 horas'
+    price: 450,
+    duration: '2 horas',
+    description: 'Sesión romántica para capturar momentos especiales antes del gran día',
+    status: 'active',
+    bookings: 12,
+    rating: 4.9,
+    featured: true
   },
   {
     id: '2',
-    name: 'Video Documental de Ceremonia',
-    category: 'Video',
+    name: 'Cobertura completa de boda',
+    category: 'Fotografía',
     price: 1200,
-    description: 'Grabación profesional de la ceremonia y edición de un video documental de 60 minutos.',
-    status: 'Activo',
-    duration: '6 horas'
+    duration: '8 horas',
+    description: 'Cobertura fotográfica completa de ceremonia y banquete',
+    status: 'active',
+    bookings: 8,
+    rating: 5.0,
+    featured: true
   },
   {
     id: '3',
-    name: 'Paquete de Impresión',
-    category: 'Impresión',
-    price: 350,
-    description: 'Álbum impreso de 30 páginas con las mejores fotos seleccionadas por el cliente.',
-    status: 'Activo',
-    duration: 'N/A'
+    name: 'Álbum digital personalizado',
+    category: 'Fotografía',
+    price: 200,
+    duration: '1 semana entrega',
+    description: 'Álbum digital con las mejores fotos editadas y personalizadas',
+    status: 'active',
+    bookings: 25,
+    rating: 4.8,
+    featured: false
   },
   {
     id: '4',
-    name: 'Sesión Pre-Boda',
-    category: 'Fotografía',
-    price: 300,
-    description: 'Sesión fotográfica para parejas antes del día de la boda, en locación a elección.',
-    status: 'Activo',
-    duration: '2 horas'
+    name: 'Evento corporativo',
+    category: 'Corporativo',
+    price: 800,
+    duration: '4 horas',
+    description: 'Cobertura profesional para eventos de empresa',
+    status: 'active',
+    bookings: 5,
+    rating: 4.7,
+    featured: false
   },
   {
     id: '5',
-    name: 'Fotografía de Evento Corporativo',
-    category: 'Fotografía',
-    price: 800,
-    description: 'Cobertura fotográfica para eventos empresariales, incluye edición y entrega digital.',
-    status: 'Inactivo',
-    duration: '4 horas'
+    name: 'Sesión familiar',
+    category: 'Familiar',
+    price: 300,
+    duration: '1.5 horas',
+    description: 'Sesión de fotos familiares en exteriores',
+    status: 'inactive',
+    bookings: 3,
+    rating: 4.6,
+    featured: false
   },
 ];
 
+const categories = ['Todas', 'Fotografía', 'Corporativo', 'Familiar', 'Eventos'];
+
 const ProviderServices = () => {
   const { toast } = useToast();
-  const [view, setView] = useState<'table' | 'cards'>('table');
-  const [searchTerm, setSearchTerm] = useState('');
   const [services, setServices] = useState(mockServices);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingService, setEditingService] = useState<any>(null);
+  const [selectedService, setSelectedService] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Todas');
   const [formData, setFormData] = useState({
     name: '',
-    category: 'Fotografía',
+    category: '',
     price: '',
+    duration: '',
     description: '',
-    status: 'Activo',
-    duration: ''
+    status: 'active'
   });
 
-  // Filter services based on search term
-  const filteredServices = services.filter(
-    service => 
-      service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      service.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filtrar servicios
+  const filteredServices = services.filter(service => {
+    const matchesSearch = service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         service.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'Todas' || service.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleAddService = () => {
-    setEditingService(null);
+    setSelectedService(null);
     setFormData({
       name: '',
-      category: 'Fotografía',
+      category: '',
       price: '',
+      duration: '',
       description: '',
-      status: 'Activo',
-      duration: ''
+      status: 'active'
     });
     setIsDialogOpen(true);
   };
 
-  const handleEditService = (service: typeof services[0]) => {
-    setEditingService(service);
+  const handleEditService = (service) => {
+    setSelectedService(service);
     setFormData({
       name: service.name,
       category: service.category,
       price: service.price.toString(),
+      duration: service.duration,
       description: service.description,
-      status: service.status,
-      duration: service.duration
+      status: service.status
     });
     setIsDialogOpen(true);
   };
 
-  const handleDeleteService = (id: string) => {
+  const handleDeleteService = (id) => {
     setServices(services.filter(service => service.id !== id));
     toast({
       title: "Servicio eliminado",
-      description: "El servicio ha sido eliminado con éxito",
-      duration: 3000
+      description: "El servicio ha sido eliminado correctamente",
     });
   };
 
   const handleSaveService = () => {
-    if (!formData.name || !formData.price) {
+    if (!formData.name || !formData.category || !formData.price) {
       toast({
         title: "Error",
-        description: "Por favor completa los campos obligatorios",
-        variant: "destructive",
-        duration: 3000
+        description: "Por favor completa todos los campos obligatorios",
+        variant: "destructive"
       });
       return;
     }
 
-    if (editingService) {
-      // Update existing service
-      setServices(services.map(service => 
-        service.id === editingService.id 
-          ? { 
-              ...service, 
-              name: formData.name,
-              category: formData.category,
-              price: parseFloat(formData.price),
-              description: formData.description,
-              status: formData.status,
-              duration: formData.duration
-            } 
-          : service
+    const serviceData = {
+      ...formData,
+      price: parseFloat(formData.price),
+      bookings: selectedService?.bookings || 0,
+      rating: selectedService?.rating || 0,
+      featured: selectedService?.featured || false
+    };
+
+    if (selectedService) {
+      // Editar servicio existente
+      setServices(services.map(service =>
+        service.id === selectedService.id ? { ...service, ...serviceData } : service
       ));
       toast({
         title: "Servicio actualizado",
-        description: "El servicio ha sido actualizado con éxito",
-        duration: 3000
+        description: "Los cambios han sido guardados correctamente",
       });
     } else {
-      // Create new service
+      // Crear nuevo servicio
       const newService = {
         id: Date.now().toString(),
-        name: formData.name,
-        category: formData.category,
-        price: parseFloat(formData.price),
-        description: formData.description,
-        status: formData.status,
-        duration: formData.duration
+        ...serviceData
       };
       setServices([...services, newService]);
       toast({
-        title: "Servicio añadido",
-        description: "El nuevo servicio ha sido añadido con éxito",
-        duration: 3000
+        title: "Servicio creado",
+        description: "El nuevo servicio ha sido añadido correctamente",
       });
     }
+
     setIsDialogOpen(false);
   };
 
-  // Function to get status color
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'activo':
-        return 'bg-green-100 text-green-800 hover:bg-green-100';
-      case 'inactivo':
-        return 'bg-gray-100 text-gray-800 hover:bg-gray-100';
-      default:
-        return 'bg-blue-100 text-blue-800 hover:bg-blue-100';
+  const toggleServiceStatus = (id) => {
+    setServices(services.map(service =>
+      service.id === id
+        ? { ...service, status: service.status === 'active' ? 'inactive' : 'active' }
+        : service
+    ));
+    toast({
+      title: "Estado actualizado",
+      description: "El estado del servicio ha sido cambiado",
+    });
+  };
+
+  const getStatusColor = (status) => {
+    return status === 'active' 
+      ? 'bg-green-100 text-green-800 hover:bg-green-100' 
+      : 'bg-red-100 text-red-800 hover:bg-red-100';
+  };
+
+  const getCategoryIcon = (category) => {
+    switch (category) {
+      case 'Fotografía': return <Camera className="h-4 w-4" />;
+      case 'Corporativo': return <Users className="h-4 w-4" />;
+      case 'Familiar': return <Heart className="h-4 w-4" />;
+      default: return <Sparkles className="h-4 w-4" />;
     }
   };
 
@@ -190,178 +226,224 @@ const ProviderServices = () => {
     <ProviderLayout>
       <div className="flex flex-col space-y-6">
         <div className="flex flex-col space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">Servicios</h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            Administra tus servicios y paquetes disponibles para clientes
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Mis Servicios</h1>
+          <p className="text-gray-600">
+            Gestiona tu catálogo de servicios y personaliza tu oferta
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col md:flex-row md:items-center gap-4">
-            <div className="relative w-full md:w-64">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
+        {/* Estadísticas rápidas */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className="border-0 shadow-md bg-gradient-to-br from-blue-50 to-blue-100">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-blue-700">Total servicios</p>
+                  <h3 className="text-2xl font-bold text-blue-800">{services.length}</h3>
+                </div>
+                <Sparkles className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-0 shadow-md bg-gradient-to-br from-green-50 to-green-100">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-green-700">Activos</p>
+                  <h3 className="text-2xl font-bold text-green-800">
+                    {services.filter(s => s.status === 'active').length}
+                  </h3>
+                </div>
+                <div className="h-8 w-8 bg-green-600 rounded-full flex items-center justify-center">
+                  <div className="h-2 w-2 bg-white rounded-full"></div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-0 shadow-md bg-gradient-to-br from-purple-50 to-purple-100">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-purple-700">Reservas totales</p>
+                  <h3 className="text-2xl font-bold text-purple-800">
+                    {services.reduce((sum, s) => sum + s.bookings, 0)}
+                  </h3>
+                </div>
+                <Users className="h-8 w-8 text-purple-600" />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-0 shadow-md bg-gradient-to-br from-amber-50 to-amber-100">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-amber-700">Rating promedio</p>
+                  <h3 className="text-2xl font-bold text-amber-800">
+                    {(services.reduce((sum, s) => sum + s.rating, 0) / services.length).toFixed(1)}
+                  </h3>
+                </div>
+                <div className="text-amber-600">★</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Controles */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                type="search"
                 placeholder="Buscar servicios..."
-                className="w-full bg-white pl-8 dark:bg-gray-950"
+                className="pl-10 w-full sm:w-64"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Button variant="outline" size="sm">
-              <Filter className="mr-2 h-4 w-4" /> Filtros
-            </Button>
-            <div className="flex items-center space-x-2">
-              <Button 
-                variant={view === 'table' ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => setView('table')}
-              >
-                Tabla
-              </Button>
-              <Button 
-                variant={view === 'cards' ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => setView('cards')}
-              >
-                Tarjetas
-              </Button>
-            </div>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full sm:w-40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map(category => (
+                  <SelectItem key={category} value={category}>{category}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Button onClick={handleAddService}>
+          <Button onClick={handleAddService} className="bg-wedding-sage hover:bg-wedding-sage/90">
             <Plus className="mr-2 h-4 w-4" />
-            Añadir Servicio
+            Nuevo Servicio
           </Button>
         </div>
 
-        {view === 'table' ? (
-          <Card>
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nombre</TableHead>
-                    <TableHead>Categoría</TableHead>
-                    <TableHead>Precio</TableHead>
-                    <TableHead>Duración</TableHead>
-                    <TableHead>Estado</TableHead>
-                    <TableHead className="text-right">Acciones</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredServices.map((service) => (
-                    <TableRow key={service.id}>
-                      <TableCell className="font-medium">{service.name}</TableCell>
-                      <TableCell>{service.category}</TableCell>
-                      <TableCell>{service.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</TableCell>
-                      <TableCell>{service.duration}</TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(service.status)}>
-                          {service.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            onClick={() => handleEditService(service)}
-                          >
-                            <span className="sr-only">Editar</span>
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="text-red-500"
-                            onClick={() => handleDeleteService(service.id)}
-                          >
-                            <span className="sr-only">Eliminar</span>
-                            <Trash className="h-4 w-4" />
-                          </Button>
+        {/* Tabla de servicios */}
+        <Card className="border-0 shadow-md">
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Servicio</TableHead>
+                  <TableHead>Categoría</TableHead>
+                  <TableHead>Precio</TableHead>
+                  <TableHead>Duración</TableHead>
+                  <TableHead>Reservas</TableHead>
+                  <TableHead>Rating</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredServices.map((service) => (
+                  <TableRow key={service.id} className="hover:bg-gray-50/50">
+                    <TableCell>
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-wedding-blush/20 p-2 rounded-lg">
+                          {getCategoryIcon(service.category)}
                         </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredServices.map((service) => (
-              <Card key={service.id}>
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between">
-                    <CardTitle className="text-md font-medium">{service.name}</CardTitle>
-                    <Badge className={getStatusColor(service.status)}>
-                      {service.status}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-2xl font-bold">
-                        {service.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
-                      </p>
-                      <p className="text-sm text-gray-500">{service.category}</p>
-                    </div>
-                    
-                    <div>
-                      <p className="text-sm text-gray-700">{service.description}</p>
-                    </div>
-                    
-                    {service.duration !== 'N/A' && (
-                      <div className="flex items-center space-x-1 text-sm text-gray-500">
-                        <span>Duración:</span>
-                        <span>{service.duration}</span>
+                        <div>
+                          <div className="font-medium flex items-center">
+                            {service.name}
+                            {service.featured && (
+                              <Badge className="ml-2 bg-amber-100 text-amber-800 hover:bg-amber-100">
+                                Destacado
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-sm text-gray-500 max-w-xs truncate">
+                            {service.description}
+                          </div>
+                        </div>
                       </div>
-                    )}
-                    
-                    <div className="flex justify-end gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => handleEditService(service)}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{service.category}</Badge>
+                    </TableCell>
+                    <TableCell className="font-medium">€{service.price}</TableCell>
+                    <TableCell>{service.duration}</TableCell>
+                    <TableCell>
+                      <span className="font-medium">{service.bookings}</span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center">
+                        ★ <span className="ml-1">{service.rating}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge 
+                        className={`cursor-pointer ${getStatusColor(service.status)}`}
+                        onClick={() => toggleServiceStatus(service.id)}
                       >
-                        <Edit className="mr-1 h-4 w-4" /> Editar
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="text-red-500"
-                        onClick={() => handleDeleteService(service.id)}
-                      >
-                        <Trash className="mr-1 h-4 w-4" /> Eliminar
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                        {service.status === 'active' ? 'Activo' : 'Inactivo'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          onClick={() => handleEditService(service)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-red-500 hover:text-red-700"
+                          onClick={() => handleDeleteService(service.id)}
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        {/* Mensaje si no hay servicios */}
+        {filteredServices.length === 0 && (
+          <div className="text-center py-8">
+            <Sparkles className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No se encontraron servicios
+            </h3>
+            <p className="text-gray-600 mb-4">
+              {searchTerm ? 'Intenta con otros términos de búsqueda' : 'Comienza añadiendo tu primer servicio'}
+            </p>
+            <Button onClick={handleAddService} className="bg-wedding-sage hover:bg-wedding-sage/90">
+              <Plus className="mr-2 h-4 w-4" />
+              Añadir Servicio
+            </Button>
           </div>
         )}
       </div>
 
-      {/* Dialog for adding/editing service */}
+      {/* Modal para añadir/editar servicio */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{editingService ? 'Editar Servicio' : 'Añadir Nuevo Servicio'}</DialogTitle>
+            <DialogTitle>
+              {selectedService ? 'Editar servicio' : 'Nuevo servicio'}
+            </DialogTitle>
             <DialogDescription>
-              {editingService 
-                ? 'Modifica los detalles del servicio existente' 
-                : 'Introduce los detalles para crear un nuevo servicio'}
+              {selectedService 
+                ? 'Modifica los detalles de tu servicio' 
+                : 'Añade un nuevo servicio a tu catálogo'}
             </DialogDescription>
           </DialogHeader>
           
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="service-name">Nombre del Servicio</Label>
+              <Label htmlFor="service-name">Nombre del servicio *</Label>
               <Input
                 id="service-name"
-                placeholder="Nombre del servicio"
+                placeholder="Ej: Sesión de fotos pre-boda"
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
               />
@@ -369,80 +451,80 @@ const ProviderServices = () => {
             
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="service-category">Categoría</Label>
+                <Label htmlFor="service-category">Categoría *</Label>
                 <Select
                   value={formData.category}
                   onValueChange={(value) => setFormData({...formData, category: value})}
                 >
-                  <SelectTrigger id="service-category">
-                    <SelectValue placeholder="Selecciona una categoría" />
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Fotografía">Fotografía</SelectItem>
-                    <SelectItem value="Video">Video</SelectItem>
-                    <SelectItem value="Impresión">Impresión</SelectItem>
-                    <SelectItem value="Otro">Otro</SelectItem>
+                    <SelectItem value="Corporativo">Corporativo</SelectItem>
+                    <SelectItem value="Familiar">Familiar</SelectItem>
+                    <SelectItem value="Eventos">Eventos</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="service-status">Estado</Label>
-                <Select
-                  value={formData.status}
-                  onValueChange={(value) => setFormData({...formData, status: value})}
-                >
-                  <SelectTrigger id="service-status">
-                    <SelectValue placeholder="Selecciona un estado" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Activo">Activo</SelectItem>
-                    <SelectItem value="Inactivo">Inactivo</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="service-price">Precio (€)</Label>
+                <Label htmlFor="service-price">Precio (€) *</Label>
                 <Input
                   id="service-price"
                   type="number"
-                  placeholder="0.00"
+                  placeholder="300"
                   value={formData.price}
                   onChange={(e) => setFormData({...formData, price: e.target.value})}
                 />
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="service-duration">Duración</Label>
-                <Input
-                  id="service-duration"
-                  placeholder="ej. 2 horas, N/A"
-                  value={formData.duration}
-                  onChange={(e) => setFormData({...formData, duration: e.target.value})}
-                />
-              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="service-duration">Duración</Label>
+              <Input
+                id="service-duration"
+                placeholder="Ej: 2 horas, 1 día, 1 semana"
+                value={formData.duration}
+                onChange={(e) => setFormData({...formData, duration: e.target.value})}
+              />
             </div>
             
             <div className="space-y-2">
               <Label htmlFor="service-description">Descripción</Label>
               <Textarea
                 id="service-description"
-                placeholder="Descripción detallada del servicio..."
+                placeholder="Describe los detalles de tu servicio..."
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
-                className="min-h-[100px]"
+                rows={3}
               />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="service-status">Estado</Label>
+              <Select
+                value={formData.status}
+                onValueChange={(value) => setFormData({...formData, status: value})}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Activo</SelectItem>
+                  <SelectItem value="inactive">Inactivo</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
-            </DialogClose>
-            <Button onClick={handleSaveService}>{editingService ? 'Guardar Cambios' : 'Crear Servicio'}</Button>
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSaveService} className="bg-wedding-sage hover:bg-wedding-sage/90">
+              {selectedService ? 'Guardar cambios' : 'Crear servicio'}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
