@@ -2,19 +2,12 @@
 import { useState } from 'react';
 import ProviderLayout from '@/components/layouts/ProviderLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search, Star, Filter, MessageSquare } from 'lucide-react';
+import { Search, Star, Filter, MessageSquare, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 // Mock data for reviews
@@ -24,18 +17,18 @@ const mockReviews = [
     clientName: 'Carlos Mendoza',
     clientAvatar: '/placeholder.svg',
     rating: 5,
-    comment: 'Excelente servicio. Todo fue perfecto para nuestra boda.',
+    comment: 'Excelente servicio. Todo fue perfecto para nuestra boda. Diana superó todas nuestras expectativas y logró crear exactamente lo que habíamos soñado.',
     date: '2024-05-10',
     eventType: 'Boda',
     status: 'publicado',
-    response: 'Gracias Carlos, fue un placer organizar tu boda.'
+    response: 'Gracias Carlos, fue un placer organizar tu boda. Espero que tengan una vida llena de felicidad juntos.'
   },
   {
     id: '2',
     clientName: 'Ana García',
     clientAvatar: '/placeholder.svg',
     rating: 4,
-    comment: 'Muy buena organización. Todo salió genial aunque hubo un pequeño retraso en el inicio.',
+    comment: 'Muy buena organización. Todo salió genial aunque hubo un pequeño retraso en el inicio. El resultado final fue fantástico.',
     date: '2024-05-05',
     eventType: 'Cumpleaños',
     status: 'publicado',
@@ -46,18 +39,18 @@ const mockReviews = [
     clientName: 'Miguel Fernández',
     clientAvatar: '/placeholder.svg',
     rating: 5,
-    comment: 'Profesionalidad absoluta. El evento corporativo fue todo un éxito.',
+    comment: 'Profesionalidad absoluta. El evento corporativo fue todo un éxito. Nuestros clientes quedaron impresionados con la organización.',
     date: '2024-04-20',
     eventType: 'Corporativo',
     status: 'publicado',
-    response: 'Gracias Miguel, encantados de haber colaborado contigo.'
+    response: 'Gracias Miguel, encantados de haber colaborado con vosotros. Esperamos futuras colaboraciones.'
   },
   {
     id: '4',
     clientName: 'Lucía Martínez',
     clientAvatar: '/placeholder.svg',
     rating: 3,
-    comment: 'El servicio fue correcto, pero esperaba un poco más de personalización.',
+    comment: 'El servicio fue correcto, pero esperaba un poco más de personalización. Algunos detalles no fueron como los había imaginado.',
     date: '2024-03-15',
     eventType: 'Boda',
     status: 'pendiente',
@@ -68,7 +61,7 @@ const mockReviews = [
     clientName: 'David Sánchez',
     clientAvatar: '/placeholder.svg',
     rating: 4,
-    comment: 'Buena organización y atención. Recomendaría sus servicios.',
+    comment: 'Buena organización y atención. Recomendaría sus servicios. El aniversario fue muy emotivo y bien planificado.',
     date: '2024-02-28',
     eventType: 'Aniversario',
     status: 'publicado',
@@ -79,7 +72,7 @@ const mockReviews = [
 const ProviderReviews = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('all'); // 'all', 'pending', '5-star', '4-star', etc.
+  const [filter, setFilter] = useState('all');
   const [selectedReview, setSelectedReview] = useState<string | null>(null);
   const [responseText, setResponseText] = useState('');
   const [reviews, setReviews] = useState(mockReviews);
@@ -120,8 +113,7 @@ const ProviderReviews = () => {
     
     toast({
       title: "Respuesta enviada",
-      description: "Tu respuesta ha sido publicada correctamente",
-      duration: 3000
+      description: "Tu respuesta ha sido publicada correctamente"
     });
   };
 
@@ -148,94 +140,107 @@ const ProviderReviews = () => {
     }
   };
 
+  const avgRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+  const totalReviews = reviews.length;
+  const fiveStarReviews = reviews.filter(r => r.rating === 5).length;
+  const pendingResponses = reviews.filter(r => r.response === '').length;
+  const recentReviews = reviews.filter(r => new Date(r.date) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length;
+
   return (
     <ProviderLayout>
       <div className="flex flex-col space-y-6">
         <div className="flex flex-col space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">Reseñas</h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            Gestiona y responde a las reseñas de tus clientes.
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Reseñas</h1>
+          <p className="text-gray-600">
+            Gestiona las valoraciones de tus clientes y construye tu reputación profesional
           </p>
         </div>
 
         {/* Summary Cards */}
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Puntuación media
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center">
-                <span className="text-2xl font-bold mr-2">4.2</span>
-                <div className="flex">
-                  {renderStars(4)}
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <Card className="border-0 shadow-md bg-gradient-to-br from-amber-50 to-amber-100">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-amber-700">Puntuación media</p>
+                  <div className="flex items-center">
+                    <span className="text-2xl font-bold text-amber-800 mr-2">{avgRating.toFixed(1)}</span>
+                    <div className="flex">
+                      {renderStars(Math.round(avgRating))}
+                    </div>
+                  </div>
+                  <p className="text-xs text-amber-600">
+                    Basado en {totalReviews} reseñas
+                  </p>
+                </div>
+                <div className="bg-amber-200 p-3 rounded-full">
+                  <Star className="h-6 w-6 text-amber-700" />
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Basado en {reviews.length} reseñas
-              </p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Reseñas 5 estrellas
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {reviews.filter(review => review.rating === 5).length}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-green-50 to-green-100">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-green-700">Reseñas 5 estrellas</p>
+                  <h3 className="text-2xl font-bold text-green-800">{fiveStarReviews}</h3>
+                  <p className="text-xs text-green-600 flex items-center">
+                    <TrendingUp className="h-3 w-3 mr-1" />
+                    {Math.round((fiveStarReviews / totalReviews) * 100)}% del total
+                  </p>
+                </div>
+                <div className="bg-green-200 p-3 rounded-full">
+                  <Star className="h-6 w-6 text-green-700" />
+                </div>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                {Math.round((reviews.filter(review => review.rating === 5).length / reviews.length) * 100)}% del total
-              </p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Pendientes de respuesta
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {reviews.filter(review => review.response === '').length}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-orange-50 to-orange-100">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-orange-700">Sin respuesta</p>
+                  <h3 className="text-2xl font-bold text-orange-800">{pendingResponses}</h3>
+                  <p className="text-xs text-orange-600">
+                    Requieren tu atención
+                  </p>
+                </div>
+                <div className="bg-orange-200 p-3 rounded-full">
+                  <MessageSquare className="h-6 w-6 text-orange-700" />
+                </div>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Requieren tu atención
-              </p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Reseñas recientes
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {reviews.filter(review => new Date(review.date) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-blue-50 to-blue-100">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-blue-700">Reseñas recientes</p>
+                  <h3 className="text-2xl font-bold text-blue-800">{recentReviews}</h3>
+                  <p className="text-xs text-blue-600">
+                    En los últimos 30 días
+                  </p>
+                </div>
+                <div className="bg-blue-200 p-3 rounded-full">
+                  <MessageSquare className="h-6 w-6 text-blue-700" />
+                </div>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                En los últimos 30 días
-              </p>
             </CardContent>
           </Card>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="relative w-64">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
               <Input
                 type="search"
                 placeholder="Buscar reseñas..."
-                className="w-full bg-white pl-8 dark:bg-gray-950"
+                className="w-full bg-white pl-8"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -273,134 +278,118 @@ const ProviderReviews = () => {
           </div>
         </div>
 
-        <Card>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Cliente</TableHead>
-                  <TableHead>Puntuación</TableHead>
-                  <TableHead>Comentario</TableHead>
-                  <TableHead>Fecha</TableHead>
-                  <TableHead>Estado</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredReviews.length > 0 ? (
-                  filteredReviews.map((review) => (
-                    <TableRow key={review.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={review.clientAvatar} alt={review.clientName} />
-                            <AvatarFallback>{review.clientName.substring(0, 2).toUpperCase()}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="font-medium">{review.clientName}</div>
-                            <div className="text-xs text-gray-500">{review.eventType}</div>
-                          </div>
+        <div className="grid gap-6">
+          {filteredReviews.length > 0 ? (
+            filteredReviews.map((review) => (
+              <Card key={review.id} className="border-0 shadow-md">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage src={review.clientAvatar} alt={review.clientName} />
+                        <AvatarFallback>{review.clientName.substring(0, 2).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">{review.clientName}</h4>
+                        <div className="flex items-center gap-2 mt-1">
+                          <div className="flex">{renderStars(review.rating)}</div>
+                          <Badge variant="outline">{review.eventType}</Badge>
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex">{renderStars(review.rating)}</div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="max-w-xs truncate">{review.comment}</div>
-                        {review.response && (
-                          <div className="text-xs italic text-gray-500 mt-1 max-w-xs truncate">
-                            Respuesta: {review.response}
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      {getStatusBadge(review.status)}
+                      <p className="text-sm text-gray-500 mt-1">
                         {new Date(review.date).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>{getStatusBadge(review.status)}</TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className={review.response ? "bg-gray-100" : ""}
-                          onClick={() => {
-                            if (selectedReview === review.id) {
-                              setSelectedReview(null);
-                            } else {
-                              setSelectedReview(review.id);
-                              setResponseText(review.response);
-                            }
-                          }}
-                        >
-                          <MessageSquare className="h-4 w-4 mr-2" />
-                          {review.response ? 'Editar respuesta' : 'Responder'}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-6 text-gray-500">
-                      No se encontraron reseñas que coincidan con los criterios de búsqueda.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-
-        {selectedReview && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">
-                Responder a reseña
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {reviews.find(r => r.id === selectedReview)?.comment && (
-                  <div className="bg-gray-50 p-4 rounded-md">
-                    <p className="font-medium mb-2">
-                      {reviews.find(r => r.id === selectedReview)?.clientName}:
-                    </p>
-                    <p className="italic">
-                      "{reviews.find(r => r.id === selectedReview)?.comment}"
-                    </p>
+                      </p>
+                    </div>
                   </div>
-                )}
-                <div>
-                  <label htmlFor="response" className="block text-sm font-medium mb-2">
-                    Tu respuesta
-                  </label>
-                  <Input
-                    id="response"
-                    className="min-h-[100px]"
-                    placeholder="Escribe tu respuesta aquí..."
-                    value={responseText}
-                    onChange={(e) => setResponseText(e.target.value)}
-                  />
-                </div>
-                <div className="flex justify-end space-x-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setSelectedReview(null);
-                      setResponseText('');
-                    }}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    onClick={() => handleSendResponse(selectedReview)}
-                    disabled={!responseText.trim()}
-                  >
-                    Publicar respuesta
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+                  
+                  <div className="mb-4">
+                    <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+                  </div>
+                  
+                  {review.response && (
+                    <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                      <p className="text-sm font-medium text-gray-900 mb-2">Tu respuesta:</p>
+                      <p className="text-gray-700">{review.response}</p>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-end">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        if (selectedReview === review.id) {
+                          setSelectedReview(null);
+                        } else {
+                          setSelectedReview(review.id);
+                          setResponseText(review.response);
+                        }
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <MessageSquare className="h-4 w-4" />
+                      {review.response ? 'Editar respuesta' : 'Responder'}
+                    </Button>
+                  </div>
+                  
+                  {selectedReview === review.id && (
+                    <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                      <div className="space-y-4">
+                        <div>
+                          <label htmlFor="response" className="block text-sm font-medium mb-2">
+                            Tu respuesta
+                          </label>
+                          <Textarea
+                            id="response"
+                            rows={3}
+                            placeholder="Escribe tu respuesta aquí..."
+                            value={responseText}
+                            onChange={(e) => setResponseText(e.target.value)}
+                            className="resize-none"
+                          />
+                        </div>
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedReview(null);
+                              setResponseText('');
+                            }}
+                          >
+                            Cancelar
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => handleSendResponse(review.id)}
+                            disabled={!responseText.trim()}
+                          >
+                            Publicar respuesta
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <Card className="border-0 shadow-md">
+              <CardContent className="text-center py-12">
+                <Star className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                <p className="text-lg font-medium text-gray-900 mb-1">No hay reseñas</p>
+                <p className="text-gray-500">
+                  {searchTerm 
+                    ? 'No se encontraron reseñas que coincidan con tu búsqueda.' 
+                    : 'Las reseñas de tus clientes aparecerán aquí.'}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
     </ProviderLayout>
   );
