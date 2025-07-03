@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import ProviderLayout from '@/components/layouts/ProviderLayout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 // Mock user data
 const mockUser = {
   name: "Diana Rodríguez",
-  email: "diana@weddingplan.com",
+  email: "diana@weddingplan.com", 
   role: "Organizador Premium",
   phone: "+34 612 345 678",
   location: "Madrid, España",
@@ -22,10 +21,10 @@ const mockUser = {
 
 // Mock service categories
 const serviceCategories = [
-  "Bodas", 
+  "Bodas",
   "Cumpleaños", 
-  "Eventos corporativos", 
-  "Aniversarios", 
+  "Eventos corporativos",
+  "Aniversarios",
   "Bautizos y comuniones",
   "Graduaciones",
   "Baby showers"
@@ -74,24 +73,22 @@ const ProviderSettings = () => {
 
   // Selected service categories state
   const [selectedCategories, setSelectedCategories] = useState([
-    "Bodas", 
-    "Cumpleaños", 
+    "Bodas",
+    "Cumpleaños",
     "Aniversarios"
   ]);
 
   const handleUpdatePersonal = () => {
     toast({
       title: "Perfil actualizado",
-      description: "Tu información personal ha sido actualizada correctamente.",
-      duration: 3000
+      description: "Tu información personal ha sido actualizada correctamente."
     });
   };
 
   const handleUpdateBusiness = () => {
     toast({
-      title: "Información de negocio actualizada",
-      description: "Los datos de tu negocio han sido actualizados.",
-      duration: 3000
+      title: "Información de negocio actualizada", 
+      description: "Los datos de tu negocio han sido actualizados."
     });
   };
 
@@ -100,8 +97,7 @@ const ProviderSettings = () => {
       toast({
         title: "Error",
         description: "Las contraseñas nuevas no coinciden.",
-        variant: "destructive",
-        duration: 3000
+        variant: "destructive"
       });
       return;
     }
@@ -110,16 +106,14 @@ const ProviderSettings = () => {
       toast({
         title: "Error",
         description: "Debes introducir tu contraseña actual.",
-        variant: "destructive",
-        duration: 3000
+        variant: "destructive"
       });
       return;
     }
     
     toast({
       title: "Contraseña actualizada",
-      description: "Tu contraseña ha sido actualizada correctamente.",
-      duration: 3000
+      description: "Tu contraseña ha sido actualizada correctamente."
     });
     
     setSecurityInfo({
@@ -132,8 +126,7 @@ const ProviderSettings = () => {
   const handleUpdateNotifications = () => {
     toast({
       title: "Preferencias actualizadas",
-      description: "Tus preferencias de notificación han sido actualizadas.",
-      duration: 3000
+      description: "Tus preferencias de notificación han sido actualizadas."
     });
   };
 
@@ -148,8 +141,7 @@ const ProviderSettings = () => {
   const handleUpdateCategories = () => {
     toast({
       title: "Categorías actualizadas",
-      description: "Tus categorías de servicio han sido actualizadas.",
-      duration: 3000
+      description: "Tus categorías de servicio han sido actualizadas."
     });
   };
 
