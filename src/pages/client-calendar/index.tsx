@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import ClientLayout from '@/components/layouts/ClientLayout';
-import { Calendar as CalendarIcon, Plus, Filter } from 'lucide-react';
+import { CalendarIcon, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -12,18 +12,17 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronRight } from 'lucide-react';
 import { useClient } from '@/contexts/ClientContext';
+import { useToast } from '@/hooks/use-toast';
 
 const ClientCalendar = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const { events, tasks, addEvent } = useClient();
   const [date, setDate] = useState<Date | undefined>();
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [showUpcoming, setShowUpcoming] = useState(true);
-  const [filterType, setFilterType] = useState<string>('all');
+  const [isNewEventOpen, setIsNewEventOpen] = useState(false);
   
   // New event form
   const [newEventTitle, setNewEventTitle] = useState('');
@@ -31,6 +30,7 @@ const ClientCalendar = () => {
   const [newEventTime, setNewEventTime] = useState('');
   const [newEventLocation, setNewEventLocation] = useState('');
   const [newEventDescription, setNewEventDescription] = useState('');
+  const [newEventType, setNewEventType] = useState<'personal' | 'appointment' | 'tasting' | 'deadline'>('personal');
 
   useEffect(() => {
     const dateParam = searchParams.get('date');
@@ -44,35 +44,23 @@ const ClientCalendar = () => {
   }, [searchParams]);
 
   const getDayEvents = (day: Date) => {
+    const dayStart = new Date(day.getFullYear(), day.getMonth(), day.getDate());
     return events.filter(event => {
       const eventDate = new Date(event.date);
-      return eventDate.getDate() === day.getDate() && 
-             eventDate.getMonth() === day.getMonth() && 
-             eventDate.getFullYear() === day.getFullYear();
+      return eventDate.getTime() === dayStart.getTime();
     });
   };
 
   const getDayTasks = (day: Date) => {
+    const dayStart = new Date(day.getFullYear(), day.getMonth(), day.getDate());
     return tasks.filter(task => {
       const taskDate = new Date(task.date);
-      return taskDate.getDate() === day.getDate() && 
-             taskDate.getMonth() === day.getMonth() && 
-             taskDate.getFullYear() === day.getFullYear();
+      return taskDate.getTime() === dayStart.getTime();
     });
   };
 
-  const getFilteredEvents = () => {
-    if (filterType === 'all') return events;
-    return events.filter(event => event.type === filterType);
-  };
-
-  const hasEvents = (day: Date) => {
-    return getDayEvents(day).length > 0;
-  };
-
-  const hasTasks = (day: Date) => {
-    return getDayTasks(day).length > 0;
-  };
+  const hasEvents = (day: Date) => getDayEvents(day).length > 0;
+  const hasTasks = (day: Date) => getDayTasks(day).length > 0;
 
   const todayEvents = date ? getDayEvents(date) : [];
   const todayTasks = date ? getDayTasks(date) : [];
@@ -85,7 +73,7 @@ const ClientCalendar = () => {
         time: newEventTime || undefined,
         location: newEventLocation || undefined,
         description: newEventDescription || undefined,
-        type: 'personal'
+        type: newEventType
       });
       
       // Reset form
@@ -94,16 +82,23 @@ const ClientCalendar = () => {
       setNewEventTime('');
       setNewEventLocation('');
       setNewEventDescription('');
+      setNewEventType('personal');
+      setIsNewEventOpen(false);
+      
+      toast({
+        title: "Evento creado",
+        description: "El nuevo evento se ha añadido a tu calendario."
+      });
     }
   };
 
   const getEventTypeColor = (type: string) => {
     switch (type) {
-      case 'appointment': return 'bg-blue-100 text-blue-800';
-      case 'tasting': return 'bg-purple-100 text-purple-800';
-      case 'deadline': return 'bg-amber-100 text-amber-800';
-      case 'personal': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'appointment': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'tasting': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'deadline': return 'bg-amber-100 text-amber-800 border-amber-200';
+      case 'personal': return 'bg-green-100 text-green-800 border-green-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -117,22 +112,35 @@ const ClientCalendar = () => {
     }
   };
 
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    const newMonth = new Date(currentMonth);
+    if (direction === 'prev') {
+      newMonth.setMonth(newMonth.getMonth() - 1);
+    } else {
+      newMonth.setMonth(newMonth.getMonth() + 1);
+    }
+    setCurrentMonth(newMonth);
+  };
+
   return (
     <ClientLayout>
-      <div className="flex flex-col space-y-6 h-full">
+      <div className="flex flex-col h-full space-y-6 bg-gradient-to-br from-pink-50/30 to-rose-50/20 p-6 rounded-lg">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <h1 className="text-3xl font-bold text-gray-900">Calendario</h1>
-          <div className="flex items-center gap-2">
-            <Dialog>
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Calendario</h1>
+            <p className="text-gray-600 text-lg">Organiza todos los momentos importantes de tu boda</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Dialog open={isNewEventOpen} onOpenChange={setIsNewEventOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-pink-600 text-white hover:bg-pink-700">
-                  <Plus className="h-4 w-4 mr-1" />
+                <Button className="bg-pink-600 hover:bg-pink-700 shadow-lg">
+                  <Plus className="mr-2 h-5 w-5" />
                   Nuevo evento
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                  <DialogTitle>Crear evento personal</DialogTitle>
+                  <DialogTitle>Crear nuevo evento</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
@@ -141,7 +149,8 @@ const ClientCalendar = () => {
                       id="eventTitle"
                       value={newEventTitle}
                       onChange={(e) => setNewEventTitle(e.target.value)}
-                      placeholder="Ej: Comprar zapatos"
+                      placeholder="Ej: Cita con el florista"
+                      className="mt-1"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -152,6 +161,7 @@ const ClientCalendar = () => {
                         type="date"
                         value={newEventDate}
                         onChange={(e) => setNewEventDate(e.target.value)}
+                        className="mt-1"
                       />
                     </div>
                     <div>
@@ -161,8 +171,23 @@ const ClientCalendar = () => {
                         type="time"
                         value={newEventTime}
                         onChange={(e) => setNewEventTime(e.target.value)}
+                        className="mt-1"
                       />
                     </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="eventType">Tipo de evento</Label>
+                    <Select value={newEventType} onValueChange={(value: any) => setNewEventType(value)}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="personal">Personal</SelectItem>
+                        <SelectItem value="appointment">Cita</SelectItem>
+                        <SelectItem value="tasting">Degustación</SelectItem>
+                        <SelectItem value="deadline">Fecha límite</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
                     <Label htmlFor="eventLocation">Ubicación (opcional)</Label>
@@ -170,7 +195,8 @@ const ClientCalendar = () => {
                       id="eventLocation"
                       value={newEventLocation}
                       onChange={(e) => setNewEventLocation(e.target.value)}
-                      placeholder="Ej: Centro Comercial Madrid"
+                      placeholder="Ej: Oficina del proveedor"
+                      className="mt-1"
                     />
                   </div>
                   <div>
@@ -179,10 +205,11 @@ const ClientCalendar = () => {
                       id="eventDescription"
                       value={newEventDescription}
                       onChange={(e) => setNewEventDescription(e.target.value)}
-                      placeholder="Detalles adicionales..."
+                      placeholder="Añade detalles sobre el evento..."
+                      className="mt-1"
                     />
                   </div>
-                  <Button onClick={handleAddEvent} className="w-full">
+                  <Button onClick={handleAddEvent} className="w-full bg-pink-600 hover:bg-pink-700">
                     Crear evento
                   </Button>
                 </div>
@@ -191,205 +218,151 @@ const ClientCalendar = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 flex-1">
-          {/* Calendar - Expands to full width */}
-          <Card className="xl:col-span-3 h-fit">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CalendarIcon className="h-5 w-5 text-pink-600" />
-                {currentMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
-              </CardTitle>
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8 flex-1">
+          {/* Calendar - Full width */}
+          <Card className="xl:col-span-3 shadow-lg bg-white/90 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <CalendarIcon className="h-6 w-6 text-pink-600" />
+                  {currentMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
+                </CardTitle>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => navigateMonth('prev')}
+                    className="hover:bg-pink-50"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => navigateMonth('next')}
+                    className="hover:bg-pink-50"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="w-full flex justify-center">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  month={currentMonth}
-                  onMonthChange={setCurrentMonth}
-                  className="w-full max-w-none"
-                  classNames={{
-                    months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 w-full",
-                    month: "space-y-4 w-full",
-                    table: "w-full border-collapse space-y-1",
-                    head_row: "flex w-full",
-                    head_cell: "text-muted-foreground rounded-md w-full font-normal text-[0.8rem] flex-1 text-center",
-                    row: "flex w-full mt-2",
-                    cell: "h-12 w-full text-center text-sm p-0 relative flex-1 [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                    day: "h-12 w-full p-0 font-normal aria-selected:opacity-100 flex items-center justify-center hover:bg-pink-50 data-[selected=true]:bg-pink-600 data-[selected=true]:text-white",
-                    day_today: "bg-pink-100 text-pink-700 font-bold",
-                    day_outside: "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
-                    day_disabled: "text-muted-foreground opacity-50",
-                    day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                    day_hidden: "invisible",
-                  }}
-                  modifiers={{
-                    hasEvents: (day) => hasEvents(day),
-                    hasTasks: (day) => hasTasks(day)
-                  }}
-                  modifiersClassNames={{
-                    hasEvents: "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:transform after:-translate-x-1/2 after:w-2 after:h-2 after:bg-blue-500 after:rounded-full",
-                    hasTasks: "relative before:content-[''] before:absolute before:top-1 before:left-1/2 before:transform before:-translate-x-1/2 before:w-2 before:h-2 before:bg-green-500 before:rounded-full"
-                  }}
-                />
-              </div>
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                month={currentMonth}
+                onMonthChange={setCurrentMonth}
+                className="w-full"
+                classNames={{
+                  months: "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
+                  month: "space-y-4 w-full flex flex-col",
+                  table: "w-full h-full border-collapse space-y-1",
+                  head_row: "",
+                  head_cell: "text-muted-foreground rounded-md w-full font-normal text-[0.8rem] h-14 flex items-center justify-center",
+                  row: "flex w-full mt-2",
+                  cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md h-20 w-full border border-gray-100",
+                  day: "h-full w-full p-0 font-normal aria-selected:opacity-100 hover:bg-pink-50 flex flex-col items-center justify-center relative",
+                  day_range_end: "day-range-end",
+                  day_selected: "bg-pink-100 text-pink-900 hover:bg-pink-100 hover:text-pink-900 focus:bg-pink-100 focus:text-pink-900",
+                  day_today: "bg-accent text-accent-foreground font-semibold",
+                  day_outside: "text-muted-foreground opacity-50  aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
+                  day_disabled: "text-muted-foreground opacity-50",
+                  day_hidden: "invisible",
+                }}
+                components={{
+                  DayContent: ({ date: dayDate }) => (
+                    <div className="flex flex-col items-center justify-center h-full w-full p-1">
+                      <span className="text-sm font-medium mb-1">{dayDate.getDate()}</span>
+                      <div className="flex gap-1 flex-wrap justify-center">
+                        {hasEvents(dayDate) && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        )}
+                        {hasTasks(dayDate) && (
+                          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                }}
+              />
             </CardContent>
           </Card>
 
-          {/* Events of selected day */}
-          <Card className="h-fit">
+          {/* Day Details */}
+          <Card className="shadow-lg bg-white/90 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CalendarIcon className="h-5 w-5 text-pink-600" />
-                Día seleccionado
+              <CardTitle className="text-lg">
+                {date ? date.toLocaleDateString('es-ES', { 
+                  weekday: 'long', 
+                  day: 'numeric', 
+                  month: 'long' 
+                }) : 'Selecciona un día'}
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              {(todayEvents.length > 0 || todayTasks.length > 0) ? (
-                <div className="space-y-4">
-                  {todayEvents.length > 0 && (
-                    <div>
-                      <h4 className="font-medium text-sm text-gray-700 mb-2">Eventos</h4>
-                      <div className="space-y-2">
-                        {todayEvents.map(event => (
-                          <div key={event.id} className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-                            <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <h4 className="font-medium">{event.title}</h4>
-                                {event.time && (
-                                  <p className="text-sm text-gray-500">{event.time}</p>
-                                )}
-                                {event.location && (
-                                  <p className="text-xs text-gray-500 mt-1">{event.location}</p>
-                                )}
-                              </div>
-                              <Badge className={getEventTypeColor(event.type)}>
-                                {getEventTypeLabel(event.type)}
-                              </Badge>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {todayTasks.length > 0 && (
-                    <div>
-                      <h4 className="font-medium text-sm text-gray-700 mb-2">Tareas</h4>
-                      <div className="space-y-2">
-                        {todayTasks.map(task => (
-                          <div key={task.id} className="bg-green-50 p-3 rounded-lg border border-green-200">
-                            <h4 className={`font-medium ${task.completed ? 'line-through text-gray-500' : ''}`}>
-                              {task.title}
-                            </h4>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="outline" className="text-xs">
-                                {task.type === 'personal' ? 'Personal' : 'Servicio'}
-                              </Badge>
-                              {task.completed && (
-                                <Badge className="bg-green-100 text-green-800 text-xs">
-                                  Completada
-                                </Badge>
-                              )}
-                            </div>
-                            {task.notes && (
-                              <p className="text-xs text-gray-600 mt-1">📝 {task.notes}</p>
+            <CardContent className="space-y-4">
+              {/* Events for selected day */}
+              {todayEvents.length > 0 && (
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                    Eventos
+                  </h4>
+                  <div className="space-y-2">
+                    {todayEvents.map((event) => (
+                      <div key={event.id} className="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <p className="font-medium text-sm text-gray-900">{event.title}</p>
+                            {event.time && (
+                              <p className="text-xs text-blue-600 mt-1">{event.time}</p>
+                            )}
+                            {event.location && (
+                              <p className="text-xs text-gray-600 mt-1">{event.location}</p>
                             )}
                           </div>
-                        ))}
+                          <Badge className={getEventTypeColor(event.type)} variant="secondary">
+                            {getEventTypeLabel(event.type)}
+                          </Badge>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <p className="text-center text-gray-500 py-6">
-                  {date ? 'No hay eventos ni tareas para este día' : 'Selecciona un día para ver eventos'}
-                </p>
+              )}
+
+              {/* Tasks for selected day */}
+              {todayTasks.length > 0 && (
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
+                    <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                    Tareas
+                  </h4>
+                  <div className="space-y-2">
+                    {todayTasks.map((task) => (
+                      <div key={task.id} className="p-3 bg-purple-50 rounded-lg border border-purple-100">
+                        <p className={`font-medium text-sm ${task.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+                          {task.title}
+                        </p>
+                        <Badge className={`mt-1 ${task.type === 'personal' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'}`} variant="secondary">
+                          {task.type === 'personal' ? 'Personal' : 'Servicio'}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {todayEvents.length === 0 && todayTasks.length === 0 && date && (
+                <div className="text-center py-8">
+                  <CalendarIcon className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-gray-500 text-sm">No hay eventos o tareas para este día</p>
+                </div>
               )}
             </CardContent>
           </Card>
         </div>
-
-        {/* Upcoming events table */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <Collapsible open={showUpcoming} onOpenChange={setShowUpcoming}>
-                <CollapsibleTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2 p-0 hover:bg-transparent">
-                    <ChevronRight className={`h-4 w-4 transition-transform ${showUpcoming ? 'rotate-90' : ''}`} />
-                    <span className="font-semibold">Próximos eventos</span>
-                  </Button>
-                </CollapsibleTrigger>
-              </Collapsible>
-              <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4" />
-                <Select value={filterType} onValueChange={setFilterType}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="Filtrar" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos</SelectItem>
-                    <SelectItem value="appointment">Citas</SelectItem>
-                    <SelectItem value="tasting">Degustaciones</SelectItem>
-                    <SelectItem value="deadline">Fechas límite</SelectItem>
-                    <SelectItem value="personal">Personales</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </CardHeader>
-          <Collapsible open={showUpcoming} onOpenChange={setShowUpcoming}>
-            <CollapsibleContent>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="text-left border-b">
-                        <th className="pb-2 font-medium">Evento</th>
-                        <th className="pb-2 font-medium">Fecha</th>
-                        <th className="pb-2 font-medium">Hora</th>
-                        <th className="pb-2 font-medium">Ubicación</th>
-                        <th className="pb-2 font-medium">Tipo</th>
-                        <th className="pb-2 font-medium">Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {getFilteredEvents().map(event => (
-                        <tr key={event.id} className="border-b">
-                          <td className="py-3">{event.title}</td>
-                          <td className="py-3">{new Date(event.date).toLocaleDateString()}</td>
-                          <td className="py-3">
-                            {event.type !== 'deadline' && event.time ? event.time : '-'}
-                          </td>
-                          <td className="py-3">{event.location || '-'}</td>
-                          <td className="py-3">
-                            <Badge className={getEventTypeColor(event.type)}>
-                              {getEventTypeLabel(event.type)}
-                            </Badge>
-                          </td>
-                          <td className="py-3">
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              onClick={() => {
-                                setDate(new Date(event.date));
-                                setCurrentMonth(new Date(event.date));
-                              }}
-                            >
-                              Ver
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </CollapsibleContent>
-          </Collapsible>
-        </Card>
       </div>
     </ClientLayout>
   );

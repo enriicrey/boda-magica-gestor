@@ -9,16 +9,20 @@ interface ClientLayoutProps {
 
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   return (
-    <SidebarProvider>
-      <div className="flex h-screen w-full">
-        <ClientSidebar />
-        <SidebarInset className="bg-background transition-all duration-300">
-          <main className="flex-1 p-6 overflow-auto w-full">
-            {children}
-          </main>
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50">
+      <SidebarProvider>
+        <div className="flex h-screen w-full">
+          <ClientSidebar />
+          <SidebarInset className="bg-transparent transition-all duration-300 ease-in-out">
+            <main className="flex-1 overflow-auto w-full">
+              <div className="p-6 h-full">
+                {children}
+              </div>
+            </main>
+          </SidebarInset>
+        </div>
+      </SidebarProvider>
+    </div>
   );
 };
 
